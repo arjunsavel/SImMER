@@ -1,0 +1,1 @@
+Want to help out? We'd be glad to have you! Feel free to peruse our [open issues](https://github.com/arjunsavel/shane-reduction/issues) or open your own issue/work on a pull request. Please be sure to take a look at our [code of conduct](https://github.com/arjunsavel/shane-reduction/blob/master/CODE_OF_CONDUCT.md) before making any contributions. Thanks!

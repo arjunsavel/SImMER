@@ -1,0 +1,9 @@
+coverage:
+  precision: 2
+  round: nearest
+  range: "40...90"
+  ignore:
+    - "src/simmer/tests"
+    - "src/simmer/aodirs.py"
+    - "src/simmer/__init__.py"
+    - "__init__.py"

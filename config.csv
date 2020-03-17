@@ -1,0 +1,4 @@
+Object,ExpTime,Filter,Comments,Filenums,Method
+flat,19.824,Ks,flat,"range(34, 44)",
+dark,9.912,,dark,"range(54, 64)",
+HIP49081,29.736,BrG,Lea Target - double filter super bright,"range(79, 94)",saturated
