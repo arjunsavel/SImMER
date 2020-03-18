@@ -12,6 +12,8 @@ First, run the below line from the :code:`Python` interpreter or a Jupiter noteb
 
     import insts as i
     import drivers
+    from tests.tests_1 import download_folder
+
 
     inst = i.PHARO() 
     download_folder('PHARO_integration')
@@ -49,6 +51,7 @@ Similarly to the PHARO method, we begin by instantiating the code — but this t
 
     import insts as i
     import drivers
+    from tests.tests_1 import download_folder
 
     inst = i.ShARCS()
     download_folder('shane_quickstart')
