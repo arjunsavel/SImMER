@@ -97,8 +97,9 @@ class ShARCS(Instrument):
         '''Read in bp file, cut down to size, replace bad 
         pixels with median of surrounding pixels.
         '''
-        # bpfile = aodirs.basedir() + 'badpix.fits'
-        bpfile_name = 'src/simmer/badpix.fits'
+        script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
+        rel_path = "badpix.fits"
+        bpfile_name = os.path.join(script_dir, rel_path)
         bpfile = pyfits.getdata(bpfile_name, 0)
         bpfile = u.image_subsection(bpfile, self.npix, self.center)
         

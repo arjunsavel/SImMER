@@ -25,12 +25,28 @@ parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 # current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 
-def download_folder(folder):
+def download_folder(folder, path=None):
+	"""
+	Downloads a .zip file from this projects S3 testing bucket, unzips it, and deletes 
+	the .zip file.
+
+	Inputs:
+		folder : (string) name of the folder to be downloaded.
+	"""
+
+	def retrieve_extract(path):
+		with zipfile.ZipFile(folder + '.zip', 'r') as zip_ref:
+			zip_ref.extractall(path)
+
+
 	folder_url = f'https://simmertesting.s3-us-west-1.amazonaws.com/{folder}.zip'
 	urllib.request.urlretrieve(folder_url, folder + '.zip')
-
-	with zipfile.ZipFile(folder + '.zip', 'r') as zip_ref:
-		zip_ref.extractall('src/simmer/tests/')
+	if path:
+		retrieve_extract(path)
+	elif 'src' in os.listdir(): # if we're actually running tests
+		retrieve_extract('src/simmer/tests/')
+	else: # we're running this in an arbitrary directory
+		retrieve_extract('')
 	os.remove(folder + '.zip')
 
 def delete_folder(folder):

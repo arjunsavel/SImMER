@@ -1,0 +1,8 @@
+Object,ExpTime,Filter,Comments,Filenums,Method
+flat,2.91,Ks,flat,"range(1124, 1125)",
+flat,15,Ks,flat,"range(1125, 1126)",
+flat,20.37,Ks,flat,"range(1126, 1151)",
+dark,2.91,,,"range(1357, 1367)",
+dark,7.28,,,"range(1377, 1387)",
+K07692454,2.91,Ks,,"range(1264, 1265)",saturated
+K07692454,7.28,Ks,,"range(1265, 1269)",saturated
