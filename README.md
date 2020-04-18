@@ -6,5 +6,5 @@
 Repository for developing the ```SImMER``` image reduction pipeline. If you'd like to help out, take a look at our [list of potential contributions](https://github.com/arjunsavel/simmer/blob/master/CONTRIBUTING.md).
 
 
-# Documentation
+## Documentation
 To get started, read the docs at [our readthedocs site](https://simmer.readthedocs.io/en/latest/pages/about.html).
