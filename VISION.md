@@ -1,0 +1,3 @@
+- Hassle-free data reduction
+- Serve as a learning tool for early-career astronomers
+- Modular
