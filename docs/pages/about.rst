@@ -6,8 +6,9 @@ About SImMER
 
 .. image:: https://codecov.io/gh/arjunsavel/simmer/branch/master/graph/badge.svg?token=5ERhXGwSDo
     :target: https://codecov.io/gh/arjunsavel/simmer
-.. image:: https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg
-    :target: https://github.com/arjunsavel/SImMER/blob/master/CODE_OF_CONDUCT.md 
+.. image:: https://www.codefactor.io/repository/github/arjunsavel/simmer/badge
+   :target: https://www.codefactor.io/repository/github/arjunsavel/simmer
+   :alt: CodeFactor
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
     :target: https://opensource.org/licenses/MIT
 .. image:: https://readthedocs.org/projects/simmer/badge/?version=latest
