@@ -3,7 +3,7 @@
 [![Build Status](https://readthedocs.org/projects/simmer/badge/?version=latest)](http://simmer.readthedocs.io/en/latest/?badge=latest)
 
 
-Repository for developing the ```SImMER``` image reduction pipeline. If you'd like to help out, take a look at our [list of potential contributions](https://github.com/arjunsavel/simmer/blob/master/CONTRIBUTING.md).
+Repository for developing the ```SImMER``` image reduction pipeline. If you'd like to help out, take a look at our [ways to contribute](https://github.com/arjunsavel/simmer/blob/master/CONTRIBUTING.md).
 
 
 ## Documentation
