@@ -1,7 +1,7 @@
 # Contributing to SImMER
 
 ## Expectations
-SImMER is in a period of limited but active development. If you open an issue or pull request and don't receive a response within a week, please contact asavel@gmail.com.
+SImMER is being actively developed. If you open an issue or pull request and don't receive a response within a week, please contact asavel@gmail.com.
 
 ## Alerting us of bugs
 If you find behavior of the code that is unexpected, please [open an issue](https://github.com/arjunsavel/shane-reduction/issues). Please use the ``bug_report`` issue template. Before doing so, make sure that there isn't a related issue that's already open!
