@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 
 ###################################################################
 
-NAME = "attrs"
+NAME = "simmer"
 PACKAGES = find_packages(where="src")
 META_PATH = os.path.join("src", "simmer", "__init__.py")
 CLASSIFIERS = [
