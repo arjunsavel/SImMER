@@ -1,3 +1,7 @@
+"""
+    isort:skip_file
+"""
+
 import inspect
 import os
 import sys
