@@ -27,3 +27,8 @@ repos:
   rev: 19.3b0
   hooks:
   - id: black
+
+- repo: https://github.com/dfm/black_nbconvert
+  rev: stable
+  hooks:
+  - id: black_nbconvert
