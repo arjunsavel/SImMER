@@ -5,8 +5,7 @@ import codecs
 import os
 import re
 
-from setuptools import setup, find_packages
-
+from setuptools import find_packages, setup
 
 ###################################################################
 
@@ -25,12 +24,19 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
-    'Topic :: Scientific/Engineering :: Astronomy'
-
+    "Topic :: Scientific/Engineering :: Astronomy",
 ]
-INSTALL_REQUIRES = ["numpy", "tqdm", "pandas", "astropy>=3.1.2",
-"openpyxl>=2.5.12", "scipy>=1.1.0", "matplotlib>=3.0.2", "Scikit-image>=0.16.2", 
-"pillow"]
+INSTALL_REQUIRES = [
+    "numpy",
+    "tqdm",
+    "pandas",
+    "astropy>=3.1.2",
+    "openpyxl>=2.5.12",
+    "scipy>=1.1.0",
+    "matplotlib>=3.0.2",
+    "Scikit-image>=0.16.2",
+    "pillow",
+]
 
 ###################################################################
 
@@ -54,8 +60,7 @@ def find_meta(meta):
     Extract __*meta*__ from META_FILE.
     """
     meta_match = re.search(
-        r"^__{meta}__ = ['\"]([^'\"]*)['\"]".format(meta=meta),
-        META_FILE, re.M
+        r"^__{meta}__ = ['\"]([^'\"]*)['\"]".format(meta=meta), META_FILE, re.M
     )
     if meta_match:
         return meta_match.group(1)
@@ -73,7 +78,7 @@ if __name__ == "__main__":
         author_email=find_meta("email"),
         maintainer=find_meta("author"),
         maintainer_email=find_meta("email"),
-	    package_data={'': ['README.md', 'LICENSE']},
+        package_data={"": ["README.md", "LICENSE"]},
         long_description=read("README.md"),
         long_description_content_type="text/x-rst",
         packages=PACKAGES,
