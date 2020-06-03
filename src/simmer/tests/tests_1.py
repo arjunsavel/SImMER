@@ -6,6 +6,12 @@ import urllib.request
 import zipfile
 from glob import glob
 
+sys.path.append(os.getcwd()[:-6])
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
+parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+
 import astropy.io.fits as pyfits
 import darks
 import drivers
@@ -16,11 +22,7 @@ import numpy as np
 import pandas as pd
 import sky
 
-sys.path.append(os.getcwd()[:-6])
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-
-parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 # sys.path.insert(0, os.getcwd())
 # parent_dir = os.path.dirname(current_dir)
 # current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
