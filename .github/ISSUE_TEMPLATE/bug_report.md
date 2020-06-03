@@ -1,3 +1,11 @@
+---
+name: Bug report
+about: Note that something's wrong with the code
+title: ''
+labels: ''
+assignees: ''
+
+---
 
 **Describe the bug**
 <!--- A clear and concise description of what the bug is. --->
