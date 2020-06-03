@@ -7,25 +7,26 @@ import os
 
 import astropy.io.fits as pyfits
 import numpy as np
-from scipy.ndimage.filters import median_filter
-
 import utils as u
+from scipy.ndimage.filters import median_filter
 
 
 class Instrument:
     """
-    Instantiates an object that dictates instrument-specific reduction techniques. 
+    Instantiates an object that dictates instrument-specific reduction techniques.
     """
 
     name = None
 
-    npix = 10  # Size of rot search; needs to be bigger if initial shifts are off.
+    npix = (
+        10
+    )  # Size of rot search; needs to be bigger if initial shifts are off.
 
     def __init__(self, take_skies=False):
         self.take_skies = take_skies
 
     def bad_pix(self, image):
-        """Read in bp file, cut down to size, replace bad 
+        """Read in bp file, cut down to size, replace bad
         pixels with median of surrounding pixels.
         """
         c_im = image.copy()
@@ -57,7 +58,12 @@ class ShARCS(Instrument):
         "H2-2.2122": ["Ks", "K"],
     }
 
-    filter_logtohead = {"Ks": "Ks", "BrG": "BrG-2.16", "J+CH4-1.2": "J", "K": "Ks"}
+    filter_logtohead = {
+        "Ks": "Ks",
+        "BrG": "BrG-2.16",
+        "J+CH4-1.2": "J",
+        "K": "Ks",
+    }
     filter_headtolog = {"Ks": "K", "BrG-2.16": "BrG", "J": "J+CH4-1.2"}
 
     file_prefix = "s"
@@ -99,10 +105,12 @@ class ShARCS(Instrument):
         return head["ITIME0"] * 1e-6
 
     def bad_pix(self, image):
-        """Read in bp file, cut down to size, replace bad 
+        """Read in bp file, cut down to size, replace bad
         pixels with median of surrounding pixels.
         """
-        script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
+        script_dir = os.path.dirname(
+            __file__
+        )  # <-- absolute dir the script is in
         rel_path = "badpix.fits"
         bpfile_name = os.path.join(script_dir, rel_path)
         bpfile = pyfits.getdata(bpfile_name, 0)

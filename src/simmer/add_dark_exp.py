@@ -1,5 +1,5 @@
 """
-For ShARCS, the darks are often produced by an automated script at 
+For ShARCS, the darks are often produced by an automated script at
 the end of a night. This module adds these frames to the log sheet.
 """
 
@@ -15,7 +15,6 @@ from ast import literal_eval
 import astropy.io.fits as pyfits
 import numpy as np
 import pandas as pd
-
 from openpyxl import load_workbook
 
 
@@ -42,7 +41,7 @@ def add_dark_exp(tab, inst, log, raw_dir):
 
     def find_end(column):
         """Finds the end of a column.
-        
+
         Inputs:
             :column: (pandas Series) column of DataFrame being searched.
 
@@ -69,7 +68,9 @@ def add_dark_exp(tab, inst, log, raw_dir):
         writer = pd.ExcelWriter(log, engine="openpyxl")
         writer.book = book
         writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
-        new_frame.to_excel(writer, tab, index=False, startrow=end, header=False)
+        new_frame.to_excel(
+            writer, tab, index=False, startrow=end, header=False
+        )
         writer.save()
 
     find_itimes(inst)
@@ -77,7 +78,9 @@ def add_dark_exp(tab, inst, log, raw_dir):
     # testing that writing works well.
     # then going to create a new dataframe for the darks and append it.
 
-    itimes_file = pd.read_csv(raw_dir + "_dark_itimes.txt", sep=" ", header=None)
+    itimes_file = pd.read_csv(
+        raw_dir + "_dark_itimes.txt", sep=" ", header=None
+    )
     itimes_file.columns = ["file_name", "itime"]
 
     sorted_darks = itimes_file.sort_values(by=["file_name"])
@@ -153,11 +156,15 @@ def find_itimes(inst, raw_dir):
             # in the header. This check prevents crashes.
             integrations = np.where(hkeys == "TRUITIME")
             objects = np.where(hkeys == "OBJECT")
-            if np.logical_and(len(hkeys[integrations]) > 0, len(hkeys[objects]) > 0):
+            if np.logical_and(
+                len(hkeys[integrations]) > 0, len(hkeys[objects]) > 0
+            ):
                 itime = int(round(inst.itime(head)))
                 obj = head["OBJECT  "]
 
                 if obj == "dark":
                     #                     if lastitime != itime:
                     #                         lastitime = itime
-                    outfile.write(os.path.basename(file) + " " + str(itime) + "\n")
+                    outfile.write(
+                        os.path.basename(file) + " " + str(itime) + "\n"
+                    )

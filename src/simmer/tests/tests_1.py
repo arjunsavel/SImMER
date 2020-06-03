@@ -7,14 +7,13 @@ import zipfile
 from glob import glob
 
 import astropy.io.fits as pyfits
-import numpy as np
-import pandas as pd
-
 import darks
 import drivers
 import flats
 import image
 import insts as i
+import numpy as np
+import pandas as pd
 import sky
 
 sys.path.append(os.getcwd()[:-6])
@@ -29,7 +28,7 @@ parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 
 def download_folder(folder, path=None):
     """
-	Downloads a .zip file from this projects S3 testing bucket, unzips it, and deletes 
+	Downloads a .zip file from this projects S3 testing bucket, unzips it, and deletes
 	the .zip file.
 
 	Inputs:
@@ -40,7 +39,9 @@ def download_folder(folder, path=None):
         with zipfile.ZipFile(folder + ".zip", "r") as zip_ref:
             zip_ref.extractall(path)
 
-    folder_url = f"https://simmertesting.s3-us-west-1.amazonaws.com/{folder}.zip"
+    folder_url = (
+        f"https://simmertesting.s3-us-west-1.amazonaws.com/{folder}.zip"
+    )
     urllib.request.urlretrieve(folder_url, folder + ".zip")
     if path:
         retrieve_extract(path)
@@ -72,7 +73,10 @@ class TestCreation(unittest.TestCase):
     def test_create_darks(self):
         print("Testing darks")
         download_folder("dark_test")
-        raw_dir, reddir = "src/simmer/tests/dark_test/", "src/simmer/tests/dark_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/dark_test/",
+            "src/simmer/tests/dark_test/",
+        )
         compare_dark = pyfits.getdata(raw_dir + "compare_dark.fits", 0)
         zero = np.zeros(np.shape(compare_dark))  # only testing flats
         darklist = range(1357, 1360)
@@ -83,7 +87,10 @@ class TestCreation(unittest.TestCase):
     def test_create_flats(self):
         print("Testing flats")
         download_folder("flat_test")
-        raw_dir, reddir = "src/simmer/tests/flat_test/", "src/simmer/tests/flat_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/flat_test/",
+            "src/simmer/tests/flat_test/",
+        )
         compare_flat = pyfits.getdata(raw_dir + "compare_flat.fits", 0)
         zero = np.zeros(np.shape(compare_flat))  # only testing flats
         flatlist = range(1108, 1114)
@@ -97,7 +104,10 @@ class TestCreation(unittest.TestCase):
     def test_create_skies(self):
         print("Testing skies")
         download_folder("sky_test")
-        raw_dir, reddir = "src/simmer/tests/sky_test/", "src/simmer/tests/sky_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/sky_test/",
+            "src/simmer/tests/sky_test/",
+        )
         compare_sky = np.loadtxt(raw_dir + "compare_sky.txt")
         s_dir = raw_dir
         skylist = range(1218, 1222)
@@ -110,11 +120,14 @@ class TestCreation(unittest.TestCase):
     def test_create_imstack(self):
         print("Testing imstack")
         download_folder("sky_test")
-        raw_dir, reddir = "src/simmer/tests/sky_test/", "src/simmer/tests/sky_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/sky_test/",
+            "src/simmer/tests/sky_test/",
+        )
         imlist = range(1218, 1222)
         s_dir = raw_dir
         result, shifts_all = image.create_imstack(
-            raw_dir, reddir, s_dir, imlist, self.inst,
+            raw_dir, reddir, s_dir, imlist, self.inst
         )
         compare_list = [
             "compare_create_imstack_0",
@@ -127,12 +140,17 @@ class TestCreation(unittest.TestCase):
         )
         zero = np.zeros(np.shape(compare_imstack))
         delete_folder(raw_dir)
-        self.assertCountEqual(np.ravel(result - compare_imstack), np.ravel(zero))
+        self.assertCountEqual(
+            np.ravel(result - compare_imstack), np.ravel(zero)
+        )
 
     def test_create_im_default(self):
         print("Testing default image creation")
         download_folder("sky_test")
-        raw_dir, reddir = "src/simmer/tests/sky_test/", "src/simmer/tests/sky_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/sky_test/",
+            "src/simmer/tests/sky_test/",
+        )
         s_dir = raw_dir
         compare_final_im = pyfits.getdata(
             raw_dir + "Ks/compare_final_im_default.fits", 0
@@ -147,9 +165,14 @@ class TestCreation(unittest.TestCase):
     def test_create_im_saturated(self):
         print("Testing saturated image creation")
         download_folder("sky_test")
-        raw_dir, reddir = "src/simmer/tests/sky_test/", "src/simmer/tests/sky_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/sky_test/",
+            "src/simmer/tests/sky_test/",
+        )
         s_dir = raw_dir
-        compare_final_im = pyfits.getdata(raw_dir + "Ks/compare_final_im.fits", 0)
+        compare_final_im = pyfits.getdata(
+            raw_dir + "Ks/compare_final_im.fits", 0
+        )
         image.create_im(s_dir, 10, method="saturated")
         final_im = pyfits.getdata(raw_dir + "Ks/final_im.fits", 0)
         zero = np.zeros(np.shape(final_im))
@@ -164,7 +187,10 @@ class TestDrivers(unittest.TestCase):
     def test_dark_driver(self):
         print("Testing dark driver")
         download_folder("dark_test")
-        raw_dir, reddir = "src/simmer/tests/dark_test/", "src/simmer/tests/dark_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/dark_test/",
+            "src/simmer/tests/dark_test/",
+        )
         config = pd.read_csv(os.getcwd() + "/src/simmer/tests/test_config.csv")
         darks.dark_driver(raw_dir, reddir, config, self.inst)
         val = "dark_3sec.fits" in os.listdir(raw_dir)
@@ -174,7 +200,10 @@ class TestDrivers(unittest.TestCase):
     def test_flat_driver(self):
         print("Testing flat driver")
         download_folder("flat_test")
-        raw_dir, reddir = "src/simmer/tests/flat_test/", "src/simmer/tests/flat_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/flat_test/",
+            "src/simmer/tests/flat_test/",
+        )
         config = pd.read_csv(os.getcwd() + "/src/simmer/tests/test_config.csv")
         source = raw_dir + "flat_J.fits"
         dest = raw_dir + "temp.fits"
@@ -189,7 +218,10 @@ class TestDrivers(unittest.TestCase):
     def test_sky_driver(self):
         print("Testing sky driver")
         download_folder("sky_test")
-        raw_dir, reddir = "src/simmer/tests/sky_test/", "src/simmer/tests/sky_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/sky_test/",
+            "src/simmer/tests/sky_test/",
+        )
         config = pd.read_csv(os.getcwd() + "/src/simmer/tests/test_config.csv")
         sky.sky_driver(raw_dir, reddir, config, self.inst)
         val = "sky.fits" in os.listdir(raw_dir + "/K09203794/Ks")
@@ -199,7 +231,10 @@ class TestDrivers(unittest.TestCase):
     def test_image_driver(self):
         print("Testing image driver")
         download_folder("image_test")
-        raw_dir, reddir = "src/simmer/tests/image_test/", "src/simmer/tests/image_test/"
+        raw_dir, reddir = (
+            "src/simmer/tests/image_test/",
+            "src/simmer/tests/image_test/",
+        )
         config = pd.read_csv(os.getcwd() + "/src/simmer/tests/test_config.csv")
         method = image.image_driver(raw_dir, reddir, config, self.inst)
         remove_files = [
@@ -209,7 +244,9 @@ class TestDrivers(unittest.TestCase):
             "sh03.fits",
             "shifts.txt",
         ]
-        val = np.all([r in os.listdir(raw_dir + f"K09203794/Ks") for r in remove_files])
+        val = np.all(
+            [r in os.listdir(raw_dir + f"K09203794/Ks") for r in remove_files]
+        )
         delete_folder(raw_dir)
         self.assertTrue(val)
 
@@ -227,7 +264,9 @@ class TestIntegration(unittest.TestCase):
         config_file = os.getcwd() + "/config.csv"
         drivers.all_driver(self.p, config_file, raw_dir, reddir)
         compare_final_im = pyfits.getdata(raw_dir + "compare_final_im.fits", 0)
-        final_im = pyfits.getdata(raw_dir + "HIP49081/Br-gamma/final_im.fits", 0)
+        final_im = pyfits.getdata(
+            raw_dir + "HIP49081/Br-gamma/final_im.fits", 0
+        )
         zero = np.zeros(np.shape(final_im))
         val = np.all(np.allclose(final_im, compare_final_im, equal_nan=True))
 
@@ -235,7 +274,9 @@ class TestIntegration(unittest.TestCase):
         self.assertTrue(val)
 
     def test_PHARO_config_drivers(self):
-        print("Testing PHARO config integration")  # need better way to get config?
+        print(
+            "Testing PHARO config integration"
+        )  # need better way to get config?
         download_folder("PHARO_config_driver")
         raw_dir, reddir = (
             os.getcwd() + "/src/simmer/tests/PHARO_config_driver/",
@@ -244,7 +285,9 @@ class TestIntegration(unittest.TestCase):
         config_file = os.getcwd() + "/config.csv"
         drivers.config_driver(self.p, config_file, raw_dir, reddir)
         sky = pyfits.getdata(raw_dir + "HIP49081/Br-gamma/sky.fits", 0)
-        compare_sky = pyfits.getdata(raw_dir + "HIP49081/Br-gamma/compare_sky.fits", 0)
+        compare_sky = pyfits.getdata(
+            raw_dir + "HIP49081/Br-gamma/compare_sky.fits", 0
+        )
         zero = np.zeros(np.shape(compare_sky))
         val = np.all(np.allclose(compare_sky, sky, equal_nan=True))
 
@@ -270,7 +313,10 @@ class TestIntegration(unittest.TestCase):
             "shifts.txt",
         ]
         val = np.all(
-            [r in os.listdir(raw_dir + "HIP49081/Br-gamma/") for r in remove_files]
+            [
+                r in os.listdir(raw_dir + "HIP49081/Br-gamma/")
+                for r in remove_files
+            ]
         )
 
         file_dir = os.getcwd() + "/src/simmer/tests/PHARO_image_driver/"

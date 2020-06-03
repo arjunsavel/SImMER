@@ -10,10 +10,9 @@ import astropy.io.fits as pyfits
 import matplotlib.colors as co
 import matplotlib.pyplot as plt
 import numpy as np
-from tqdm import tqdm
-
 import registration as reg
 import utils as u
+from tqdm import tqdm
 
 
 def image_driver(raw_dir, reddir, config, inst, plot=True):
@@ -43,12 +42,18 @@ def image_driver(raw_dir, reddir, config, inst, plot=True):
 
     methods = []
 
-    for star in tqdm(stars, desc="Running image driver", position=0, leave=True):
+    for star in tqdm(
+        stars, desc="Running image driver", position=0, leave=True
+    ):
         s_dir = reddir + star + "/"
-        if s_dir not in sdirs:  # make sure there's a subdirectory for each star
+        if (
+            s_dir not in sdirs
+        ):  # make sure there's a subdirectory for each star
             os.mkdir(s_dir)
 
-        filts = skies[skies.Object == star].Filter.values  # array of filters as strings
+        filts = skies[
+            skies.Object == star
+        ].Filter.values  # array of filters as strings
         for n, filter_name in enumerate(filts):
             obj = config[config.Object == star]
             #             imlist = literal_eval(obj[obj.Comments != 'sky'].Filenums.values[n])
@@ -66,12 +71,20 @@ def image_driver(raw_dir, reddir, config, inst, plot=True):
             else:
                 methods.append("default")
             create_imstack(
-                raw_dir, reddir, s_dir, imlist, inst, plot=plot, filter_name=filter_name
+                raw_dir,
+                reddir,
+                s_dir,
+                imlist,
+                inst,
+                plot=plot,
+                filter_name=filter_name,
             )
     return methods
 
 
-def create_imstack(raw_dir, reddir, s_dir, imlist, inst, plot=True, filter_name=None):
+def create_imstack(
+    raw_dir, reddir, s_dir, imlist, inst, plot=True, filter_name=None
+):
     """Create the stack of images by performing flat division, sky subtraction.
 
     Inputs:
@@ -120,14 +133,18 @@ def create_imstack(raw_dir, reddir, s_dir, imlist, inst, plot=True, filter_name=
     for i in range(nims):
         # flat division and sky subtraction
         current_im = im_array[i, :, :]
-        current_im = (current_im / flat) - sky  # where flat = 0, this will be nan
+        current_im = (
+            current_im / flat
+        ) - sky  # where flat = 0, this will be nan
         current_head = pyfits.getheader(imfiles[i])
 
         # bad pixel correction
         current_im = inst.bad_pix(current_im)
 
         # now deal with headers and shifts
-        shifted_im, shifts = reg.shift_bruteforce(current_im)  # put it at the center
+        shifted_im, shifts = reg.shift_bruteforce(
+            current_im
+        )  # put it at the center
 
         shifts_all.append(shifts)
 
@@ -138,7 +155,9 @@ def create_imstack(raw_dir, reddir, s_dir, imlist, inst, plot=True, filter_name=
         im_array[i, :, :] = shifted_im
         hdu = pyfits.PrimaryHDU(shifted_im, header=current_head)
         hdu.writeto(
-            sf_dir + "sh{:02d}.fits".format(i), overwrite=True, output_verify="ignore"
+            sf_dir + "sh{:02d}.fits".format(i),
+            overwrite=True,
+            output_verify="ignore",
         )
 
     if nims > 50:
@@ -157,7 +176,7 @@ def create_imstack(raw_dir, reddir, s_dir, imlist, inst, plot=True, filter_name=
 
 
 def create_im(s_dir, ssize1, plot=True, fdirs=None, method="default"):
-    """Take the shifted, cut down images from before, then perform registration 
+    """Take the shifted, cut down images from before, then perform registration
     and combine. Tests should happen before this, as this is a per-star basis.
     """
     if not fdirs:
@@ -166,7 +185,9 @@ def create_im(s_dir, ssize1, plot=True, fdirs=None, method="default"):
     for sf_dir in fdirs:  # each filter
 
         # files = glob(sf_dir + 'sh*.fits') #reduced image files
-        files = glob(sf_dir + f"s*.fits")  # might need to change to file_prefix
+        files = glob(
+            sf_dir + f"s*.fits"
+        )  # might need to change to file_prefix
         nims = len(files)
         frames = u.read_imcube(files)
         frames = frames.astype(float)
@@ -213,7 +234,9 @@ def create_im(s_dir, ssize1, plot=True, fdirs=None, method="default"):
 
         head = pyfits.getheader(files[0])
         hdu = pyfits.PrimaryHDU(final_im, header=head)
-        hdu.writeto(sf_dir + "final_im.fits", overwrite=True, output_verify="ignore")
+        hdu.writeto(
+            sf_dir + "final_im.fits", overwrite=True, output_verify="ignore"
+        )
 
         textfile1 = open(sf_dir + "shifts2.txt", "w")
         textfile1.write("im, d_row, d_col\n")

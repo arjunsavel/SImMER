@@ -7,9 +7,8 @@ from glob import glob
 
 import astropy.io.fits as pyfits
 import numpy as np
-from tqdm import tqdm
-
 import utils as u
+from tqdm import tqdm
 
 CENTER = (750, 1100)  # row,col
 NPIX = 600
@@ -18,7 +17,7 @@ NPIX = 600
 def sky_driver(raw_dir, reddir, config, inst, plot=True):
     """Night should be entered in format 'yyyy_mm_dd' as string.
     This will point toward a config file for the night with flats listed.
-    
+
     Inputs:
         :raw_dir: (string) directory for the raw data
         :reddir: (string) directory for the reduced data
@@ -42,10 +41,14 @@ def sky_driver(raw_dir, reddir, config, inst, plot=True):
     for star in tqdm(stars, desc="Running skies", position=0, leave=True):
 
         s_dir = reddir + star + "/"
-        if s_dir not in sdirs:  # make sure there's a subdirectory for each star
+        if (
+            s_dir not in sdirs
+        ):  # make sure there's a subdirectory for each star
             os.mkdir(s_dir)
 
-        filts = skies[skies.Object == star].Filter.values  # array of filters as strings
+        filts = skies[
+            skies.Object == star
+        ].Filter.values  # array of filters as strings
         for n, filter_name in enumerate(filts):
             # CDD change
             # skylist = literal_eval(skies[skies.Object == s].Filenums.values[n])
@@ -65,10 +68,12 @@ def sky_driver(raw_dir, reddir, config, inst, plot=True):
             )
 
 
-def create_skies(raw_dir, reddir, s_dir, skylist, inst, plot=True, filter_name=None):
+def create_skies(
+    raw_dir, reddir, s_dir, skylist, inst, plot=True, filter_name=None
+):
     """Create a sky from a single list of skies.
     sf_dir is the reduced directory for the specific star and filter.
-    
+
     Inputs:
         :raw_dir: (string) directory for the raw data
         :reddir: (string) directory for the reduced data

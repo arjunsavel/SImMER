@@ -3,9 +3,8 @@ Functions to work with flats.
 """
 import astropy.io.fits as pyfits
 import numpy as np
-from tqdm import tqdm
-
 import utils as u
+from tqdm import tqdm
 
 CENTER = (750, 1100)  # row,col
 MPIX = 600
@@ -13,7 +12,7 @@ MPIX = 600
 
 def flat_driver(raw_dir, reddir, config, inst, plot=True):
     """Sets up and runs create_flats.
-    
+
     Inputs:
         :raw_dir: (string) directory for the raw data
         :reddir: (string) directory for the reduced data
@@ -24,7 +23,9 @@ def flat_driver(raw_dir, reddir, config, inst, plot=True):
     """
     _flats = config[config.Object == "flat"]
     filts = _flats.Filter.tolist()
-    for filter_name in tqdm(filts, desc="Running flats", position=0, leave=True):
+    for filter_name in tqdm(
+        filts, desc="Running flats", position=0, leave=True
+    ):
         # literal_eval issues below
         flatlist = eval(
             _flats[_flats.Filter == filter_name].Filenums.values[0]
@@ -43,10 +44,17 @@ def flat_driver(raw_dir, reddir, config, inst, plot=True):
 
 
 def create_flats(
-    raw_dir, reddir, flatlist, darkfile, inst, filter_name=None, test=False, plot=True
+    raw_dir,
+    reddir,
+    flatlist,
+    darkfile,
+    inst,
+    filter_name=None,
+    test=False,
+    plot=True,
 ):
     """Create a flat from a single list of flat files.
-    
+
     Inputs:
         :raw_dir: (str) directory where the raw data is stored.
         :reddir: (str) directory where the reduced data is stored.
@@ -70,7 +78,9 @@ def create_flats(
         dark = pyfits.getdata(darkfile, 0)
     for i in range(nflats):
         flat_array[i, :, :] = flat_array[i, :, :] - dark
-        flat_array[i, :, :] = flat_array[i, :, :] / np.median(flat_array[i, :, :])
+        flat_array[i, :, :] = flat_array[i, :, :] / np.median(
+            flat_array[i, :, :]
+        )
 
     final_flat = np.median(flat_array, axis=0)
     final_flat = final_flat / np.median(final_flat)
@@ -84,6 +94,8 @@ def create_flats(
     # end CDD update
 
     hdu = pyfits.PrimaryHDU(final_flat, header=head)
-    hdu.writeto(reddir + f"flat_{filt}.fits", overwrite=True, output_verify="ignore")
+    hdu.writeto(
+        reddir + f"flat_{filt}.fits", overwrite=True, output_verify="ignore"
+    )
 
     return final_flat

@@ -10,9 +10,8 @@ from PIL import Image
 from scipy.ndimage.filters import median_filter
 from scipy.ndimage.interpolation import rotate
 from scipy.ndimage.interpolation import shift as subpix_shift
-from skimage.feature import peak_local_max
-
 from scipy_utils import *
+from skimage.feature import peak_local_max
 
 
 def roll_shift(image, shifts, cval=0.0):
@@ -36,12 +35,12 @@ def register_bruteforce(image, rough_center=None):
     """
     Performs the default image registration scheme. Shifts the center of the
     image to the peak.
-    
+
     inputs:
         :image: (2-d array) photon counts at each pixel of each science image.
         :rough_center: (2-d array, default None) location of primary star. This
                     argument is only passed in the wide binary case.
-                    
+
     outputs:
         image_centered : (2-d array) image cenered by the rotations method.
     """
@@ -114,10 +113,10 @@ def find_wide_binary(image):
     Performs the first step of image registration for a science image that
     contains a wide binary. User input selects which target is the primary star
     of interest in the first frame of the target.
-    
+
     inputs:
         :image: (2-d array) photon counts at each pixel of each science image.
-                    
+
     outputs:
         :image_centered: (2-d array) image cenered by the rotations method.
     """
@@ -149,14 +148,14 @@ def register_saturated(image, searchsize1, newshifts1, rough_center=None):
     """
     Performs image registration when a saturated star is present in
     the science image.
-    
+
     inputs:
         :image: (2-d array) photon counts at each pixel of each science image.
         :searchsize1: (int) initial size of search for center of image.
         :newshifts1: (list) keeps tracks of x-y shifts.
         :rough_center: (2-d array, default None) location of primary star. This
                     argument is only passed in the wide binary case.
-                    
+
     outputs:
         :image_centered: (2-d array) image centered by the rotations method.
         :rot: the rotation
@@ -252,7 +251,7 @@ def roll2d(dat, xshift, yshift):
 def rotate_sub(dat):
     """Rotate the image about the center point, then subtract from original and record residuals.
     Does this at set angles.
-    
+
     inputs:
         :dat: (2d array) image data.
 
@@ -270,7 +269,9 @@ def rotate_sub(dat):
     return total_residuals
 
 
-def calc_shifts(dat, x_initial, y_initial, xrad, yrad, find="max", method="radon"):
+def calc_shifts(
+    dat, x_initial, y_initial, xrad, yrad, find="max", method="radon"
+):
     """Do the radon search and then translate back to image coordinates."""
 
     if method == "rotate":

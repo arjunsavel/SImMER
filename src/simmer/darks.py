@@ -4,16 +4,15 @@ Functions to work with darks.
 
 import astropy.io.fits as pyfits
 import numpy as np
-from tqdm import tqdm
-
 import utils as u
+from tqdm import tqdm
 
 CENTER = (750, 1100)  # row,col
 NPIX = 600
 
 
 def dark_driver(raw_dir, reddir, config, inst, plot=True):
-    """Night should be entered in format 'yyyy_mm_dd' as string. 
+    """Night should be entered in format 'yyyy_mm_dd' as string.
     This will point toward a config file for the night with darks listed.flat
 
     Inputs:
@@ -39,7 +38,7 @@ def dark_driver(raw_dir, reddir, config, inst, plot=True):
 
 
 def create_darks(raw_dir, reddir, darklist, inst, plot=True):
-    """creates the actual darks from a list of dark file numbers, taking 
+    """creates the actual darks from a list of dark file numbers, taking
     the median and writing to a file. Returns the final dark.
 
     Inputs:
@@ -61,7 +60,11 @@ def create_darks(raw_dir, reddir, darklist, inst, plot=True):
 
     if plot:
         u.plot_array(
-            dark_array, -1.0, 50.0, reddir, f"dark_cube_{int(round(itime))}sec.png"
+            dark_array,
+            -1.0,
+            50.0,
+            reddir,
+            f"dark_cube_{int(round(itime))}sec.png",
         )
 
     # CDD update
@@ -69,7 +72,9 @@ def create_darks(raw_dir, reddir, darklist, inst, plot=True):
     head.set("DATAFILE", str(darklist))  # add all file names
     # end CDD update
 
-    hdu = pyfits.PrimaryHDU(final_dark, header=head)  # can i do this with fits?
+    hdu = pyfits.PrimaryHDU(
+        final_dark, header=head
+    )  # can i do this with fits?
     dark_filename = reddir + "dark_{}sec.fits".format(int(round(itime)))
     hdu.writeto(dark_filename, overwrite=True, output_verify="ignore")
 

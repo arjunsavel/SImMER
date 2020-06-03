@@ -6,10 +6,9 @@
 Capability to check whether logsheet format is conducive to creating a config.
 """
 
+import add_dark_exp as ad
 import numpy as np
 import pandas as pd
-
-import add_dark_exp as ad
 
 
 def check_logsheet(inst, log_name, date=None, add_dark_times=False):
@@ -25,7 +24,7 @@ def check_logsheet(inst, log_name, date=None, add_dark_times=False):
 
     def check_date(date, inst, add_dark_times):
         """
-        Checks for typos for one day in the observing run, 
+        Checks for typos for one day in the observing run,
         assuming each day corresponds to a new sheet.
 
         Inputs:
@@ -61,9 +60,9 @@ def check_logsheet(inst, log_name, date=None, add_dark_times=False):
         print(f"2/9 tests passed for {date}")
 
         filters = log_frame["Filter"].dropna().values
-        assert len(filters) == len(log_frame[log_frame["Object"] != "dark"]) or len(
-            filters
-        ) == len(objects), "Missing a filter."
+        assert len(filters) == len(
+            log_frame[log_frame["Object"] != "dark"]
+        ) or len(filters) == len(objects), "Missing a filter."
         print(f"3/9 tests passed for {date}")
 
         starts = log_frame["Start"].dropna().values
