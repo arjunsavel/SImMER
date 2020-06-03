@@ -1,24 +1,26 @@
+import inspect
 import os
 import sys
+import unittest
+import urllib.request
+import zipfile
+from glob import glob
+
+import astropy.io.fits as pyfits
+import numpy as np
+import pandas as pd
+
+import darks
+import drivers
+import flats
+import image
+import insts as i
+import sky
 
 sys.path.append(os.getcwd()[:-6])
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-import flats
-import darks
-import sky
-import pandas as pd
-import unittest
-import image
-import insts as i
-import drivers
-import numpy as np
-from glob import glob
-import inspect
-import astropy.io.fits as pyfits
-import urllib.request
-import zipfile
 
 parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 # sys.path.insert(0, os.getcwd())

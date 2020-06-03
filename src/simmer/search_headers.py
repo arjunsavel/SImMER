@@ -2,6 +2,7 @@
     to s0512.fits from night 2015_10_26."""
 
 from glob import glob
+
 import astropy.io.fits as pyfits
 
 

@@ -2,11 +2,11 @@
 Module for instrument class and subclasses.
 """
 
-import os
 import glob
+import os
 
-import numpy as np
 import astropy.io.fits as pyfits
+import numpy as np
 from scipy.ndimage.filters import median_filter
 
 import utils as u

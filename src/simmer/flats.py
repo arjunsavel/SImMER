@@ -1,12 +1,11 @@
 """
 Functions to work with flats.
 """
+import astropy.io.fits as pyfits
 import numpy as np
 from tqdm import tqdm
-import astropy.io.fits as pyfits
 
 import utils as u
-
 
 CENTER = (750, 1100)  # row,col
 MPIX = 600

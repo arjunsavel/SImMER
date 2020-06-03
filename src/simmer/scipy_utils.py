@@ -4,7 +4,6 @@ since been deprecated (see the LICENSE.MD file at the project root directory).
 """
 
 import numpy as np
-
 from PIL import Image
 
 

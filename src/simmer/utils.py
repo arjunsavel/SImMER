@@ -2,10 +2,10 @@
 This module provides utility functions for the reduction pipeline.
 """
 
-import numpy as np
+import astropy.io.fits as pyfits
 import matplotlib.colors as co
 import matplotlib.pyplot as plt
-import astropy.io.fits as pyfits
+import numpy as np
 
 
 def find_angle(loc1, loc2):

@@ -6,14 +6,14 @@ Module to make the image stacking / production occur.
 import os
 from glob import glob
 
-import numpy as np
-from tqdm import tqdm
+import astropy.io.fits as pyfits
 import matplotlib.colors as co
 import matplotlib.pyplot as plt
-import astropy.io.fits as pyfits
+import numpy as np
+from tqdm import tqdm
 
-import utils as u
 import registration as reg
+import utils as u
 
 
 def image_driver(raw_dir, reddir, config, inst, plot=True):

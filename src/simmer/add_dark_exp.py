@@ -8,15 +8,14 @@ the end of a night. This module adds these frames to the log sheet.
 # Created: 2/11/19
 # Updated: 2/11/19
 
-import os
 import glob
-
+import os
 from ast import literal_eval
 
+import astropy.io.fits as pyfits
 import numpy as np
 import pandas as pd
 
-import astropy.io.fits as pyfits
 from openpyxl import load_workbook
 
 

@@ -3,19 +3,14 @@ Module containing all functions related to image center-finding
 and stacking.
 """
 
-import numpy as np
 import matplotlib.pylab as plt
-
-from PIL import Image
-
-from skimage.feature import peak_local_max
-
+import numpy as np
 import skimage
-
-
+from PIL import Image
 from scipy.ndimage.filters import median_filter
 from scipy.ndimage.interpolation import rotate
 from scipy.ndimage.interpolation import shift as subpix_shift
+from skimage.feature import peak_local_max
 
 from scipy_utils import *
 

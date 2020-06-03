@@ -2,16 +2,14 @@
 Functions to work with skies.
 """
 
+import os
 from glob import glob
 
-import os
-import numpy as np
 import astropy.io.fits as pyfits
-
+import numpy as np
 from tqdm import tqdm
 
 import utils as u
-
 
 CENTER = (750, 1100)  # row,col
 NPIX = 600

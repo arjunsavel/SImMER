@@ -5,13 +5,13 @@ Module for driving large reduction processes.
 
 from glob import glob
 
-from tqdm import tqdm
 import pandas as pd
+from tqdm import tqdm
 
-import sky
 import darks
 import flats
 import image
+import sky
 
 
 def all_driver(inst, config_file, raw_dir, reddir):
