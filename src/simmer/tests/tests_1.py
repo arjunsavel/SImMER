@@ -21,7 +21,6 @@ sys.path.append(os.getcwd()[:-6])
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-
 parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 # sys.path.insert(0, os.getcwd())
 # parent_dir = os.path.dirname(current_dir)
