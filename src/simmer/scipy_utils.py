@@ -1,5 +1,5 @@
 """
-Utility functions (used in the registration stage) adapted from SciPy 1.2.0 that have 
+Utility functions (used in the registration stage) adapted from SciPy 1.2.0 that have
 since been deprecated (see the LICENSE.MD file at the project root directory).
 """
 
@@ -10,7 +10,7 @@ from PIL import Image
 def bytescale(data, high=255, low=0):
     """
     Byte scales an image.
-    
+
     inputs:
         :data: (ndarray) PIL image data array.
         :cmin: (int)  Bias scaling of small values. Default is ``data.min()``.
@@ -55,9 +55,13 @@ def toimage(arr, high=255, low=0):
 
     data = np.asarray(arr)
     shape = list(data.shape)
-    valid = len(shape) == 2 or ((len(shape) == 3) and ((3 in shape) or (4 in shape)))
+    valid = len(shape) == 2 or (
+        (len(shape) == 3) and ((3 in shape) or (4 in shape))
+    )
     if not valid:
-        raise ValueError("'arr' does not have a suitable array shape for " "any mode.")
+        raise ValueError(
+            "'arr' does not have a suitable array shape for " "any mode."
+        )
     if len(shape) == 2:
         shape = (shape[1], shape[0])  # columns show up first
         bytedata = bytescale(data, high=high, low=low)

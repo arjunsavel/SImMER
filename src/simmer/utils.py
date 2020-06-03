@@ -11,11 +11,11 @@ import numpy as np
 def find_angle(loc1, loc2):
     """
     Calculated the angle between two locations on a grid.
-    
+
     Inputs:
         :loc1: (tuple) first location.
         :relative: (tuple) second location.
-                    
+
     Outputs:
         :angle : (float) real-valued angle between loc1 and loc2.
     """
@@ -35,13 +35,15 @@ def make_filelist(directory, numlist, inst):
         :filelist: (list) list of strings pertaining to files of interest
     """
 
-    filelist = [directory + inst.file_prefix + "{:04d}.fits".format(d) for d in numlist]
+    filelist = [
+        directory + inst.file_prefix + "{:04d}.fits".format(d) for d in numlist
+    ]
     return filelist
 
 
 def read_imcube(filelist):
     """Reads a stack of fits files into an image cube of dimensions (nims, xpix, ypix).
-    
+
     Inputs:
         :filelist: (list) list of strings pertaining to files of interest.
 
@@ -64,10 +66,10 @@ def image_subsection(input_image, npix, center):
         :input_image: (2D array) image of which a subsection is desired.
         :center: (tuple) center of image, with format (x, y)
         :npix: (float) value for size of return image. If non-square image desired, enter as list.
-    
+
         :default: center = (750, 1100)
         :npix: = 600 for inscribed region or npix = 1000 for circumscribing region
-        
+
         :transposed: = np.rot90(input_image.T,2)
         :transposed: = np.rot90(input_image,2)
         :center: = (2047-center[0],2047-center[1]
@@ -98,11 +100,11 @@ def header_subsection(input_image_file, npix, center):
         :input_image: (2D array) image of which a subsection is desired.
         :center: (tuple) center of image, with format (x, y)
         :npix: (float) value for size of return image. If non-square image desired, enter as list.
-    
+
     Outputs:
         :header: (FITS header) header of the image file, adjusted accordingly.
 
-    
+
     """
     header = pyfits.getheader(input_image_file)
     # hdulist = fits.open(input_image_file)

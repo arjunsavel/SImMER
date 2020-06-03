@@ -19,8 +19,8 @@ class Instrument:
     name = None
 
     npix = (
-        10
-    )  # Size of rot search; needs to be bigger if initial shifts are off.
+        10  # Size of rot search; needs to be bigger if initial shifts are off.
+    )
 
     def __init__(self, take_skies=False):
         self.take_skies = take_skies
