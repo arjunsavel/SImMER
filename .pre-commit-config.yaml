@@ -15,6 +15,12 @@ repos:
   - id: seed-isort-config
     args: [--application-directories=src]
 
+- repo: https://github.com/psf/black
+  rev: 19.3b0
+  hooks:
+  - id: black
+
+
 - repo: https://github.com/pre-commit/mirrors-isort
   rev: v4.3.20
   hooks:
@@ -22,8 +28,3 @@ repos:
     args: []
     additional_dependencies: [toml]
     exclude: src/simmer/tests
-
-- repo: https://github.com/psf/black
-  rev: 19.3b0
-  hooks:
-  - id: black
