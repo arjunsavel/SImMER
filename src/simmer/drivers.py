@@ -26,7 +26,7 @@ def all_driver(inst, config_file, raw_dir, reddir):
 
     """
 
-    #obstain file list from config file
+    # obstain file list from config file
     config = pd.read_csv(config_file)
     config.Object = config.Object.astype(str)
 
@@ -35,13 +35,15 @@ def all_driver(inst, config_file, raw_dir, reddir):
     sky.sky_driver(raw_dir, reddir, config, inst)
     methods = image.image_driver(raw_dir, reddir, config, inst)
 
-    star_dirlist = glob(reddir + '*/') 
-    i = 0 # can't use tqdm on zipped objects, I believe
-    for s_dir in tqdm(star_dirlist, desc='Running registration', position=0, leave=True):
+    star_dirlist = glob(reddir + "*/")
+    i = 0  # can't use tqdm on zipped objects, I believe
+    for s_dir in tqdm(
+        star_dirlist, desc="Running registration", position=0, leave=True
+    ):
         image.create_im(s_dir, 10, method=methods[i])
         i += 1
-        
-        
+
+
 def config_driver(inst, config_file, raw_dir, reddir):
     """
     Runs all_drivers, terminating afrer running sky_driver.
@@ -54,15 +56,15 @@ def config_driver(inst, config_file, raw_dir, reddir):
 
     """
 
-    #get file list from config file
+    # get file list from config file
     config = pd.read_csv(config_file)
     config.Object = config.Object.astype(str)
 
     darks.dark_driver(raw_dir, reddir, config, inst)
     flats.flat_driver(raw_dir, reddir, config, inst)
     sky.sky_driver(raw_dir, reddir, config, inst)
-            
-    
+
+
 def image_driver(inst, config_file, raw_dir, reddir):
     """
     Runs all_drivers, terminating afrer running image_drivers.
@@ -73,15 +75,14 @@ def image_driver(inst, config_file, raw_dir, reddir):
         :raw_dir: (string) path of the directory containing the raw data.
         :reddir: (string) path of the directory to contain the raw data.
     """
-    
-    #get file list from config file
+
+    # get file list from config file
     config = pd.read_csv(config_file)
     config.Object = config.Object.astype(str)
 
     image.image_driver(raw_dir, reddir, config, inst)
 
-    #Now do registration
-    star_dirlist = glob(reddir + '*/') 
+    # Now do registration
+    star_dirlist = glob(reddir + "*/")
     for s_dir in star_dirlist:
         image.create_im(s_dir, 10)
-        

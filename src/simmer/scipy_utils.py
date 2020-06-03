@@ -33,6 +33,7 @@ def bytescale(data, high=255, low=0):
     bytedata = (data - cmin) * scale + low
     return (bytedata.clip(low, high) + 0.5).astype(np.uint8)
 
+
 def toimage(arr, high=255, low=0):
     """Takes a numpy array and returns a PIL image.
     This function is only available if Python Imaging Library (PIL) is installed.
@@ -55,15 +56,13 @@ def toimage(arr, high=255, low=0):
 
     data = np.asarray(arr)
     shape = list(data.shape)
-    valid = len(shape) == 2 or ((len(shape) == 3) and
-                                ((3 in shape) or (4 in shape)))
+    valid = len(shape) == 2 or ((len(shape) == 3) and ((3 in shape) or (4 in shape)))
     if not valid:
-        raise ValueError("'arr' does not have a suitable array shape for "
-                         "any mode.")
+        raise ValueError("'arr' does not have a suitable array shape for " "any mode.")
     if len(shape) == 2:
         shape = (shape[1], shape[0])  # columns show up first
         bytedata = bytescale(data, high=high, low=low)
-        image = Image.frombytes('L', shape, bytedata.tostring())
+        image = Image.frombytes("L", shape, bytedata.tostring())
         return image
 
 
@@ -77,11 +76,9 @@ def imresize(arr):
     outputs:
         :im_resized: (ndarray) The resized array of image.
     """
-    
+
     im = toimage(arr)
-    size = tuple((np.array(im.size) * 100.).astype(int))
+    size = tuple((np.array(im.size) * 100.0).astype(int))
     im_resized = im.resize(size, resample=3)
     im_resized = np.array(im_resized)
     return im_resized
-
-    

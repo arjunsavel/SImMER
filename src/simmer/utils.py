@@ -21,9 +21,10 @@ def find_angle(loc1, loc2):
     """
     angle = np.atan(loc1[1] / loc2[1])
     return angle
-    
+
+
 def make_filelist(directory, numlist, inst):
-    '''Turn a list of numbers into a list of properly formatted filenames.
+    """Turn a list of numbers into a list of properly formatted filenames.
 
     Inputs:
         :directory: (string) path leading to directory of interest.
@@ -32,13 +33,14 @@ def make_filelist(directory, numlist, inst):
 
     Outputs:
         :filelist: (list) list of strings pertaining to files of interest
-    '''
-    
-    filelist = [directory + inst.file_prefix + '{:04d}.fits'.format(d) for d in numlist]
+    """
+
+    filelist = [directory + inst.file_prefix + "{:04d}.fits".format(d) for d in numlist]
     return filelist
 
+
 def read_imcube(filelist):
-    '''Reads a stack of fits files into an image cube of dimensions (nims, xpix, ypix).
+    """Reads a stack of fits files into an image cube of dimensions (nims, xpix, ypix).
     
     Inputs:
         :filelist: (list) list of strings pertaining to files of interest.
@@ -46,15 +48,15 @@ def read_imcube(filelist):
     Outputs:
         :im_array: (3D array) array of 2D arrays pertaining to the files in filelist.
 
-    '''
-    
+    """
+
     im_array = np.array([pyfits.getdata(file, 0) for file in filelist])
-            
+
     return im_array
 
 
 def image_subsection(input_image, npix, center):
-    '''reads in a full image array, selects the relevant subsection of the array,
+    """reads in a full image array, selects the relevant subsection of the array,
     and returns the new array, transposed for use with Python.
     input_image must be 2D
 
@@ -73,16 +75,18 @@ def image_subsection(input_image, npix, center):
     Outputs:
         :subsection: (2d array) subsection of original image.
 
-    )'''
-    
+    )"""
+
     npix = np.array(npix)
     if np.size(npix) == 1:
         npix = [npix, npix]
     half = [int(n / 2) for n in npix]
 
-    subsection = input_image[center[0] - half[0] : center[0] + half[0], 
-                             center[1] - half[1] : center[1] + half[1]]
-        
+    subsection = input_image[
+        center[0] - half[0] : center[0] + half[0],
+        center[1] - half[1] : center[1] + half[1],
+    ]
+
     return subsection
 
 
@@ -101,19 +105,20 @@ def header_subsection(input_image_file, npix, center):
     
     """
     header = pyfits.getheader(input_image_file)
-    #hdulist = fits.open(input_image_file)
-    #header = wcs.WCS(hdulist[0].header)
-    
-    header['CRPIX1'] = npix / 2 - (center[1] - header['CRPIX1'])  #x=col
-    header['CRPIX2'] = npix / 2 - (center[0] - header['CRPIX2'])  #y=row
-    header['NAXIS1'] = 600
-    header['NAXIS2'] = 600
-        
+    # hdulist = fits.open(input_image_file)
+    # header = wcs.WCS(hdulist[0].header)
+
+    header["CRPIX1"] = npix / 2 - (center[1] - header["CRPIX1"])  # x=col
+    header["CRPIX2"] = npix / 2 - (center[0] - header["CRPIX2"])  # y=row
+    header["NAXIS1"] = 600
+    header["NAXIS2"] = 600
+
     return header
-    
-    
-    
-def plot_array(im_array, vmin, vmax, directory, filename, extent=None): # pylint: disable=too-many-arguments 
+
+
+def plot_array(
+    im_array, vmin, vmax, directory, filename, extent=None
+):  # pylint: disable=too-many-arguments
     """
     Plots arrays produced in the process of the pipeline.
 
@@ -134,52 +139,66 @@ def plot_array(im_array, vmin, vmax, directory, filename, extent=None): # pylint
     def plot_few():
         fig = plt.figure(figsize=(30, 6))
         for i in range(array_len):
-            ax = fig.add_subplot(1, array_len, i + 1) # pylint: disable=invalid-name # common axis name!
+            ax = fig.add_subplot(
+                1, array_len, i + 1
+            )  # pylint: disable=invalid-name # common axis name!
             pltim = np.rot90(im_array[i, :, :], 2)
-            cim = ax.imshow(pltim, origin='lower', cmap='plasma', 
-                            norm=co.Normalize(vmin=vmin, vmax=vmax), extent=extent)
-            ax.tick_params(axis='both', which='major', labelsize=20)
+            cim = ax.imshow(
+                pltim,
+                origin="lower",
+                cmap="plasma",
+                norm=co.Normalize(vmin=vmin, vmax=vmax),
+                extent=extent,
+            )
+            ax.tick_params(axis="both", which="major", labelsize=20)
         return fig, cim
 
     def plot_many():
         nrows = 4
-        ncols = int(np.ceil((array_len / 4.)))
+        ncols = int(np.ceil((array_len / 4.0)))
         rowheight = nrows * 10
         colheight = ncols * 10
-        
+
         fig = plt.figure(figsize=(colheight, rowheight))
         for i in range(array_len):
-            ax = fig.add_subplot(nrows, ncols, i + 1) # pylint: disable=invalid-name # common axis name!
+            ax = fig.add_subplot(
+                nrows, ncols, i + 1
+            )  # pylint: disable=invalid-name # common axis name!
             pltim = np.rot90(im_array[i, :, :], 2)
-            
-            cim = ax.imshow(pltim, origin='lower', cmap='plasma', 
-                            norm=co.Normalize(vmin=vmin, vmax=vmax), extent=extent)
-            ax.tick_params(axis='both', which='major', labelsize=40)
+
+            cim = ax.imshow(
+                pltim,
+                origin="lower",
+                cmap="plasma",
+                norm=co.Normalize(vmin=vmin, vmax=vmax),
+                extent=extent,
+            )
+            ax.tick_params(axis="both", which="major", labelsize=40)
         return fig, cim
 
     array_len = np.shape(im_array)[0]
 
     if array_len <= 5:
         fig, cim = plot_few()
-                
-    else: #11 images? 13 images? make it 4xn
+
+    else:  # 11 images? 13 images? make it 4xn
         fig, cim = plot_many()
 
     fig.subplots_adjust(right=0.8)
     cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
     cbar = fig.colorbar(cim, cax=cbar_ax)
-    cbar.ax.tick_params(labelsize=50) 
+    cbar.ax.tick_params(labelsize=50)
 
     plt.savefig(directory + filename)
-    plt.close('all')
+    plt.close("all")
     return fig
 
 
-#def general_bad_pix(image):
+# def general_bad_pix(image):
 #    sh = np.shape(image)
 #    bp_im = image.copy()
 #    px = 5
-#    
+#
 #    for r in range(sh[0]):
 #        for c in range(sh[1]):
 #            left = np.max([0, c-px]) #left of image, or 5 less than current pixel
@@ -188,16 +207,15 @@ def plot_array(im_array, vmin, vmax, directory, filename, extent=None): # pylint
 #            top = np.min([sh[0], c+px]) #top of image or 5 more than current pixel
 #
 #            region = image[bott:top, left:right]
-#            region_size = np.size(region) 
-#            
+#            region_size = np.size(region)
+#
 #            nans = np.sum(np.isnan(region))
-#            if nans == region_size: 
+#            if nans == region_size:
 #                #all these pixels are shitty, set value to 0
 #                bp_im[r,c] = 0.
 #            else:
 #                r_med = np.nanmedian(region)
 #                if image[r,c] > 5.*r_med or np.isnan(image[r,c]):
 #                    bp_im[r,c] = r_med
-#                
+#
 #    return bp_im
-    
