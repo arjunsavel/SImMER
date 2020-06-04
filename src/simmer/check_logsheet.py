@@ -12,7 +12,8 @@ import pandas as pd
 
 
 def check_logsheet(inst, log_name, date=None, add_dark_times=False):
-    """Checks for common typos/type errors in the logsheet.
+    """Checks for common typos/type errors in the logsheet. Should be
+    run if an Excel worksheet is sent.
 
     Inputs:
         :inst: (Instrument object) instrument for which data is being reduced.
@@ -100,3 +101,24 @@ def check_logsheet(inst, log_name, date=None, add_dark_times=False):
             check_date(sheet, inst, add_dark_times=add_dark_times)
     else:
         check_date(date, inst, add_dark_times=add_dark_times)
+
+
+class checker:
+    def __init__(self):
+        return
+
+    def check_config(self, filepath):
+        try:
+            config = pd.read_csv(filepath)
+        except FileNotFoundError:
+            print("Incorrect file path.")
+        # check that it has the right columns
+        # check that it has the same rows in each column
+
+    def check_fits(self):
+        # go through all the raw data
+        # open and close it all, make sure it's all fits
+        return
+
+    def check_plot_config():
+        return
