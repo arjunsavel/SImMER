@@ -109,6 +109,7 @@ def create_skies(
     flat = pyfits.getdata(flatfile, 0)
 
     for i in range(nskies):
+        flat[flat == 0] = np.nan
         sky_array[i, :, :] = sky_array[i, :, :] / flat
 
     # final_sky = u.median_outlier_reject(sky_array, 2.0) #2sigma outlier rejection?

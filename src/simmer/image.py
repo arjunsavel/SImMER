@@ -133,6 +133,7 @@ def create_imstack(
     for i in range(nims):
         # flat division and sky subtraction
         current_im = im_array[i, :, :]
+        flat[flat == 0] = np.nan
         current_im = (
             current_im / flat
         ) - sky  # where flat = 0, this will be nan

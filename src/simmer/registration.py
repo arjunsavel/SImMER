@@ -171,7 +171,11 @@ def register_saturated(image, searchsize1, newshifts1, rough_center=None):
         ]
 
     res1, im1, (xshift1, yshift1) = run_rot(image, searchsize1, cent, 200)
-    rot = res1 / np.max(res1)
+    if np.max(res1) == 0:
+        rot = np.empty(res1.shape)
+        rot.fill(np.nan)
+    else:
+        rot = res1 / np.max(res1)
     newshifts1.append((yshift1, xshift1))
     image_centered = subpix_shift(image, (yshift1, xshift1))
     return image_centered, rot, newshifts1
@@ -332,7 +336,7 @@ def run_rot(image, searchsize, center, newsize):
     """
     Runs all rotations.
     """
-
+    # image = np.nan_to_num(image)
     image[np.where(image < 0.0)] = 0.0
     cut_image = image[
         int(center[0] - newsize / 2) : int(center[0] + newsize / 2),
