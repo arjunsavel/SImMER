@@ -1,5 +1,5 @@
 # SImMER
-[![Build Status](https://travis-ci.com/arjunsavel/simmer.svg?token=4BzSgPkkto83Ppb3j9Si&branch=master)](https://travis-ci.com/arjunsavel/simmer) [![codecov](https://codecov.io/gh/arjunsavel/simmer/branch/master/graph/badge.svg?token=5ERhXGwSDo)](https://codecov.io/gh/arjunsavel/simmer) [![Code Climate](https://img.shields.io/codeclimate/maintainability/arjunsavel/SImMER?style=flat)](https://codeclimate.com/github/arjunsavel/SImMER) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://dev.azure.com/asavel/SImMER/_apis/build/status/arjunsavel.SImMER?branchName=master)](https://dev.azure.com/asavel/SImMER/_build/latest?definitionId=1&branchName=master) [![codecov](https://codecov.io/gh/arjunsavel/simmer/branch/master/graph/badge.svg?token=5ERhXGwSDo)](https://codecov.io/gh/arjunsavel/simmer) [![Code Climate](https://img.shields.io/codeclimate/maintainability/arjunsavel/SImMER?style=flat)](https://codeclimate.com/github/arjunsavel/SImMER) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://readthedocs.org/projects/simmer/badge/?version=latest)](http://simmer.readthedocs.io/en/latest/?badge=latest)
 
 
