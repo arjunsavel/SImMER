@@ -1,5 +1,7 @@
 Quickstart
 ============
+.. warning::
+    There are a few notebooks included within the package that are merely skeletons and not fully fleshed out examples. They can be modified to run with your specifications, but they are not currently expected to run as provided.
 
 PHARO reduction
 ---------------
@@ -15,12 +17,12 @@ First, run the below line from the :code:`Python` interpreter or a Jupiter noteb
     from tests.tests_1 import download_folder
 
 
-    inst = i.PHARO() 
+    inst = i.PHARO()
     download_folder('PHARO_integration')
 
 This instantiates :code:`inst` as an :code:`instrument` object prepared to reduced PHARO data.
 
-Next, you'll want to set up your config file path, raw data directory, and reduced data directory. :code:`path_to_package` should be a path ending in :code:`SImMER/`. 
+Next, you'll want to set up your config file path, raw data directory, and reduced data directory. :code:`path_to_package` should be a path ending in :code:`SImMER/`.
 
 .. code-block:: bash
 
@@ -31,7 +33,7 @@ Next, you'll want to set up your config file path, raw data directory, and reduc
 
     reddir = ... # edit this line!
 
-Finally, run 
+Finally, run
 
 .. code-block:: bash
 
@@ -70,7 +72,7 @@ Next, you'll want to set up your config file path, raw data directory, and reduc
 
     reddir = ... # edit this line!
 
-Finally, run 
+Finally, run
 
 .. code-block:: bash
 
@@ -80,5 +82,4 @@ Progress bars should give estimates as to how long each step will take along the
 
 Now, check your :code:`reddir` folder — you should find your reduced data! Feel free to delete the raw data folder afterward.
 
-Each :code:`sh**.fits` file is a shifted (centered) frame. The image that you'll likely want to use for your science is :code:`final_im.fits`. 
-
+Each :code:`sh**.fits` file is a shifted (centered) frame. The image that you'll likely want to use for your science is :code:`final_im.fits`.
