@@ -34,11 +34,14 @@ steps:
     python3 -m pip install -e .
     pip3 install codecov
   displayName: 'Install dependencies'
+  condition: not(contains(variables['Build.SourceVersionMessage'], '[skip ci]'))
 
 - script: |
     coverage run -m unittest discover src
   displayName: 'unit test'
+  condition: not(contains(variables['Build.SourceVersionMessage'], '[skip ci]'))
 
 - script: |
     bash <(curl -s https://codecov.io/bash)
   displayName: 'send to codecov'
+  condition: not(contains(variables['Build.SourceVersionMessage'], '[skip ci]'))
