@@ -1,18 +1,22 @@
 ############
 About SImMER
 ############
-.. image:: https://travis-ci.com/arjunsavel/shane-reduction.svg?token=4BzSgPkkto83Ppb3j9Si&branch=master
-    :target: https://travis-ci.com/arjunsavel/simmer
+.. image:: https://dev.azure.com/asavel/SImMER/_apis/build/status/arjunsavel.SImMER?branchName=master
+    :target: https://dev.azure.com/asavel/SImMER/_build?definitionId=1&_a=summary
+    :alt: Azure Pipelines badge
 
 .. image:: https://codecov.io/gh/arjunsavel/simmer/branch/master/graph/badge.svg?token=5ERhXGwSDo
     :target: https://codecov.io/gh/arjunsavel/simmer
-.. image:: https://www.codefactor.io/repository/github/arjunsavel/simmer/badge
-   :target: https://www.codefactor.io/repository/github/arjunsavel/simmer
-   :alt: CodeFactor
+    :alt: CodeCov badge
+.. image:: https://img.shields.io/codeclimate/maintainability/arjunsavel/SImMER?style=flat
+   :target: https://codeclimate.com/github/arjunsavel/SImMER
+   :alt: Code Climate badge
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
     :target: https://opensource.org/licenses/MIT
+    :alt: MIT License badge
 .. image:: https://readthedocs.org/projects/simmer/badge/?version=latest
     :target: http://simmer.readthedocs.io/en/latest/?badge=latest
+    :alt: Docs badge
 
 SImMER (Stellar Image Maturation via Efficient Reduction) was created to be an open-source, modular, and well-tested reduction pipeline for astronomical imaging data. It can currently reduce data from the ShARCS camera on the Shane 3-m telescope at Lick Observatory and the PHARO camera on the Hale 5.1-m telescope at Palomar Observatory. Its object-oriented design allows it to be extended to other instruments, and we hope that other capabilities are folded in by other members of the community.
 
