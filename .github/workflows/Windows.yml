@@ -1,3 +1,4 @@
+# Inspired by exoplanet: https://github.com/exoplanet-dev/exoplanet/blob/master/.github/workflows/windows.yml
 name: Windows
 
 on:
