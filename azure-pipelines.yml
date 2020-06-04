@@ -19,6 +19,9 @@ strategy:
         mac:
           vm_Image: "macOS-10.14"
           python.version: "3.7"
+        windows:
+          vm_Image: "vs2017-win2016"
+          python.version: "3.7"
 
 steps:
 - task: UsePythonVersion@0
@@ -38,4 +41,4 @@ steps:
 
 - script: |
     bash <(curl -s https://codecov.io/bash)
-    displayName: 'send to codecov'
+  displayName: 'send to codecov'
