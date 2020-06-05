@@ -5,6 +5,20 @@ import numpy as np
 plot_config = None
 
 
+def check_plot_type(plot_type):
+    """
+    Ensures that invalid plot types don't make it to plotting functions.
+
+    Inputs:
+        plot_type: (string) type of plot to be used.
+    """
+    valid_plot_types = ["rots", "final_im", "intermediate"]
+    if plot_type not in valid_plot_types:
+        raise NotImplementedError(
+            "Plotting is not implemented for this plot type."
+        )
+
+
 def zoom(image, zoom_scale):
     """
     TODO: Check that this works for odd, even zoom_scale
@@ -19,17 +33,21 @@ def zoom(image, zoom_scale):
     return zoomed
 
 
-def add_colorbars(fig):
+def add_colorbars(fig, plot_type):
     """
-    TODO: not use type, as that's already defined.
     TODO: fill in `text` with scaling
+
+    Inputs:
+        fig: (figure object) This is where the colorbars are added.
+        plot_type: (string) The type of plot to add colorbars to.
     """
+    check_plot_type(plot_type)
     scaling = plot_config[type][scaling]
     if plot_config["colorbars"]:
         cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
         cbar = fig.colorbar(cim, cax=cbar_ax)
         cbar.ax.tick_params(labelsize=50)
-        if plot_config["type"] == "rots":
+        if plot_config[plot_type] == "rots":
             text = blank
             cbar.text = "Residuals"
         else:
