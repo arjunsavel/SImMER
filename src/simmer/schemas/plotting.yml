@@ -12,7 +12,7 @@ final_im:
       default: "true"
       meta: Whether or not to output a .fits file of the final image in addition
         to the .png file.
-    zoom:
+    zoom_scale:
       type: "float"
       min: "1"
       default: "0"
@@ -31,6 +31,12 @@ final_im:
       meta: Sets the colormap of all produced plots produced by SImMer.
         Checks against matplotlib colormaps later on and will default
         to "plasma".
+    scaling:
+      type: "string"
+        default: "linear"
+        dependencies: plot_all
+        meta: Determines the scaling of the color. Can be linear, square root,
+          log (base 10), sine, or exponential.
 rots:
   type: "dict"
   schema:
@@ -43,7 +49,7 @@ rots:
       default: "true"
       meta: Whether or not to output a .fits file of the final image in addition
         to the .png file.
-    zoom:
+    zoom_scale:
       type: "float"
       min: "1"
       default: "0"
@@ -62,3 +68,9 @@ rots:
       meta: Sets the colormap of all produced plots produced by SImMer.
         Checks against matplotlib colormaps later on and will default
         to "plasma".
+      scaling:
+        type: "string"
+          default: "linear"
+          dependencies: plot_all
+          meta: Determines the scaling of the color. Can be linear, square root,
+            log (base 10), sine, or exponential.
