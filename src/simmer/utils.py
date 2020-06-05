@@ -3,8 +3,6 @@ This module provides utility functions for the reduction pipeline.
 """
 
 import astropy.io.fits as pyfits
-import matplotlib.colors as co
-import matplotlib.pyplot as plt
 import numpy as np
 
 
