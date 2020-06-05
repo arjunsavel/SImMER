@@ -1,40 +1,41 @@
-# inspired by exoplanet: https://github.com/exoplanet-dev/exoplanet/blob/master/.pre-commit-config.yaml
+# inspired by exoplanet:
+# https://github.com/exoplanet-dev/exoplanet/blob/master/.pre-commit-config.yaml
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.3.0
-  hooks:
-  - id: trailing-whitespace
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: trailing-whitespace
 
-  - id: end-of-file-fixer
+      - id: end-of-file-fixer
 
-  - id: debug-statements
+      - id: debug-statements
 
-- repo: https://github.com/asottile/seed-isort-config
-  rev: v1.9.2
-  hooks:
-  - id: seed-isort-config
-    args: [--application-directories=src]
+  - repo: https://github.com/asottile/seed-isort-config
+    rev: v1.9.2
+    hooks:
+      - id: seed-isort-config
+        args: [--application-directories=src]
 
-- repo: https://github.com/pre-commit/mirrors-isort
-  rev: v4.3.20
-  hooks:
-  - id: isort
-    args: []
-    additional_dependencies: [toml]
-    exclude: src/simmer/tests
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v4.3.20
+    hooks:
+      - id: isort
+        args: []
+        additional_dependencies: [toml]
+        exclude: src/simmer/tests
 
-- repo: https://github.com/psf/black
-  rev: 19.3b0
-  hooks:
-  - id: black
+  - repo: https://github.com/psf/black
+    rev: 19.3b0
+    hooks:
+      - id: black
 
-- repo: https://github.com/dfm/black_nbconvert
-  rev: stable
-  hooks:
-  - id: black_nbconvert
+  - repo: https://github.com/dfm/black_nbconvert
+    rev: stable
+    hooks:
+      - id: black_nbconvert
 
-- repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.17.0
-  hooks:
-  - id: yamllint
-    args: ['-d {extends: relaxed, rules: {line-length: disable}}', '-s']
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.17.0
+    hooks:
+      - id: yamllint
+        args: ['-d {extends: relaxed, rules: {line-length: disable}}', '-s']
