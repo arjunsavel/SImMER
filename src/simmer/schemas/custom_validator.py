@@ -11,4 +11,4 @@ class SimmerValidator(Validator):
         try:
             cm.get_cmap(colormap)
         except ValueError:  # if the colormap isn't valid
-            self._error(field, "Must be an odd number")
+            self._error(field, "Not a valid colormap")
