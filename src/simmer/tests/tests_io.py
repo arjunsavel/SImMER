@@ -30,7 +30,7 @@ class TestYml(unittest.TestCase):
         file = open("../src/simmer/schemas/plotting.yml")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
 
-        document = {"all_colorbars": True}
+        document = {"final_im": {"zoom": 20}}
         try:
             s.validate(document, parsed_yaml_file)
             validated = True
@@ -38,3 +38,18 @@ class TestYml(unittest.TestCase):
             validated = False
         file.close()
         self.assertTrue(validated)
+
+    def test_bad_zoom(self):
+        s = validator.SimmerValidator()
+
+        file = open("../src/simmer/schemas/plotting.yml")
+        parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
+
+        document = {"final_im": {"zoom": -10}}
+        try:
+            s.validate(document, parsed_yaml_file)
+            caught = False
+        except:
+            caught = True
+        file.close()
+        self.assertTrue(caught)
