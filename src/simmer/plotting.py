@@ -63,11 +63,18 @@ def plot_array(
             ax.tick_params(axis="both", which="major", labelsize=20)
         return fig, cim
 
-    def zoom(image, scale):
+    def zoom(image, zoom_scale):
         """
-        TODO: implement this!
+        TODO: Check that this works for odd, even zoom_scale
+        TODO: write docsting
+        TODO: write tests
         """
-        return image
+        cent_x = im_shape[0] / 2
+        cent_y = im_shape[1] / 2
+        zoomed = image[cent_x - zoom_scale / 2 : cent_x + zoom_scale / 2][
+            cent_y - zoom_scale / 2 : cent_y + zoom_scale / 2
+        ]
+        return zoomed
 
     def plot_many():
         nrows = 4
