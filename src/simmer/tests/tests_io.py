@@ -1,3 +1,7 @@
+"""
+    isort:skip_file
+"""
+
 import yaml
 import unittest
 import sys
