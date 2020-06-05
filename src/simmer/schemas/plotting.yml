@@ -1,5 +1,5 @@
 # For plotting purposes. Descriptions provided as meta.
-
+# TODO: make sure that the "list validation" works — or add to custom validator
 final_im:
   type: "dict"
   schema:
@@ -21,20 +21,17 @@ final_im:
     colorbars:
       type: "boolean"
       default: "true"
-      dependencies: plot_all
       meta: Setting to determine whether to turn on colorbars (labeled) for
         all plots produced by SImMER.
     colormap:
       type: "string"
       default: "plasma"
-      dependencies: plot_all
       meta: Sets the colormap of all produced plots produced by SImMer.
         Checks against matplotlib colormaps later on and will default
         to "plasma".
     scaling:
       type: "string"
         default: "linear"
-        dependencies: plot_all
         meta: Determines the scaling of the color. Can be linear, square root,
           log (base 10), sine, or exponential.
 rots:
@@ -58,19 +55,16 @@ rots:
     colorbars:
       type: "boolean"
       default: "true"
-      dependencies: plot_all
       meta: Setting to determine whether to turn on colorbars (labeled) for
         all plots produced by SImMER.
     colormap:
       type: "string"
       default: "plasma"
-      dependencies: plot_all
       meta: Sets the colormap of all produced plots produced by SImMer.
         Checks against matplotlib colormaps later on and will default
         to "plasma".
       scaling:
         type: "string"
           default: "linear"
-          dependencies: plot_all
           meta: Determines the scaling of the color. Can be linear, square root,
             log (base 10), sine, or exponential.
