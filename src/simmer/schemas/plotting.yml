@@ -1,5 +1,6 @@
 # For plotting purposes. Descriptions provided as meta.
 # TODO: make sure that the "list validation" works — or add to custom validator
+# TODO: add yaml linter to checks
 final_im:
   type: "dict"
   schema:
@@ -31,9 +32,12 @@ final_im:
         to "plasma".
     scaling:
       type: "string"
-        default: "linear"
-        meta: Determines the scaling of the color. Can be linear, square root,
-          log (base 10), sine, or exponential.
+      default: "linear"
+      meta: Determines the scaling of the color. Can be linear, square root,
+        log (base 10), sine, or exponential.
+    matplotlib_kwargs:
+      type: args
+
 rots:
   type: "dict"
   schema:
@@ -65,6 +69,6 @@ rots:
         to "plasma".
       scaling:
         type: "string"
-          default: "linear"
-          meta: Determines the scaling of the color. Can be linear, square root,
-            log (base 10), sine, or exponential.
+        default: "linear"
+        meta: Determines the scaling of the color. Can be linear, square root,
+          log (base 10), sine, or exponential.

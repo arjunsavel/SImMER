@@ -5,6 +5,8 @@ class SimmerValidator(Validator):
     def _validate_colormaps(self, colormap, field, value):
         """ Test the oddity of a value.
 
+        TODO: Make sure this is actually called on colormaps.
+
         The rule's arguments are validated against this schema:
         {'type': 'boolean'}
         """
