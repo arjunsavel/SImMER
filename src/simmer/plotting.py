@@ -126,8 +126,8 @@ def plot_array(
         fig, cim = plot_many()
 
     fig.subplots_adjust(right=0.8)
-
-    add_colorbars()
+    if plot_config["colorbars"]:
+        add_colorbars()
     plt.savefig(directory + filename)
     plt.close("all")
     return fig
