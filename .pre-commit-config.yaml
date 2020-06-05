@@ -32,3 +32,11 @@ repos:
   rev: stable
   hooks:
   - id: black_nbconvert
+
+- repo: https://github.com/adrienverge/yamllint.git
+  rev: v1.17.0
+  hooks:
+    - id: yamllint
+      files: src/*
+      types: [file, yaml]
+      entry: yamllint --strict -f parsable
