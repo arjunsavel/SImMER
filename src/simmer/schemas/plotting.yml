@@ -1,0 +1,34 @@
+# For plotting purposes. Descriptions provided as meta.
+
+plot_all:
+  type: "boolean"
+  default: "true"
+  meta: Whether or not to plot everything.
+
+all_colorbars:
+  type: "boolean"
+  default: "true"
+  dependencies: plot_all
+  meta: Setting to determine whether to turn on colorbars (labeled) for
+    all plots produced by SImMER.
+
+all_colormaps:
+  type: "string"
+  default: "plasma"
+  dependencies: plot_all
+  meta: Sets the colormap of all produced plots produced by SImMer.
+    Checks against matplotlib colormaps later on and will default to "plasma".
+
+# figure out how to do nested mapping
+
+##rots:
+#
+final:
+  type: "dict"
+  schema:
+    zoom:
+      type: "float"
+      min: "1"
+      default: "0"
+      meta: zoom in on the center of an image with box width of `zoom`
+        pixels. A zoom of 0 leads to no zoom.
