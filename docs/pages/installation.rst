@@ -1,9 +1,6 @@
 Installation
 ============
 
-SImMER is meant to be a well-tested code across multiple operating systems. However, Windows testing is yet to be implemented, so installation may be especially buggy for Windows users.
-
-
 Installing from source
 -----------------------
 
