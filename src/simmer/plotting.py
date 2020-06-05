@@ -35,23 +35,22 @@ def zoom(image, zoom_scale):
 
 def add_colorbars(fig, plot_type):
     """
-    TODO: fill in `text` with scaling
-
     Inputs:
         fig: (figure object) This is where the colorbars are added.
         plot_type: (string) The type of plot to add colorbars to.
     """
     check_plot_type(plot_type)
-    scaling = plot_config[type][scaling]
-    if plot_config["colorbars"]:
-        cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
-        cbar = fig.colorbar(cim, cax=cbar_ax)
-        cbar.ax.tick_params(labelsize=50)
-        if plot_config[plot_type] == "rots":
-            text = blank
-            cbar.text = "Residuals"
-        else:
-            cbar.text = "Counts"
+    scaling = plot_config[plot_type]["scaling"]
+    text_dict = {
+        "rots": "Residuals",
+        "final_im": "Counts",
+        "intermediate": "Counts",
+    }
+    cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
+    cbar = fig.colorbar(cim, cax=cbar_ax)
+    text = f"{text_dict[plot_type]}, {scaling} scaling"
+    cbar.set_label(text)
+    cbar.ax.tick_params(labelsize=50)
 
 
 def plot_array(
