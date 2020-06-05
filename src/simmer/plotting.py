@@ -1,5 +1,6 @@
 import matplotlib.colors as co
 import matplotlib.pyplot as plt
+import numpy as np
 
 plot_config = None
 
@@ -53,10 +54,9 @@ def plot_array(
     Outputs:
         :fig: (Matplotlib figure) plotted figure.
 
-    TODO: break up into outside functions
     TODO: implement scaling
     TODO: implement intermediate plotting
-    TODO:
+    TODO: write tests
 
     """
 
