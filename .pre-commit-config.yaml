@@ -36,7 +36,5 @@ repos:
 - repo: https://github.com/adrienverge/yamllint.git
   rev: v1.17.0
   hooks:
-    - id: yamllint
-      files: src/*
-      types: [file, yaml]
-      entry: yamllint --strict -f parsable
+  - id: yamllint
+    args: ['-d {extends: relaxed, rules: {line-length: disable}}', '-s']
