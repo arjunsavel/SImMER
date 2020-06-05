@@ -1,3 +1,26 @@
+import matplotlib.colors as co
+import matplotlib.pyplot as plt
+
+plot_config = None
+
+
+def add_colorbars(fig):
+    """
+    TODO: not use type, as that's already defined.
+    TODO: fill in `text` with scaling
+    """
+    scaling = plot_config[type][scaling]
+    if plot_config["colorbars"]:
+        cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
+        cbar = fig.colorbar(cim, cax=cbar_ax)
+        cbar.ax.tick_params(labelsize=50)
+        if plot_config["type"] == "rots":
+            text = blank
+            cbar.text = "Residuals"
+        else:
+            cbar.text = "Counts"
+
+
 def plot_array(
     im_array, vmin, vmax, directory, filename, extent=None
 ):  # pylint: disable=too-many-arguments
@@ -15,6 +38,11 @@ def plot_array(
 
     Outputs:
         :fig: (Matplotlib figure) plotted figure.
+
+    TODO: break up into outside functions
+    TODO: implement scaling
+    TODO: implement intermediate plotting
+    TODO:
 
     """
 
@@ -35,6 +63,12 @@ def plot_array(
             ax.tick_params(axis="both", which="major", labelsize=20)
         return fig, cim
 
+    def zoom(image, scale):
+        """
+        TODO: implement this!
+        """
+        return image
+
     def plot_many():
         nrows = 4
         ncols = int(np.ceil((array_len / 4.0)))
@@ -51,7 +85,7 @@ def plot_array(
             cim = ax.imshow(
                 pltim,
                 origin="lower",
-                cmap="plasma",
+                cmap=plot_config[plot_type]["colormap"],
                 norm=co.Normalize(vmin=vmin, vmax=vmax),
                 extent=extent,
             )
@@ -67,10 +101,8 @@ def plot_array(
         fig, cim = plot_many()
 
     fig.subplots_adjust(right=0.8)
-    cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
-    cbar = fig.colorbar(cim, cax=cbar_ax)
-    cbar.ax.tick_params(labelsize=50)
 
+    add_colorbars()
     plt.savefig(directory + filename)
     plt.close("all")
     return fig
