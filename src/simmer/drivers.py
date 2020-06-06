@@ -15,7 +15,7 @@ from schemas.read_yml import get_plotting_args
 from tqdm import tqdm
 
 
-def all_driver(inst, config_file, raw_dir, reddir, plotting_yml={}):
+def all_driver(inst, config_file, raw_dir, reddir, plotting_yml=None):
     """
     Runs all drivers, performing an end-to-end reduction.
 
