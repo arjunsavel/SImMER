@@ -6,6 +6,17 @@ import yaml
 
 
 def read_yml(yml_filename):
+    """
+    Reads in a yaml file.
+
+    Inputs:
+        :yml_filename: (string) path to the yml.
+
+    Outputs:
+        :parsed_yml_file: (dictionary) key-value pairs as read from the yaml
+            file.
+
+    """
     file = open(yml_filename)
     parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
     file.close()
@@ -13,20 +24,45 @@ def read_yml(yml_filename):
 
 
 def validate_yml(schema_filename, yml_filename):
+    """
+    Ensures that a given yml file is in accordance with the provided schema. In
+    essence, this ensures that no odd keys or fields are provided to the yml.
+
+    Inputs:
+        :schema_filename: (string) path to schema yaml.
+        :yml_filename: (string) path to yml yaml.
+
+    Outputs:
+        :validated: (bool) whether or not the yaml was successfully validated.
+
+    """
     parsed_schema = read_yml(schema_filename)
     parsed_yml = read_yml(yml_filename)
     s = custom_validator.SimmerValidator()
     try:
         s.validate(parsed_yml, parsed_schema)
-        return True
+        validated = True
     except cerberus.SchemaError:
-        return False
+        validated = False
+    return validated
 
 
 def get_plotting_args(yml_filename=None):
+    """
+    Gets plotting args.
+
+    Inputs:
+        :yml_filename: (string) path of the plotting yml to be used.
+                        Defaults to None.
+
+    Outputs:
+        :plotting_arg: (dictionary) all arguments that are related to plotting.
+            See the `plotting.yml` schema for documentation of keys and values.
+
+    """
     schema_filename = os.getcwd() + "/plotting.yml"
     if not yml_filename:
-        yml_dict = {}
+        yml_dict = {}  # the normalizer fills in empty fields
     else:
         if validate_yml(schema_filename, yml_filename):
             yml_dict = read_yml(yml_filename)
