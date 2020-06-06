@@ -115,8 +115,9 @@ def create_skies(
     # final_sky = u.median_outlier_reject(sky_array, 2.0) #2sigma outlier rejection?
     final_sky = np.median(sky_array, axis=0)
 
-    if plot:
-        u.plot_array(sky_array, -10.0, 100.0, sf_dir, "sky_cube.png")
+    pl.plot_array(
+        "intermediate", sky_array, -10.0, 100.0, sf_dir, "sky_cube.png"
+    )
     # CDD change
     #  head.update('DATAFILE', str(skylist)) #add all file names
     head.set("DATAFILE", str(skylist))  # add all file names

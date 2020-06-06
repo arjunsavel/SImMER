@@ -62,7 +62,7 @@ def get_plotting_args(yml_filename=None):
     """
     schema_filename = os.getcwd() + "/plotting.yml"
     if not yml_filename:
-        yml_dict = {}  # the normalizer fills in empty fields
+        yml_dict = {}  # the normalizer fills in all empty fields later on
     else:
         if validate_yml(schema_filename, yml_filename):
             yml_dict = read_yml(yml_filename)

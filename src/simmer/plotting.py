@@ -55,7 +55,7 @@ def add_colorbars(fig, plot_type):
 
 
 def plot_array(
-    im_array, vmin, vmax, directory, filename, extent=None
+    plot_type, im_array, vmin, vmax, directory, filename, extent=None
 ):  # pylint: disable=too-many-arguments
     """
     Plots arrays produced in the process of the pipeline.
@@ -119,8 +119,11 @@ def plot_array(
         return fig, cim
 
     if not plot_config:
-        get_plotting_args()
+        get_plotting_args()  # call with empty arguments
 
+    # if this shouldn't be plotted, break
+    if not plot_config[plot_type]["plot"]:
+        return
     array_len = np.shape(im_array)[0]
 
     if array_len <= 5:

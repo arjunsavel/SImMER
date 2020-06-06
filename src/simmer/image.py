@@ -10,6 +10,7 @@ import astropy.io.fits as pyfits
 import matplotlib.colors as co
 import matplotlib.pyplot as plt
 import numpy as np
+import plotting as pl
 import registration as reg
 import utils as u
 from tqdm import tqdm
@@ -164,8 +165,9 @@ def create_imstack(
     if nims > 50:
         plot = False
 
-    if plot:
-        u.plot_array(im_array, -10.0, 10000.0, sf_dir, "shift1_cube.png")
+    pl.plot_array(
+        "intermediate", im_array, -10.0, 10000.0, sf_dir, "shift1_cube.png"
+    )
 
     # write shifts to file
     textfile = open(sf_dir + "shifts.txt", "w")
@@ -245,11 +247,12 @@ def create_im(s_dir, ssize1, plot=True, fdirs=None, method="default"):
             textfile1.write("{},{},{}\n".format(i, *item))
         textfile1.close()
 
+        # TODO: implement the below line
         if nims > 50:
             plot = False
 
-        if plot:
-            u.plot_array(
+            pl.plot_array(
+                "rots",
                 rots,
                 0.0,
                 1.0,
@@ -257,7 +260,6 @@ def create_im(s_dir, ssize1, plot=True, fdirs=None, method="default"):
                 "rots.png",
                 extent=[-ssize1, ssize1, -ssize1, ssize1],
             )
-
             fig = plt.figure(figsize=(10, 10))
             ax = fig.add_subplot(
                 1, 1, 1

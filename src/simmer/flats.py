@@ -3,6 +3,7 @@ Functions to work with flats.
 """
 import astropy.io.fits as pyfits
 import numpy as np
+import plotting as pl
 import utils as u
 from tqdm import tqdm
 
@@ -85,8 +86,9 @@ def create_flats(
     final_flat = np.median(flat_array, axis=0)
     final_flat = final_flat / np.median(final_flat)
 
-    if plot:
-        u.plot_array(flat_array, -2.0, 2.0, reddir, f"flat_cube_{filt}.png")
+    pl.plot_array(
+        "intermediate", flat_array, -2.0, 2.0, reddir, f"flat_cube_{filt}.png"
+    )
 
     # CDD update
     #  head.update('DATAFILE', str(flatlist)) #add all file names

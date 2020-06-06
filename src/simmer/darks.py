@@ -4,6 +4,7 @@ Functions to work with darks.
 
 import astropy.io.fits as pyfits
 import numpy as np
+import plotting as pl
 import utils as u
 from tqdm import tqdm
 
@@ -58,14 +59,14 @@ def create_darks(raw_dir, reddir, darklist, inst, plot=True):
 
     final_dark = np.median(dark_array, axis=0)  # nanmedian?
 
-    if plot:
-        u.plot_array(
-            dark_array,
-            -1.0,
-            50.0,
-            reddir,
-            f"dark_cube_{int(round(itime))}sec.png",
-        )
+    pl.plot_array(
+        "intermediate",
+        dark_array,
+        -1.0,
+        50.0,
+        reddir,
+        f"dark_cube_{int(round(itime))}sec.png",
+    )
 
     # CDD update
     # head.update('DATAFILE', str(darklist)) #add all file names
