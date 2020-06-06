@@ -25,8 +25,14 @@ def validate_yml(schema_filename, yml_filename):
 
 def get_plotting_args(yml_filename):
     schema_filename = os.getcwd() + "/plotting.yml"
-
-    if validate_yml(schema_filename, yml_filename):
-        yml_file = read_yml(yml_filename)
+    if not yml_filename:
+        yml_dict = {}
     else:
-        raise cerberus.SchemaError("parsing plotting yml failed")
+        if validate_yml(schema_filename, yml_filename):
+            yml_dict = read_yml(yml_filename)
+        else:
+            raise cerberus.SchemaError("parsing plotting yml failed")
+    s = custom_validator.SimmerValidator()
+    s.schema = read_yml(schema_filename)
+    plotting_args = s.normalized(yml_dict)
+    return plotting_args
