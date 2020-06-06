@@ -63,7 +63,8 @@ def get_plotting_args(yml_filename=None):
             See the `plotting.yml` schema for documentation of keys and values.
 
     """
-    schema_filename = os.getcwd() + "/plotting.yml"
+    my_path = os.path.abspath(os.path.dirname(__file__))
+    schema_filename = os.path.join(my_path, "/plotting.yml")
     if not yml_filename:
         yml_dict = {}  # the normalizer fills in all empty fields later on
     else:
