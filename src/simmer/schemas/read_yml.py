@@ -23,7 +23,7 @@ def validate_yml(schema_filename, yml_filename):
         return False
 
 
-def get_plotting_args(yml_filename):
+def get_plotting_args(yml_filename=None):
     schema_filename = os.getcwd() + "/plotting.yml"
     if not yml_filename:
         yml_dict = {}

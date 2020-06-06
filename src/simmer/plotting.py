@@ -1,6 +1,7 @@
 import matplotlib.colors as co
 import matplotlib.pyplot as plt
 import numpy as np
+from schemas.read_yaml import get_plotting_args
 
 plot_config = None
 
@@ -116,6 +117,9 @@ def plot_array(
             )
             ax.tick_params(axis="both", which="major", labelsize=40)
         return fig, cim
+
+    if not plot_config:
+        get_plotting_args()
 
     array_len = np.shape(im_array)[0]
 
