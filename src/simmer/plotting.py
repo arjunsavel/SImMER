@@ -1,7 +1,7 @@
 import matplotlib.colors as co
 import matplotlib.pyplot as plt
 import numpy as np
-from schemas.read_yaml import get_plotting_args
+from schemas import read_yml as read
 
 plot_config = None
 
@@ -119,7 +119,7 @@ def plot_array(
         return fig, cim
 
     if not plot_config:
-        get_plotting_args()  # call with empty arguments
+        read.get_plotting_args()  # call with empty arguments
 
     # if this shouldn't be plotted, break
     if not plot_config[plot_type]["plot"]:

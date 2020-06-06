@@ -6,6 +6,43 @@ final_im:
   schema:
     plot:
       type: "boolean"
+      default: true
+      meta: Whether or not to produce a plot of the final image.
+    output_fits:
+      type: "boolean"
+      default: true
+      meta: Whether or not to output a .fits file of the final image in addition
+        to the .png file.
+    zoom_scale:
+      type: "integer"
+      min: 0
+      default: 0
+      meta: zoom in on the center of an image with box width of `zoom`
+        pixels. A zoom of 0 leads to no zoom.
+    colorbars:
+      type: "boolean"
+      default: true
+      meta: Setting to determine whether to turn on colorbars (labeled) for
+        all plots produced by SImMER.
+    colormap:
+      type: "string"
+      default: "plasma"
+      meta: Sets the colormap of all produced plots produced by SImMer.
+        Checks against matplotlib colormaps later on and will default
+        to "plasma".
+    scaling:
+      type: "string"
+      default: "linear"
+      meta: Determines the scaling of the color. Can be linear, square root,
+        log (base 10), sine, or exponential.
+    matplotlib_kwargs:
+      type: "string"
+
+rots:
+  type: "dict"
+  schema:
+    plot:
+      type: "boolean"
       default: "true"
       meta: Whether or not to produce a plot of the final image.
     output_fits:
@@ -14,7 +51,7 @@ final_im:
       meta: Whether or not to output a .fits file of the final image in addition
         to the .png file.
     zoom_scale:
-      type: "float"
+      type: "integer"
       min: "1"
       default: "0"
       meta: zoom in on the center of an image with box width of `zoom`
@@ -35,40 +72,3 @@ final_im:
       default: "linear"
       meta: Determines the scaling of the color. Can be linear, square root,
         log (base 10), sine, or exponential.
-    matplotlib_kwargs:
-      type: args
-
-rots:
-  type: "dict"
-  schema:
-    plot:
-      type: "boolean"
-      default: "true"
-      meta: Whether or not to produce a plot of the final image.
-    output_fits:
-      type: "boolean"
-      default: "true"
-      meta: Whether or not to output a .fits file of the final image in addition
-        to the .png file.
-    zoom_scale:
-      type: "float"
-      min: "1"
-      default: "0"
-      meta: zoom in on the center of an image with box width of `zoom`
-        pixels. A zoom of 0 leads to no zoom.
-    colorbars:
-      type: "boolean"
-      default: "true"
-      meta: Setting to determine whether to turn on colorbars (labeled) for
-        all plots produced by SImMER.
-    colormap:
-      type: "string"
-      default: "plasma"
-      meta: Sets the colormap of all produced plots produced by SImMer.
-        Checks against matplotlib colormaps later on and will default
-        to "plasma".
-      scaling:
-        type: "string"
-        default: "linear"
-        meta: Determines the scaling of the color. Can be linear, square root,
-          log (base 10), sine, or exponential.

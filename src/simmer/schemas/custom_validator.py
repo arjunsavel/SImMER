@@ -1,3 +1,4 @@
+import matplotlib.cm as cm
 from cerberus import Validator
 
 
@@ -8,7 +9,7 @@ class SimmerValidator(Validator):
         TODO: Make sure this is actually called on colormaps.
 
         The rule's arguments are validated against this schema:
-        {'type': 'boolean'}
+        {'type': 'string'}
         """
         try:
             cm.get_cmap(colormap)

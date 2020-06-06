@@ -28,7 +28,7 @@ class TestYml(unittest.TestCase):
     def test_validate(self):
         s = validator.SimmerValidator()
 
-        file = open("../schemas/plotting.yml")
+        file = open(os.getcwd()[:-6] + "/schemas/plotting.yml")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
         test_file = open("test_validate.yml")
         test_yaml_file = yaml.load(test_file, Loader=yaml.SafeLoader)
@@ -40,7 +40,7 @@ class TestYml(unittest.TestCase):
     def test_bad_zoom(self):
         s = validator.SimmerValidator()
 
-        file = open("../schemas/plotting.yml")
+        file = open(os.getcwd()[:-6] + "/schemas/plotting.yml")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
 
         document = {"final_im": {"zoom_scale": -10}}
