@@ -30,14 +30,11 @@ class TestYml(unittest.TestCase):
 
         file = open("../schemas/plotting.yml")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
-
-        document = {"final_im": {"zoom": 20}}
-        try:
-            s.validate(document, parsed_yaml_file)
-            validated = True
-        except:
-            validated = False
+        test_file = open("test_validate.yml")
+        test_yaml_file = yaml.load(test_file, Loader=yaml.SafeLoader)
+        validated = s.validate(test_yaml_file, parsed_yaml_file)
         file.close()
+        test_file.close()
         self.assertTrue(validated)
 
     def test_bad_zoom(self):
@@ -46,11 +43,7 @@ class TestYml(unittest.TestCase):
         file = open("../schemas/plotting.yml")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
 
-        document = {"final_im": {"zoom": -10}}
-        try:
-            s.validate(document, parsed_yaml_file)
-            caught = False
-        except:
-            caught = True
+        document = {"final_im": {"zoom_scale": -10}}
+        validated = s.validate(document, parsed_yaml_file)
         file.close()
-        self.assertTrue(caught)
+        self.assertFalse(validated)
