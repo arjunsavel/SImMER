@@ -1,8 +1,11 @@
 import os
 
 import cerberus
-import custom_validator
 import yaml
+
+from .custom_validator import SimmerValidator
+
+# TODO: refactor pretty much all of this
 
 
 def read_yml(yml_filename):
@@ -38,7 +41,7 @@ def validate_yml(schema_filename, yml_filename):
     """
     parsed_schema = read_yml(schema_filename)
     parsed_yml = read_yml(yml_filename)
-    s = custom_validator.SimmerValidator()
+    s = SimmerValidator()
     try:
         s.validate(parsed_yml, parsed_schema)
         validated = True
@@ -68,7 +71,7 @@ def get_plotting_args(yml_filename=None):
             yml_dict = read_yml(yml_filename)
         else:
             raise cerberus.SchemaError("parsing plotting yml failed")
-    s = custom_validator.SimmerValidator()
+    s = SimmerValidator()
     s.schema = read_yml(schema_filename)
     plotting_args = s.normalized(yml_dict)
     return plotting_args
