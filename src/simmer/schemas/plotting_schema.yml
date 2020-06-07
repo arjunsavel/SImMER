@@ -29,8 +29,8 @@ final_im:
     scaling:
       type: "string"
       default: "linear"
-      allowed: "linear", "square root", "log",
-        "sine", "exponential", "quadratic"
+      allowed: ["linear", "square root",
+                "log", "sine", "exponential", "quadratic"]
       meta: Determines the scaling of the color. Can be linear, square root,
         log (base 10), sine, quadratic, or exponential.
 
@@ -62,6 +62,8 @@ rots:
     scaling:
       type: "string"
       default: "linear"
+      allowed: ["linear", "square root",
+                "log", "sine", "exponential", "quadratic"]
       meta: Determines the scaling of the color. Can be linear, square root,
         log (base 10), sine, or exponential.
 
@@ -93,5 +95,7 @@ intermediate:
     scaling:
       type: "string"
       default: "linear"
+      allowed: ["linear", "square root",
+                "log", "sine", "exponential", "quadratic"]
       meta: Determines the scaling of the color. Can be linear, square root,
         log (base 10), sine, or exponential.
