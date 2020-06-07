@@ -1,5 +1,4 @@
 # For plotting purposes. Descriptions provided as meta.
-# TODO: add to any driver.
 # TODO: validate matplotlib kwargs
 final_im:
   type: "dict"

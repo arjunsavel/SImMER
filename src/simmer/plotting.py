@@ -85,9 +85,6 @@ def plot_array(
 
     Outputs:
         :fig: (Matplotlib figure) plotted figure.
-
-    TODO: write tests
-
     """
 
     def plot_few(func):
