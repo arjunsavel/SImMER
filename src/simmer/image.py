@@ -181,6 +181,7 @@ def create_imstack(
 def create_im(s_dir, ssize1, plot=True, fdirs=None, method="default"):
     """Take the shifted, cut down images from before, then perform registration
     and combine. Tests should happen before this, as this is a per-star basis.
+    TODO: get rid of plot kwarg
     """
     if not fdirs:
         fdirs = glob(s_dir + "*/")
@@ -246,11 +247,8 @@ def create_im(s_dir, ssize1, plot=True, fdirs=None, method="default"):
         for i, item in enumerate(newshifts1):
             textfile1.write("{},{},{}\n".format(i, *item))
         textfile1.close()
-
-        # TODO: implement the below line
-        if nims > 50:
-            plot = False
-
+        # TODO: incorporate the below into plotting suite
+        if plot:
             pl.plot_array(
                 "rots",
                 rots,

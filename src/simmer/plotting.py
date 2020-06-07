@@ -6,6 +6,13 @@ from schemas import read_yml as read
 plot_config = None
 
 
+def initialize_plotting(yml_filename=None):
+    global plot_config
+    plot_config = read.get_plotting_args(
+        yml_filename
+    )  # call with empty arguments
+
+
 def check_plot_type(plot_type):
     """
     Ensures that invalid plot types don't make it to plotting functions.
@@ -34,7 +41,7 @@ def zoom(image, zoom_scale):
     return zoomed
 
 
-def add_colorbars(fig, plot_type):
+def add_colorbars(fig, plot_type, cim):
     """
     Inputs:
         fig: (figure object) This is where the colorbars are added.
@@ -73,7 +80,6 @@ def plot_array(
         :fig: (Matplotlib figure) plotted figure.
 
     TODO: implement scaling
-    TODO: implement intermediate plotting
     TODO: write tests
 
     """
@@ -119,7 +125,9 @@ def plot_array(
         return fig, cim
 
     if not plot_config:
-        read.get_plotting_args()  # call with empty arguments
+        initialize_plotting()
+
+    # ipdb.set_trace()
 
     # if this shouldn't be plotted, break
     if not plot_config[plot_type]["plot"]:
@@ -129,12 +137,15 @@ def plot_array(
     if array_len <= 5:
         fig, cim = plot_few()
 
+    elif array_len > 50:
+        print("Too many images to plot.")
+        return
     else:  # 11 images? 13 images? make it 4xn
         fig, cim = plot_many()
 
     fig.subplots_adjust(right=0.8)
-    if plot_config["colorbars"]:
-        add_colorbars()
+    if plot_config[plot_type]["colorbars"]:
+        add_colorbars(fig, plot_type, cim)
     plt.savefig(directory + filename)
     plt.close("all")
     return fig

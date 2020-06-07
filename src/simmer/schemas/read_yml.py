@@ -8,6 +8,26 @@ from .custom_validator import SimmerValidator
 # TODO: refactor pretty much all of this
 
 
+def normalize(yml_dict, validator, schema, plot_types):
+    """
+    Inputs:
+        :yml_dict: (dictionary) the dictionary to be normalized against a schema
+        :validator: (SimmerValidator) the validator object used.
+        :schema: the schema against which the yml_dict is normalized.
+        :plot_types: (list of strings) the basic plot_types that must be in
+            the uppermost keys.
+
+    Outputs:
+        :normalized: normalized dictionary.
+    """
+    validator.schema = schema
+    for plot_type in plot_types:
+        if plot_type not in yml_dict.keys():
+            yml_dict[plot_type] = {}
+    normalized = validator.normalized(yml_dict)
+    return normalized
+
+
 def read_yml(yml_filename):
     """
     Reads in a yaml file.
@@ -64,15 +84,19 @@ def get_plotting_args(yml_filename=None):
 
     """
     my_path = os.path.abspath(os.path.dirname(__file__))
-    schema_filename = os.path.join(my_path, "/plotting.yml")
+    schema_filename = os.path.join(my_path, "plotting.yml")
+    plot_types = ["intermediate", "final_im", "rots"]
+
     if not yml_filename:
-        yml_dict = {}  # the normalizer fills in all empty fields later on
+        # the normalizer fills in all empty fields later on
+        yml_dict = {plot_type: {} for plot_type in plot_types}
     else:
         if validate_yml(schema_filename, yml_filename):
             yml_dict = read_yml(yml_filename)
         else:
             raise cerberus.SchemaError("parsing plotting yml failed")
+
     s = SimmerValidator()
-    s.schema = read_yml(schema_filename)
-    plotting_args = s.normalized(yml_dict)
+    schema = read_yml(schema_filename)
+    plotting_args = normalize(yml_dict, s, schema, plot_types)
     return plotting_args

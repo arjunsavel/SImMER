@@ -5,8 +5,6 @@ and stacking.
 
 import matplotlib.pylab as plt
 import numpy as np
-import skimage
-from PIL import Image
 from scipy.ndimage.filters import median_filter
 from scipy.ndimage.interpolation import rotate
 from scipy.ndimage.interpolation import shift as subpix_shift
