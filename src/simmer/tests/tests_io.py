@@ -21,7 +21,6 @@ class TestYml(unittest.TestCase):
     default_config = {
         "intermediate": {
             "plot": True,
-            "output_fits": True,
             "zoom_scale": 0,
             "colorbars": True,
             "colormap": "plasma",
@@ -29,7 +28,6 @@ class TestYml(unittest.TestCase):
         },
         "final_im": {
             "plot": True,
-            "output_fits": True,
             "zoom_scale": 0,
             "colorbars": True,
             "colormap": "plasma",
@@ -37,7 +35,6 @@ class TestYml(unittest.TestCase):
         },
         "rots": {
             "plot": True,
-            "output_fits": True,
             "zoom_scale": 0,
             "colorbars": True,
             "colormap": "plasma",
@@ -56,14 +53,9 @@ class TestYml(unittest.TestCase):
         self.assertTrue(instantiated)
 
     def test_validate(self):
-        s = validator.SimmerValidator()
-        file = open("src/simmer/schemas/plotting_schema.yml")
-        parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
-        test_file = open("src/simmer/tests/test_validate.yml")
-        test_yaml_file = yaml.load(test_file, Loader=yaml.SafeLoader)
-        validated = s.validate(test_yaml_file, parsed_yaml_file)
-        file.close()
-        test_file.close()
+        schema_filename = "src/simmer/schemas/plotting_schema.yml"
+        yml_filename = "src/simmer/tests/test_validate.yml"
+        validated = read.validate_yml(schema_filename, yml_filename)
         self.assertTrue(validated)
 
     def test_empty_yaml(self):
