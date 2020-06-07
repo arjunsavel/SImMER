@@ -30,8 +30,16 @@ def check_plot_type(plot_type):
 def zoom(image, zoom_scale):
     """
     TODO: Check that this works for odd, even zoom_scale
-    TODO: write docsting
     TODO: write tests
+
+    Zooms in on center of image, with a representative zoom_scale.
+
+    Inputs:
+        :image: (numpy array) image to be zoomed in on.
+        :zoom_scale: (int) length of side of box of zoomed image, in pixels.
+
+    Outputs:
+        :zoomed: (numpy array) zoomed image.
     """
     cent_x = im_shape[0] / 2
     cent_y = im_shape[1] / 2
@@ -47,7 +55,6 @@ def add_colorbars(fig, plot_type, cim):
         fig: (figure object) This is where the colorbars are added.
         plot_type: (string) The type of plot to add colorbars to.
     """
-    check_plot_type(plot_type)
     scaling = plot_config[plot_type]["scaling"]
     text_dict = {
         "rots": "Residuals",
@@ -79,20 +86,21 @@ def plot_array(
     Outputs:
         :fig: (Matplotlib figure) plotted figure.
 
-    TODO: implement scaling
     TODO: write tests
 
     """
 
-    def plot_few():
+    def plot_few(func):
         fig = plt.figure(figsize=(30, 6))
         for i in range(array_len):
             ax = fig.add_subplot(
                 1, array_len, i + 1
             )  # pylint: disable=invalid-name # common axis name!
             pltim = np.rot90(im_array[i, :, :], 2)
+            scaled_pltim = func(pltim)
+
             cim = ax.imshow(
-                pltim,
+                scaled_pltim,
                 origin="lower",
                 cmap="plasma",
                 norm=co.Normalize(vmin=vmin, vmax=vmax),
@@ -101,7 +109,7 @@ def plot_array(
             ax.tick_params(axis="both", which="major", labelsize=20)
         return fig, cim
 
-    def plot_many():
+    def plot_many(func):
         nrows = 4
         ncols = int(np.ceil((array_len / 4.0)))
         rowheight = nrows * 10
@@ -113,9 +121,10 @@ def plot_array(
                 nrows, ncols, i + 1
             )  # pylint: disable=invalid-name # common axis name!
             pltim = np.rot90(im_array[i, :, :], 2)
+            scaled_pltim = func(pltim)
 
             cim = ax.imshow(
-                pltim,
+                scaled_pltim,
                 origin="lower",
                 cmap=plot_config[plot_type]["colormap"],
                 norm=co.Normalize(vmin=vmin, vmax=vmax),
@@ -127,21 +136,31 @@ def plot_array(
     if not plot_config:
         initialize_plotting()
 
-    # ipdb.set_trace()
-
-    # if this shouldn't be plotted, break
+    # if this shouldn't be plotted, just return
     if not plot_config[plot_type]["plot"]:
         return
+    check_plot_type(plot_type)
+    func_dict = {
+        "linear": lambda x: x,
+        "sine": np.sin,
+        "exponential": np.exp,
+        "log": np.log10,
+        "quadratic": np.square,
+        "square root": np.sqrt,
+    }
+
+    func = func_dict[plot_config[plot_type]["scaling"]]
+
     array_len = np.shape(im_array)[0]
 
     if array_len <= 5:
-        fig, cim = plot_few()
+        fig, cim = plot_few(func)
 
     elif array_len > 50:
         print("Too many images to plot.")
         return
     else:  # 11 images? 13 images? make it 4xn
-        fig, cim = plot_many()
+        fig, cim = plot_many(func)
 
     fig.subplots_adjust(right=0.8)
     if plot_config[plot_type]["colorbars"]:

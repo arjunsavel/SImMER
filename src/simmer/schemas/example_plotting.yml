@@ -1,6 +1,3 @@
-# TODO: remove output_fits
-# TODO: implement scaling and restrict
-
 final_im:
   plot: true
   zoom_scale: 10

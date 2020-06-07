@@ -1,5 +1,4 @@
 # For plotting purposes. Descriptions provided as meta.
-# TODO: update documentation
 # TODO: add to any driver.
 # TODO: validate matplotlib kwargs
 final_im:
@@ -9,11 +8,6 @@ final_im:
       type: "boolean"
       default: true
       meta: Whether or not to produce a plot of the final image.
-    output_fits:
-      type: "boolean"
-      default: true
-      meta: Whether or not to output a .fits file of the final image in addition
-        to the .png file.
     zoom_scale:
       type: "integer"
       'forbidden': [true]
@@ -35,8 +29,10 @@ final_im:
     scaling:
       type: "string"
       default: "linear"
+      allowed: "linear", "square root", "log",
+        "sine", "exponential", "quadratic"
       meta: Determines the scaling of the color. Can be linear, square root,
-        log (base 10), sine, or exponential.
+        log (base 10), sine, quadratic, or exponential.
 
 rots:
   type: "dict"
@@ -45,11 +41,6 @@ rots:
       type: "boolean"
       default: true
       meta: Whether or not to produce a plot of the final image.
-    output_fits:
-      type: "boolean"
-      default: true
-      meta: Whether or not to output a .fits file of the final image in addition
-        to the .png file.
     zoom_scale:
       type: "integer"
       'forbidden': [true]
@@ -81,11 +72,6 @@ intermediate:
       type: "boolean"
       default: true
       meta: Whether or not to produce a plot of the final image.
-    output_fits:
-      type: "boolean"
-      default: true
-      meta: Whether or not to output a .fits file of the final image in addition
-        to the .png file.
     zoom_scale:
       type: "integer"
       'forbidden': [true]
