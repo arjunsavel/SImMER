@@ -14,6 +14,7 @@ Welcome to SImMER's documentation!
    pages/installation
    pages/overview
    pages/Using
+   pages/plotting
    pages/FAQ
 
 .. toctree::

@@ -80,11 +80,11 @@ def get_plotting_args(yml_filename=None):
 
     Outputs:
         :plotting_arg: (dictionary) all arguments that are related to plotting.
-            See the `plotting.yml` schema for documentation of keys and values.
+            See the `plotting_schema` schema for documentation of keys and values.
 
     """
     my_path = os.path.abspath(os.path.dirname(__file__))
-    schema_filename = os.path.join(my_path, "plotting.yml")
+    schema_filename = os.path.join(my_path, "plotting_schema")
     plot_types = ["intermediate", "final_im", "rots"]
 
     if not yml_filename:

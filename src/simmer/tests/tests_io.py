@@ -57,7 +57,7 @@ class TestYml(unittest.TestCase):
 
     def test_validate(self):
         s = validator.SimmerValidator()
-        file = open("src/simmer/schemas/plotting.yml")
+        file = open("src/simmer/schemas/plotting_schema")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
         test_file = open("src/simmer/tests/test_validate.yml")
         test_yaml_file = yaml.load(test_file, Loader=yaml.SafeLoader)
@@ -69,7 +69,7 @@ class TestYml(unittest.TestCase):
     def test_empty_yaml(self):
         yml_dict = {"intermediate": {}, "final_im": {}, "rots": {}}
         s = validator.SimmerValidator()
-        file = open("src/simmer/schemas/plotting.yml")
+        file = open("src/simmer/schemas/plotting_schema")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
         s.schema = parsed_yaml_file
         file.close()
@@ -78,7 +78,7 @@ class TestYml(unittest.TestCase):
     def test_incomplete_yaml(self):
         yml_dict = {"intermediate": {}, "final_im": {}, "rots": {}}
         s = validator.SimmerValidator()
-        file = open("src/simmer/schemas/plotting.yml")
+        file = open("src/simmer/schemas/plotting_schema")
         schema = yaml.load(file, Loader=yaml.SafeLoader)
         file.close()
         normalized = read.normalize(yml_dict, s, schema, self.plot_types)
@@ -87,7 +87,7 @@ class TestYml(unittest.TestCase):
     def test_negative_zoom(self):
         s = validator.SimmerValidator()
 
-        file = open("src/simmer/schemas/plotting.yml")
+        file = open("src/simmer/schemas/plotting_schema")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
 
         document = {"final_im": {"zoom_scale": -10}}
@@ -98,7 +98,7 @@ class TestYml(unittest.TestCase):
     def test_wrong_type_zoom(self):
         s = validator.SimmerValidator()
 
-        file = open("src/simmer/schemas/plotting.yml")
+        file = open("src/simmer/schemas/plotting_schema")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
 
         document = {"final_im": {"zoom_scale": "some_string"}}
