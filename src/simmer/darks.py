@@ -12,7 +12,7 @@ CENTER = (750, 1100)  # row,col
 NPIX = 600
 
 
-def dark_driver(raw_dir, reddir, config, inst, plot=True):
+def dark_driver(raw_dir, reddir, config, inst, plotting_yml=True):
     """Night should be entered in format 'yyyy_mm_dd' as string.
     This will point toward a config file for the night with darks listed.flat
 
@@ -24,6 +24,8 @@ def dark_driver(raw_dir, reddir, config, inst, plot=True):
         :plot: (bool) determines whether or not intermediate plots should be produced.
 
     """
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
 
     _darks = config[config.Object == "dark"]
     texps = _darks.ExpTime.unique()

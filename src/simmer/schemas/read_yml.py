@@ -5,8 +5,6 @@ import yaml
 
 from .custom_validator import SimmerValidator
 
-# TODO: refactor pretty much all of this
-
 
 def normalize(yml_dict, validator, schema, plot_types):
     """

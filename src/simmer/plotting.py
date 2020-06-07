@@ -120,7 +120,10 @@ def plot_array(
             ax = fig.add_subplot(
                 nrows, ncols, i + 1
             )  # pylint: disable=invalid-name # common axis name!
-            pltim = np.rot90(im_array[i, :, :], 2)
+            if filename == "centers.png":
+                pltim = np.rot90(frames[i, 250:350, 250:350], 2)
+            else:
+                pltim = np.rot90(im_array[i, :, :], 2)
             scaled_pltim = func(pltim)
 
             cim = ax.imshow(
@@ -131,6 +134,10 @@ def plot_array(
                 extent=extent,
             )
             ax.tick_params(axis="both", which="major", labelsize=40)
+            if filename == "centers.png":
+                ax.plot([50], [50], "wo", markersize=8)
+                ax.set_xlim([0, 100])
+                ax.set_ylim([0, 100])
         return fig, cim
 
     if not plot_config:

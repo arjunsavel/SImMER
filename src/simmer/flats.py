@@ -11,7 +11,7 @@ CENTER = (750, 1100)  # row,col
 MPIX = 600
 
 
-def flat_driver(raw_dir, reddir, config, inst, plot=True):
+def flat_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     """Sets up and runs create_flats.
 
     Inputs:
@@ -22,6 +22,9 @@ def flat_driver(raw_dir, reddir, config, inst, plot=True):
         :plot: (bool) determines whether or not intermediate plots should be produced.
 
     """
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
+
     _flats = config[config.Object == "flat"]
     filts = _flats.Filter.tolist()
     for filter_name in tqdm(
