@@ -19,27 +19,33 @@ import schemas.read_yml as read
 
 class TestYml(unittest.TestCase):
     default_config = {
-        "intermediate": {
-            "plot": True,
-            "zoom_scale": 0,
-            "colorbars": True,
-            "colormap": "plasma",
-            "scaling": "linear",
-        },
-        "final_im": {
-            "plot": True,
-            "zoom_scale": 0,
-            "colorbars": True,
-            "colormap": "plasma",
-            "scaling": "linear",
-        },
-        "rots": {
-            "plot": True,
-            "zoom_scale": 0,
-            "colorbars": True,
-            "colormap": "plasma",
-            "scaling": "linear",
-        },
+        "intermediate": [
+            {
+                "plot": True,
+                "zoom_scale": 0,
+                "colorbars": True,
+                "colormap": "plasma",
+                "scaling": "linear",
+            }
+        ],
+        "final_im": [
+            {
+                "plot": True,
+                "zoom_scale": 0,
+                "colorbars": True,
+                "colormap": "plasma",
+                "scaling": "linear",
+            }
+        ],
+        "rots": [
+            {
+                "plot": True,
+                "zoom_scale": 0,
+                "colorbars": True,
+                "colormap": "plasma",
+                "scaling": "linear",
+            }
+        ],
     }
 
     plot_types = ["intermediate", "final_im", "rots"]
@@ -59,22 +65,14 @@ class TestYml(unittest.TestCase):
         self.assertTrue(validated)
 
     def test_empty_yaml(self):
-        yml_dict = {"intermediate": {}, "final_im": {}, "rots": {}}
-        s = validator.SimmerValidator()
+        yml_dict = {"intermediate": [{}], "final_im": [{}], "rots": [{}]}
+        ss = validator.SimmerValidator()
         file = open("src/simmer/schemas/plotting_schema.yml")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
-        s.schema = parsed_yaml_file
+        ss.schema = parsed_yaml_file
         file.close()
-        self.assertEqual(s.normalized(yml_dict), self.default_config)
-
-    def test_incomplete_yaml(self):
-        yml_dict = {"intermediate": {}, "final_im": {}, "rots": {}}
-        s = validator.SimmerValidator()
-        file = open("src/simmer/schemas/plotting_schema.yml")
-        schema = yaml.load(file, Loader=yaml.SafeLoader)
-        file.close()
-        normalized = read.normalize(yml_dict, s, schema, self.plot_types)
-        self.assertEqual(normalized, self.default_config)
+        ipdb.set_trace()
+        self.assertEqual(ss.normalized(yml_dict), self.default_config)
 
     def test_negative_zoom(self):
         s = validator.SimmerValidator()
@@ -82,7 +80,7 @@ class TestYml(unittest.TestCase):
         file = open("src/simmer/schemas/plotting_schema.yml")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
 
-        document = {"final_im": {"zoom_scale": -10}}
+        document = {"final_im": [{"zoom_scale": -10}]}
         validated = s.validate(document, parsed_yaml_file)
         file.close()
         self.assertFalse(validated)
@@ -93,7 +91,28 @@ class TestYml(unittest.TestCase):
         file = open("src/simmer/schemas/plotting_schema.yml")
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
 
-        document = {"final_im": {"zoom_scale": "some_string"}}
+        document = {"final_im": [{"zoom_scale": "some_string"}]}
         validated = s.validate(document, parsed_yaml_file)
+        file.close()
+        self.assertFalse(validated)
+
+    def test_colormap_validator_valid(self):
+        ss = validator.SimmerValidator()
+        file = open("src/simmer/schemas/plotting_schema.yml")
+        parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
+        document = {"final_im": [{"colormap": "viridis"}]}
+        validated = ss.validate(document, parsed_yaml_file)
+        file.close()
+        self.assertTrue(validated)
+
+    def test_colormap_validator_invalid(self):
+        s = validator.SimmerValidator()
+        file = open("src/simmer/schemas/plotting_schema.yml")
+        parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
+        document = {"final_im": [{"colormap": "badmap"}]}
+        try:
+            validated = s.validate(document, parsed_yaml_file)
+        except ValueError:
+            validated = False
         file.close()
         self.assertFalse(validated)

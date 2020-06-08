@@ -3,15 +3,14 @@ from cerberus import Validator
 
 
 class SimmerValidator(Validator):
-    def _validate_colormaps(self, colormap, field, value):
+    def _validate_type_mpl(self, value):
         """ Test the oddity of a value.
-
-        TODO: Make sure this is actually called on colormaps.
 
         The rule's arguments are validated against this schema:
         {'type': 'string'}
         """
         try:
-            cm.get_cmap(colormap)
+            cm.get_cmap(value)
+            return True
         except ValueError:  # if the colormap isn't valid
-            self._error(field, "Not a valid colormap")
+            return False
