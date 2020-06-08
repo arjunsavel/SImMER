@@ -1,5 +1,4 @@
 # For plotting purposes. Descriptions provided as meta.
-# TODO: validate matplotlib kwargs
 final_im:
   type: "list"
   schema:
