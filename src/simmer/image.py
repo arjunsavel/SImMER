@@ -7,15 +7,14 @@ import os
 from glob import glob
 
 import astropy.io.fits as pyfits
-import matplotlib.colors as co
-import matplotlib.pyplot as plt
 import numpy as np
+import plotting as pl
 import registration as reg
 import utils as u
 from tqdm import tqdm
 
 
-def image_driver(raw_dir, reddir, config, inst, plot=True):
+def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     """Do flat division, sky subtraction, and initial alignment via coords in header.
     Returns Python list of each registration method used per star.
 
@@ -28,6 +27,9 @@ def image_driver(raw_dir, reddir, config, inst, plot=True):
 
     """
     # Save these images to the appropriate folder.
+
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
 
     if inst.take_skies:
         skies = config[config.Comments == "sky"]
@@ -71,19 +73,13 @@ def image_driver(raw_dir, reddir, config, inst, plot=True):
             else:
                 methods.append("default")
             create_imstack(
-                raw_dir,
-                reddir,
-                s_dir,
-                imlist,
-                inst,
-                plot=plot,
-                filter_name=filter_name,
+                raw_dir, reddir, s_dir, imlist, inst, filter_name=filter_name
             )
     return methods
 
 
 def create_imstack(
-    raw_dir, reddir, s_dir, imlist, inst, plot=True, filter_name=None
+    raw_dir, reddir, s_dir, imlist, inst, plotting_yml=None, filter_name=None
 ):
     """Create the stack of images by performing flat division, sky subtraction.
 
@@ -101,6 +97,9 @@ def create_imstack(
         :shifts_all: recording of all the x-y shifts made
     """
     #     method = 'brute force' # the default
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
+
     nims = len(imlist)
     imfiles = u.make_filelist(raw_dir, imlist, inst)
 
@@ -161,11 +160,9 @@ def create_imstack(
             output_verify="ignore",
         )
 
-    if nims > 50:
-        plot = False
-
-    if plot:
-        u.plot_array(im_array, -10.0, 10000.0, sf_dir, "shift1_cube.png")
+    pl.plot_array(
+        "intermediate", im_array, -10.0, 10000.0, sf_dir, "shift1_cube.png"
+    )
 
     # write shifts to file
     textfile = open(sf_dir + "shifts.txt", "w")
@@ -176,10 +173,13 @@ def create_imstack(
     return im_array, shifts_all
 
 
-def create_im(s_dir, ssize1, plot=True, fdirs=None, method="default"):
+def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
     """Take the shifted, cut down images from before, then perform registration
     and combine. Tests should happen before this, as this is a per-star basis.
     """
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
+
     if not fdirs:
         fdirs = glob(s_dir + "*/")
 
@@ -244,49 +244,18 @@ def create_im(s_dir, ssize1, plot=True, fdirs=None, method="default"):
         for i, item in enumerate(newshifts1):
             textfile1.write("{},{},{}\n".format(i, *item))
         textfile1.close()
-
-        if nims > 50:
-            plot = False
-
-        if plot:
-            u.plot_array(
-                rots,
-                0.0,
-                1.0,
-                sf_dir,
-                "rots.png",
-                extent=[-ssize1, ssize1, -ssize1, ssize1],
-            )
-
-            fig = plt.figure(figsize=(10, 10))
-            ax = fig.add_subplot(
-                1, 1, 1
-            )  # pylint: disable=invalid-name # common axis name!
-            ax.imshow(
-                final_im,
-                cmap="plasma",
-                origin="lower",
-                norm=co.Normalize(vmin=0.0, vmax=10000.0),
-            )
-            plt.savefig(sf_dir + "final_image.png")
-            plt.close("all")
-
-            nrows = 4
-            ncols = int(np.ceil((nims / 4.0)))
-            rowheight = nrows * 10
-            colheight = ncols * 10
-
-            fig = plt.figure(figsize=(colheight, rowheight))
-            for i in range(nims):
-                ax = fig.add_subplot(
-                    nrows, ncols, i + 1
-                )  # pylint: disable=invalid-name # common axis name!
-                ax.imshow(
-                    np.rot90(frames[i, 250:350, 250:350], 2),
-                    cmap="plasma",
-                    norm=co.Normalize(vmin=0.0, vmax=10000.0),
-                )
-                ax.plot([50], [50], "wo", markersize=8)
-                ax.set_xlim([0, 100])
-                ax.set_ylim([0, 100])
-            plt.savefig(sf_dir + "centers.png")
+        pl.plot_array(
+            "rots",
+            rots,
+            0.0,
+            1.0,
+            sf_dir,
+            "rots.png",
+            extent=[-ssize1, ssize1, -ssize1, ssize1],
+        )
+        pl.plot_array(
+            "final_im", final_im, 0.0, 10000.0, sf_dir, "final_image.png"
+        )
+        pl.plot_array(
+            "intermediate", frames, 0.0, 10000.0, sf_dir, "centers.png"
+        )

@@ -27,5 +27,5 @@ jobs:
       - name: Check the style
         run: |
           isort -c -rc src
-          black --check src
+          black --check src --exclude "__init__.py"
           black_nbconvert --check .

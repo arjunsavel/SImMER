@@ -334,7 +334,6 @@ def run_rot(image, searchsize, center, newsize):
     """
     Runs all rotations.
     """
-    # image = np.nan_to_num(image)
     image[np.where(image < 0.0)] = 0.0
     cut_image = image[
         int(center[0] - newsize / 2) : int(center[0] + newsize / 2),

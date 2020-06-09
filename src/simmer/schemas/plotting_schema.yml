@@ -1,0 +1,105 @@
+# For plotting purposes. Descriptions provided as meta.
+final_im:
+  type: "list"
+  schema:
+    type: "dict"
+    schema:
+      plot:
+        type: "boolean"
+        default: true
+        meta: Whether or not to produce a plot of the final image.
+      zoom_scale:
+        type: "integer"
+        'forbidden': [true]
+        min: 0
+        default: 0
+        meta: zoom in on the center of an image with box width of `zoom`
+          pixels. A zoom of 0 leads to no zoom.
+      colorbars:
+        type: "boolean"
+        default: true
+        meta: Setting to determine whether to turn on colorbars (labeled) for
+          all plots produced by SImMER.
+      colormap:
+        type: "mpl"
+        default: "plasma"
+        meta: Sets the colormap of all produced plots produced by SImMer.
+          Checks against matplotlib colormaps later on and will default
+          to "plasma".
+      scaling:
+        type: "string"
+        default: "linear"
+        allowed: ["linear", "square root",
+                  "log", "sine", "exponential", "quadratic"]
+        meta: Determines the scaling of the color. Can be linear, square root,
+          log (base 10), sine, quadratic, or exponential.
+
+rots:
+  type: "list"
+  schema:
+    type: "dict"
+    schema:
+      plot:
+        type: "boolean"
+        default: true
+        meta: Whether or not to produce a plot of the final image.
+      zoom_scale:
+        type: integer
+        'forbidden': [true]
+        min: 0
+        default: 0
+        meta: zoom in on the center of an image with box width of `zoom`
+          pixels. A zoom of 0 leads to no zoom.
+      colorbars:
+        type: "boolean"
+        default: true
+        meta: Setting to determine whether to turn on colorbars (labeled) for
+          all plots produced by SImMER.
+      colormap:
+        type: "mpl"
+        default: "plasma"
+        meta: Sets the colormap of all produced plots produced by SImMer.
+          Checks against matplotlib colormaps later on and will default
+          to "plasma".
+      scaling:
+        type: "string"
+        default: "linear"
+        allowed: ["linear", "square root",
+                  "log", "sine", "exponential", "quadratic"]
+        meta: Determines the scaling of the color. Can be linear, square root,
+          log (base 10), sine, or exponential.
+
+intermediate:
+  type: "list"
+  schema:
+    type: "dict"
+    schema:
+      plot:
+        type: "boolean"
+        default: true
+        meta: Whether or not to produce a plot of the final image.
+      zoom_scale:
+        type: "integer"
+        'forbidden': [true]
+        min: 0
+        default: 0
+        meta: zoom in on the center of an image with box width of `zoom`
+          pixels. A zoom of 0 leads to no zoom.
+      colorbars:
+        type: "boolean"
+        default: true
+        meta: Setting to determine whether to turn on colorbars (labeled) for
+          all plots produced by SImMER.
+      colormap:
+        type: "mpl"
+        default: "plasma"
+        meta: Sets the colormap of all produced plots produced by SImMer.
+          Checks against matplotlib colormaps later on and will default
+          to "plasma".
+      scaling:
+        type: "string"
+        default: "linear"
+        allowed: ["linear", "square root",
+                  "log", "sine", "exponential", "quadratic"]
+        meta: Determines the scaling of the color. Can be linear, square root,
+          log (base 10), sine, or exponential.

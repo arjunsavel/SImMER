@@ -3,6 +3,7 @@ Functions to work with flats.
 """
 import astropy.io.fits as pyfits
 import numpy as np
+import plotting as pl
 import utils as u
 from tqdm import tqdm
 
@@ -10,7 +11,7 @@ CENTER = (750, 1100)  # row,col
 MPIX = 600
 
 
-def flat_driver(raw_dir, reddir, config, inst, plot=True):
+def flat_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     """Sets up and runs create_flats.
 
     Inputs:
@@ -21,6 +22,9 @@ def flat_driver(raw_dir, reddir, config, inst, plot=True):
         :plot: (bool) determines whether or not intermediate plots should be produced.
 
     """
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
+
     _flats = config[config.Object == "flat"]
     filts = _flats.Filter.tolist()
     for filter_name in tqdm(
@@ -33,25 +37,12 @@ def flat_driver(raw_dir, reddir, config, inst, plot=True):
         itime = _flats[_flats.Filter == filter_name].ExpTime.values[0]
         darkfile = reddir + f"dark_{int(round(itime))}sec.fits"
         create_flats(
-            raw_dir,
-            reddir,
-            flatlist,
-            darkfile,
-            inst,
-            plot=plot,
-            filter_name=filter_name,
+            raw_dir, reddir, flatlist, darkfile, inst, filter_name=filter_name
         )
 
 
 def create_flats(
-    raw_dir,
-    reddir,
-    flatlist,
-    darkfile,
-    inst,
-    filter_name=None,
-    test=False,
-    plot=True,
+    raw_dir, reddir, flatlist, darkfile, inst, filter_name=None, test=False
 ):
     """Create a flat from a single list of flat files.
 
@@ -85,8 +76,9 @@ def create_flats(
     final_flat = np.median(flat_array, axis=0)
     final_flat = final_flat / np.median(final_flat)
 
-    if plot:
-        u.plot_array(flat_array, -2.0, 2.0, reddir, f"flat_cube_{filt}.png")
+    pl.plot_array(
+        "intermediate", flat_array, -2.0, 2.0, reddir, f"flat_cube_{filt}.png"
+    )
 
     # CDD update
     #  head.update('DATAFILE', str(flatlist)) #add all file names

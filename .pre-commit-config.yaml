@@ -28,6 +28,7 @@ repos:
     rev: 19.3b0
     hooks:
       - id: black
+        exclude: src/simmer/__init__.py
 
   - repo: https://github.com/dfm/black_nbconvert
     rev: stable

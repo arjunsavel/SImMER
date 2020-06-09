@@ -9,17 +9,20 @@ import darks
 import flats
 import image
 import pandas as pd
+import plotting as pl
 import sky
 from tqdm import tqdm
 
 
-def all_driver(inst, config_file, raw_dir, reddir):
+def all_driver(inst, config_file, raw_dir, reddir, plotting_yml=None):
     """
     Runs all drivers, performing an end-to-end reduction.
 
     Inputs:
         :inst: (Instrument object) instrument for which data is being reduced.
-        :config_file: (string) path of the config file.
+        :config_file: (string) path of the config file containing plotting
+            specifications. Optional.
+        :plotting_yml: (string) path to the y
         :raw_dir: (string) path of the directory containing the raw data.
         :reddir: (string) path of the directory to contain the raw data.
 
@@ -28,6 +31,9 @@ def all_driver(inst, config_file, raw_dir, reddir):
     # obstain file list from config file
     config = pd.read_csv(config_file)
     config.Object = config.Object.astype(str)
+
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
 
     darks.dark_driver(raw_dir, reddir, config, inst)
     flats.flat_driver(raw_dir, reddir, config, inst)

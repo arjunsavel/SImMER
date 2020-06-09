@@ -1,0 +1,12 @@
+final_im:
+  plot: true
+  zoom_scale: 10
+  colorbars: false
+  colormap: viridis
+  scaling: "square root"
+
+rots:
+  plot: false
+
+intermediate:
+  scaling: "exponential"

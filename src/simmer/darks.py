@@ -4,6 +4,7 @@ Functions to work with darks.
 
 import astropy.io.fits as pyfits
 import numpy as np
+import plotting as pl
 import utils as u
 from tqdm import tqdm
 
@@ -11,7 +12,7 @@ CENTER = (750, 1100)  # row,col
 NPIX = 600
 
 
-def dark_driver(raw_dir, reddir, config, inst, plot=True):
+def dark_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     """Night should be entered in format 'yyyy_mm_dd' as string.
     This will point toward a config file for the night with darks listed.flat
 
@@ -23,6 +24,8 @@ def dark_driver(raw_dir, reddir, config, inst, plot=True):
         :plot: (bool) determines whether or not intermediate plots should be produced.
 
     """
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
 
     _darks = config[config.Object == "dark"]
     texps = _darks.ExpTime.unique()
@@ -33,11 +36,11 @@ def dark_driver(raw_dir, reddir, config, inst, plot=True):
             _darks[_darks.ExpTime == texp].Filenums.values[0]
         )  # pylint: disable=eval-used
         create_darks(
-            raw_dir, reddir, darklist, inst, plot=plot
+            raw_dir, reddir, darklist, inst
         )  # creates a new dark file
 
 
-def create_darks(raw_dir, reddir, darklist, inst, plot=True):
+def create_darks(raw_dir, reddir, darklist, inst):
     """creates the actual darks from a list of dark file numbers, taking
     the median and writing to a file. Returns the final dark.
 
@@ -58,14 +61,14 @@ def create_darks(raw_dir, reddir, darklist, inst, plot=True):
 
     final_dark = np.median(dark_array, axis=0)  # nanmedian?
 
-    if plot:
-        u.plot_array(
-            dark_array,
-            -1.0,
-            50.0,
-            reddir,
-            f"dark_cube_{int(round(itime))}sec.png",
-        )
+    pl.plot_array(
+        "intermediate",
+        dark_array,
+        -1.0,
+        50.0,
+        reddir,
+        f"dark_cube_{int(round(itime))}sec.png",
+    )
 
     # CDD update
     # head.update('DATAFILE', str(darklist)) #add all file names
