@@ -34,14 +34,32 @@ def download_folder(folder, path=None):
         folder : (string) name of the folder to be downloaded.
     """
 
+    folder_dict = {
+        "sky_test": "hhs5w81dvok5wp8",
+        "dark_test": "ao1ug1kvlr5l4y3",
+        "flat_test": "r0gntctnfrjh5zd",
+        "PHARO_config_driver": "p3wv7l800fdqx5q",
+        "image_test": "9qwa6ojfsk1l5pq",
+        "PHARO_image_driver": "p9uivslz7hoym5c",
+        "PHARO_integration": "v8l50zm7jbrccqj",
+        "shane_quickstart": "q6m6ls2x2186u3p",
+    }
+
     def retrieve_extract(path):
         with zipfile.ZipFile(folder + ".zip", "r") as zip_ref:
             zip_ref.extractall(path)
 
-    folder_url = (
-        f"https://simmertesting.s3-us-west-1.amazonaws.com/{folder}.zip"
-    )
-    urllib.request.urlretrieve(folder_url, folder + ".zip")
+    # folder_url = (
+    #     f"https://simmertesting.s3-us-west-1.amazonaws.com/{folder}.zip"
+    # )
+    # urllib.request.urlretrieve(folder_url, folder + ".zip")
+    url = f"https://www.dropbox.com/s/{folder_dict[folder]}/{folder}.zip?dl=1"
+    u = urllib.request.urlopen(url)
+    data = u.read()
+    u.close()
+
+    with open(f"{folder}.zip", "wb") as f:
+        f.write(data)
     if path:
         retrieve_extract(path)
     elif "src" in os.listdir():  # if we're actually running tests
