@@ -12,7 +12,7 @@ CENTER = (750, 1100)  # row,col
 NPIX = 600
 
 
-def dark_driver(raw_dir, reddir, config, inst, plotting_yml=True):
+def dark_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     """Night should be entered in format 'yyyy_mm_dd' as string.
     This will point toward a config file for the night with darks listed.flat
 
@@ -36,11 +36,11 @@ def dark_driver(raw_dir, reddir, config, inst, plotting_yml=True):
             _darks[_darks.ExpTime == texp].Filenums.values[0]
         )  # pylint: disable=eval-used
         create_darks(
-            raw_dir, reddir, darklist, inst, plot=plot
+            raw_dir, reddir, darklist, inst
         )  # creates a new dark file
 
 
-def create_darks(raw_dir, reddir, darklist, inst, plot=True):
+def create_darks(raw_dir, reddir, darklist, inst):
     """creates the actual darks from a list of dark file numbers, taking
     the median and writing to a file. Returns the final dark.
 

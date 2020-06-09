@@ -55,7 +55,7 @@ def add_colorbars(fig, plot_type, cim):
         fig: (figure object) This is where the colorbars are added.
         plot_type: (string) The type of plot to add colorbars to.
     """
-    scaling = plot_config[plot_type]["scaling"]
+    scaling = plot_config[plot_type][0]["scaling"]
     text_dict = {
         "rots": "Residuals",
         "final_im": "Counts",
@@ -126,7 +126,7 @@ def plot_array(
             cim = ax.imshow(
                 scaled_pltim,
                 origin="lower",
-                cmap=plot_config[plot_type]["colormap"],
+                cmap=plot_config[plot_type][0]["colormap"],
                 norm=co.Normalize(vmin=vmin, vmax=vmax),
                 extent=extent,
             )
@@ -141,7 +141,7 @@ def plot_array(
         initialize_plotting()
 
     # if this shouldn't be plotted, just return
-    if not plot_config[plot_type]["plot"]:
+    if not plot_config[plot_type][0]["plot"]:
         return
     check_plot_type(plot_type)
     func_dict = {
@@ -153,7 +153,7 @@ def plot_array(
         "square root": np.sqrt,
     }
 
-    func = func_dict[plot_config[plot_type]["scaling"]]
+    func = func_dict[plot_config[plot_type][0]["scaling"]]
 
     array_len = np.shape(im_array)[0]
 
@@ -167,7 +167,7 @@ def plot_array(
         fig, cim = plot_many(func)
 
     fig.subplots_adjust(right=0.8)
-    if plot_config[plot_type]["colorbars"]:
+    if plot_config[plot_type][0]["colorbars"]:
         add_colorbars(fig, plot_type, cim)
     plt.savefig(directory + filename)
     plt.close("all")

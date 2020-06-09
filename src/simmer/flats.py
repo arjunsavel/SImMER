@@ -37,25 +37,12 @@ def flat_driver(raw_dir, reddir, config, inst, plotting_yml=None):
         itime = _flats[_flats.Filter == filter_name].ExpTime.values[0]
         darkfile = reddir + f"dark_{int(round(itime))}sec.fits"
         create_flats(
-            raw_dir,
-            reddir,
-            flatlist,
-            darkfile,
-            inst,
-            plot=plot,
-            filter_name=filter_name,
+            raw_dir, reddir, flatlist, darkfile, inst, filter_name=filter_name
         )
 
 
 def create_flats(
-    raw_dir,
-    reddir,
-    flatlist,
-    darkfile,
-    inst,
-    filter_name=None,
-    test=False,
-    plot=True,
+    raw_dir, reddir, flatlist, darkfile, inst, filter_name=None, test=False
 ):
     """Create a flat from a single list of flat files.
 

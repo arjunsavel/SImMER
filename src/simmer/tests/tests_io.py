@@ -71,7 +71,6 @@ class TestYml(unittest.TestCase):
         parsed_yaml_file = yaml.load(file, Loader=yaml.SafeLoader)
         ss.schema = parsed_yaml_file
         file.close()
-        ipdb.set_trace()
         self.assertEqual(ss.normalized(yml_dict), self.default_config)
 
     def test_negative_zoom(self):

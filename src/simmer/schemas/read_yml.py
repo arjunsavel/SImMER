@@ -87,7 +87,7 @@ def get_plotting_args(yml_filename=None):
 
     if not yml_filename:
         # the normalizer fills in all empty fields later on
-        yml_dict = {plot_type: {} for plot_type in plot_types}
+        yml_dict = {plot_type: [{}] for plot_type in plot_types}
     else:
         if validate_yml(schema_filename, yml_filename):
             yml_dict = read_yml(yml_filename)

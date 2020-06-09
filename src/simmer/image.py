@@ -7,8 +7,6 @@ import os
 from glob import glob
 
 import astropy.io.fits as pyfits
-import matplotlib.colors as co
-import matplotlib.pyplot as plt
 import numpy as np
 import plotting as pl
 import registration as reg
@@ -16,7 +14,7 @@ import utils as u
 from tqdm import tqdm
 
 
-def image_driver(raw_dir, reddir, config, inst, plotting_yml=True):
+def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     """Do flat division, sky subtraction, and initial alignment via coords in header.
     Returns Python list of each registration method used per star.
 
@@ -75,19 +73,13 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=True):
             else:
                 methods.append("default")
             create_imstack(
-                raw_dir,
-                reddir,
-                s_dir,
-                imlist,
-                inst,
-                plot=plot,
-                filter_name=filter_name,
+                raw_dir, reddir, s_dir, imlist, inst, filter_name=filter_name
             )
     return methods
 
 
 def create_imstack(
-    raw_dir, reddir, s_dir, imlist, inst, plotting_yml=True, filter_name=None
+    raw_dir, reddir, s_dir, imlist, inst, plotting_yml=None, filter_name=None
 ):
     """Create the stack of images by performing flat division, sky subtraction.
 

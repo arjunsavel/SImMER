@@ -15,7 +15,7 @@ CENTER = (750, 1100)  # row,col
 NPIX = 600
 
 
-def sky_driver(raw_dir, reddir, config, inst, plot=True):
+def sky_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     """Night should be entered in format 'yyyy_mm_dd' as string.
     This will point toward a config file for the night with flats listed.
 
@@ -39,6 +39,9 @@ def sky_driver(raw_dir, reddir, config, inst, plot=True):
     stars = skies.Object.unique()
     sdirs = glob(reddir + "*/")
 
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
+
     for star in tqdm(stars, desc="Running skies", position=0, leave=True):
 
         s_dir = reddir + star + "/"
@@ -59,18 +62,12 @@ def sky_driver(raw_dir, reddir, config, inst, plot=True):
             )  # pylint: disable=eval-used
             # end CDD change
             create_skies(
-                raw_dir,
-                reddir,
-                s_dir,
-                skylist,
-                inst,
-                plot=plot,
-                filter_name=filter_name,
+                raw_dir, reddir, s_dir, skylist, inst, filter_name=filter_name
             )
 
 
 def create_skies(
-    raw_dir, reddir, s_dir, skylist, inst, plot=True, filter_name=None
+    raw_dir, reddir, s_dir, skylist, inst, plotting_yml=None, filter_name=None
 ):
     """Create a sky from a single list of skies.
     sf_dir is the reduced directory for the specific star and filter.
@@ -86,6 +83,8 @@ def create_skies(
     Outputs:
         :final_sky: (2D array) medianed sky image.
     """
+    if plotting_yml:
+        pl.initialize_plotting(plotting_yml)
 
     nskies = len(skylist)
 
