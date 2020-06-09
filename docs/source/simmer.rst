@@ -1,4 +1,4 @@
-API 
+API
 ==============
 
 simmer\.add\_dark\_exp module
@@ -9,13 +9,6 @@ simmer\.add\_dark\_exp module
     :undoc-members:
     :show-inheritance:
 
-simmer\.aodirs module
----------------------
-
-.. automodule:: simmer.aodirs
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 simmer\.check\_logsheet module
 ------------------------------
@@ -101,6 +94,23 @@ simmer\.utils module
 --------------------
 
 .. automodule:: simmer.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+simmer\.schemas\.custom_validator module
+-----------------------------------------
+
+.. automodule:: simmer.schemas.custom_validator
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+simmer\.schemas\.read_yml module
+---------------------------------
+
+.. automodule:: simmer.schemas.read_yml
     :members:
     :undoc-members:
     :show-inheritance:
