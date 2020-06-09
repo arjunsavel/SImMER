@@ -1,4 +1,5 @@
-# inspired by exoplanet-dev/exoplanet: https://github.com/exoplanet-dev/exoplanet/blob/master/.github/workflows/style.yml
+# inspired by exoplanet-dev/exoplanet:
+# https://github.com/exoplanet-dev/exoplanet/blob/master/.github/workflows/style.yml
 name: Style
 
 on:
