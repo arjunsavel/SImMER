@@ -16,6 +16,7 @@ exclude = '''
   | buck-out
   | build
   | dist
+  | src/simmer/__init__.py
   | docs/tutorials
 )/
 '''
