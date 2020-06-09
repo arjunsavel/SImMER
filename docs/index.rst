@@ -18,6 +18,12 @@ Welcome to SImMER's documentation!
    pages/FAQ
 
 .. toctree::
+   :maxdepth: 3
+   :caption: For developers
+
+   pages/integrations
+
+.. toctree::
    :maxdepth: 2
    :caption: Documentation
 
