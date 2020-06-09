@@ -118,7 +118,7 @@ def plot_array(
                 nrows, ncols, i + 1
             )  # pylint: disable=invalid-name # common axis name!
             if filename == "centers.png":
-                pltim = np.rot90(frames[i, 250:350, 250:350], 2)
+                pltim = np.rot90(im_array[i, 250:350, 250:350], 2)
             else:
                 pltim = np.rot90(im_array[i, :, :], 2)
             scaled_pltim = func(pltim)
