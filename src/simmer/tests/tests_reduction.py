@@ -49,10 +49,6 @@ def download_folder(folder, path=None):
         with zipfile.ZipFile(folder + ".zip", "r") as zip_ref:
             zip_ref.extractall(path)
 
-    # folder_url = (
-    #     f"https://simmertesting.s3-us-west-1.amazonaws.com/{folder}.zip"
-    # )
-    # urllib.request.urlretrieve(folder_url, folder + ".zip")
     url = f"https://www.dropbox.com/s/{folder_dict[folder]}/{folder}.zip?dl=1"
     u = urllib.request.urlopen(url)
     data = u.read()
@@ -430,7 +426,7 @@ class TestIntegration(unittest.TestCase):
             os.getcwd() + "/src/simmer/tests/PHARO_integration/",
             os.getcwd() + "/src/simmer/tests/PHARO_integration/",
         )
-        config_file = os.getcwd() + "/config.csv"
+        config_file = os.getcwd() + "/src/simmer/tests/test_image_config.csv"
         try:
             drivers.all_driver(self.p, config_file, raw_dir, reddir)
             compare_final_im = pyfits.getdata(
@@ -467,7 +463,7 @@ class TestIntegration(unittest.TestCase):
             os.getcwd() + "/src/simmer/tests/PHARO_config_driver/",
             os.getcwd() + "/src/simmer/tests/PHARO_config_driver/",
         )
-        config_file = os.getcwd() + "/config.csv"
+        config_file = os.getcwd() + "/src/simmer/tests/test_image_config.csv"
         try:
             drivers.config_driver(self.p, config_file, raw_dir, reddir)
             sky = pyfits.getdata(raw_dir + "HIP49081/Br-gamma/sky.fits", 0)
@@ -500,7 +496,7 @@ class TestIntegration(unittest.TestCase):
             os.getcwd() + "/src/simmer/tests/PHARO_image_driver/",
             os.getcwd() + "/src/simmer/tests/PHARO_image_driver/",
         )
-        config_file = os.getcwd() + "/config.csv"
+        config_file = os.getcwd() + "/src/simmer/tests/test_image_config.csv"
         try:
             drivers.image_driver(self.p, config_file, raw_dir, reddir)
             remove_files = [
