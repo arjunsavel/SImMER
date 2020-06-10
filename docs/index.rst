@@ -22,6 +22,8 @@ Welcome to SImMER's documentation!
    :caption: For developers
 
    pages/integrations
+   pages/versioning
+   pages/contributing
 
 .. toctree::
    :maxdepth: 2
