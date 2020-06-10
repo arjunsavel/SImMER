@@ -13,7 +13,8 @@ Welcome to SImMER's documentation!
    pages/about
    pages/installation
    pages/overview
-   pages/Using
+   pages/PHARO_reduction
+   pages/Shane_reduction
    pages/plotting
    pages/FAQ
 
