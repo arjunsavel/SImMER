@@ -38,6 +38,8 @@ INSTALL_REQUIRES = [
     "pillow",
     "pyyaml>=5.3.1",
     "cerberus>=1.3.2",
+    "nbsphinx",
+    "nbconvert",
 ]
 
 ###################################################################
@@ -82,7 +84,7 @@ if __name__ == "__main__":
         maintainer_email=find_meta("email"),
         package_data={"": ["README.md", "LICENSE"]},
         long_description=read("README.md"),
-        long_description_content_type="text/x-rst",
+        long_description_content_type="text/markdown",
         packages=PACKAGES,
         package_dir={"": "src"},
         zip_safe=False,
