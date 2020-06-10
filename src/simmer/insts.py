@@ -7,8 +7,9 @@ import os
 
 import astropy.io.fits as pyfits
 import numpy as np
-import utils as u
 from scipy.ndimage.filters import median_filter
+
+from . import utils as u
 
 
 class Instrument:

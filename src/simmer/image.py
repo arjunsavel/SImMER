@@ -8,10 +8,11 @@ from glob import glob
 
 import astropy.io.fits as pyfits
 import numpy as np
-import plotting as pl
-import registration as reg
-import utils as u
 from tqdm import tqdm
+
+from . import plotting as pl
+from . import registration as reg
+from . import utils as u
 
 
 def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):

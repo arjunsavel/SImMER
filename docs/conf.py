@@ -71,8 +71,12 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
+    "nbsphinx",
 ]
-
+nbsphinx_prolog = """
+This notebook is available at
+https://github.com/arjunsavel/simmer/tree/master/docs/{{ env.doc2path(env.docname, base=None) }}
+"""
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 

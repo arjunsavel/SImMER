@@ -3,9 +3,10 @@ Functions to work with flats.
 """
 import astropy.io.fits as pyfits
 import numpy as np
-import plotting as pl
-import utils as u
 from tqdm import tqdm
+
+from . import plotting as pl
+from . import utils as u
 
 CENTER = (750, 1100)  # row,col
 MPIX = 600

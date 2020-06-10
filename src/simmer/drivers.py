@@ -2,16 +2,14 @@
 Module for driving large reduction processes.
 """
 
-
 from glob import glob
 
-import darks
-import flats
-import image
 import pandas as pd
-import plotting as pl
-import sky
 from tqdm import tqdm
+
+from . import darks, flats, image
+from . import plotting as pl
+from . import sky
 
 
 def all_driver(inst, config_file, raw_dir, reddir, plotting_yml=None):

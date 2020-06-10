@@ -8,21 +8,21 @@ import unittest
 import urllib.request
 import zipfile
 
-sys.path.append(os.getcwd()[:-6])
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-
-parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+# sys.path.append(os.getcwd()[:-6])
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+#
+#
+# parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 
 import astropy.io.fits as pyfits
-import darks
-import drivers
-import flats
-import image
-import insts as i
+import simmer.darks as darks
+import simmer.drivers as drivers
+import simmer.flats as flats
+import simmer.image as image
+import simmer.insts as i
 import numpy as np
 import pandas as pd
-import sky
+import simmer.sky as sky
 
 
 def download_folder(folder, path=None):

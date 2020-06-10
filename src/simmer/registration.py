@@ -8,8 +8,9 @@ import numpy as np
 from scipy.ndimage.filters import median_filter
 from scipy.ndimage.interpolation import rotate
 from scipy.ndimage.interpolation import shift as subpix_shift
-from scipy_utils import *
 from skimage.feature import peak_local_max
+
+from .scipy_utils import *
 
 
 def roll_shift(image, shifts, cval=0.0):
