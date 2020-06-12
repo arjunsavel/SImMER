@@ -17,6 +17,9 @@ About SImMER
 .. image:: https://readthedocs.org/projects/simmer/badge/?version=latest
     :target: http://simmer.readthedocs.io/en/latest/?badge=latest
     :alt: Docs badge
+.. image:: https://badge.fury.io/py/simmer.svg
+    :target: https://badge.fury.io/py/simmer
+    :alt: PyPI badge
 
 SImMER (Stellar Image Maturation via Efficient Reduction) was created to be an open-source, modular, and well-tested reduction pipeline for astronomical imaging data. It can currently reduce data from the ShARCS camera on the Shane 3-m telescope at Lick Observatory and the PHARO camera on the Hale 5.1-m telescope at Palomar Observatory. Its object-oriented design allows it to be extended to other instruments, and we hope that other capabilities are folded in by other members of the community.
 
