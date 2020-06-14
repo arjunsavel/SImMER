@@ -7,8 +7,8 @@ Philosophy
 guidelines. In brief, this means that our version numbers follow a `AA.BB.CC`
 convenion, with `AA` incrementing when a large, backward-incompatible changes
 are introduced to the code base; `BB` incrementing when backward-compatible
-functionality is added to a code; and `CC` incrementing whenever backward-
-compatible bugs are fixed. For example:
+functionality is added to a code; and `CC` incrementing whenever backward-compatible 
+bugs are fixed. For example:
 
 - If a user input of square root scaling resulted in quadratic scaling, fixing
   this would result in `CC` increasing
@@ -28,6 +28,5 @@ needs to be done is:
 
 1. Adjust the version specified in :code:`src/simmer/__init__.py`. This will
    automatically update docs and :code:`setup.py` configurations.
-2. Delete any previous PyPI build artifacts in the directory.
-3. Update the GitHub release version to match the version specified in Step 1.
+2. Update the GitHub release version to match the version specified in Step 1.
    This will automatically publish the build on PyPI.
