@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 from . import darks, flats, image
 from . import plotting as pl
+from . import search_headers as search
 from . import sky
 
 
@@ -26,9 +27,11 @@ def all_driver(inst, config_file, raw_dir, reddir, plotting_yml=None):
 
     """
 
-    # obstain file list from config file
+    # obtain file list from config file
     config = pd.read_csv(config_file)
     config.Object = config.Object.astype(str)
+
+    search.search_headers(raw_dir)
 
     if plotting_yml:
         pl.initialize_plotting(plotting_yml)

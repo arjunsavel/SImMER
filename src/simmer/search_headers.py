@@ -8,14 +8,18 @@ from glob import glob
 import astropy.io.fits as pyfits
 
 
-def search_headers(raw_dir, write_dir):
+def search_headers(raw_dir, write_dir=None):
     """Function to perform search of FITS headers.
 
     Inputs:
         :raw_dir: (string) absolute path to directory containing raw data.
-        :wr
+        :write_dir: (string) absolute path to directory containing raw data.
+                    Defaults to None; if this is the case, it's reassigned to
+                    the `raw_dir` directory.
 
     """
+    if not write_dir:
+        write_dir = raw_dir
 
     file = write_dir + "headers_wrong.txt"
     textfile = open(file, "w")
@@ -30,11 +34,11 @@ def search_headers(raw_dir, write_dir):
     ]
 
     for file in files:
-        # load in header:
+        # load in header
         head = pyfits.getheader(file)
         keys = head.keys()
 
-        # check keywords:
+        # check keywords
         key1 = "DATAFILE"
         key2 = "FRAMENUM"
 
@@ -47,7 +51,7 @@ def search_headers(raw_dir, write_dir):
                 textfile.write(f"{file}\n")
 
         else:
-            print("Header Incomplete in file!!! ", file)
+            print(f"Header Incomplete in {file}!!! ")
             textfile.write(f"{file} HEADER INCOMPLETE\n")
 
     textfile.close()
