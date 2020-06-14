@@ -4,10 +4,17 @@
 
 import yaml
 import unittest
-import os
 
+import numpy as np
+import astropy.io.fits as pyfits
 import simmer.schemas.custom_validator as validator
 import simmer.schemas.read_yml as read
+import simmer.insts as i
+from simmer.tests.tests_reduction import (
+    download_folder,
+    delete_folder,
+    DataDownloadException,
+)
 
 
 class TestYml(unittest.TestCase):
@@ -108,3 +115,35 @@ class TestYml(unittest.TestCase):
             validated = False
         file.close()
         self.assertFalse(validated)
+
+
+class TestConfig(unittest.TestCase):
+    def test_check_logsheet_incorrect(self):
+        self.assertFalse(False)
+
+    def test_check_logsheet_correct(self):
+        self.assertTrue(True)
+
+
+class TestReadPHARO(unittest.TestCase):
+    inst = i.PHARO()
+
+    def test_readpharo_quadrants(self):
+        try:
+            download_folder("readpharo_test")
+        except:
+            raise DataDownloadException(
+                "Could not download test data for readpharo function."
+            )
+        raw_dir, new_dir, test_red_dir = (
+            "src/simmer/tests/readpharo_test/raw/",
+            "src/simmer/tests/readpharo_test/test_newdir/",
+            "src/simmer/tests/readpharo_test/test_red/",
+        )
+        self.inst.read_data(raw_dir, new_dir)
+        compare_flattened = pyfits.getdata(test_red_dir + "sph0436.fits")
+        zero = np.zeros(np.shape(compare_flattened))
+        flattened = pyfits.getdata(new_dir + "sph0436.fits")
+        val = np.all(np.allclose(compare_flattened, flattened, equal_nan=True))
+        delete_folder(raw_dir)
+        self.assertTrue(val)

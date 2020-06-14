@@ -43,6 +43,7 @@ def download_folder(folder, path=None):
         "PHARO_image_driver": "p9uivslz7hoym5c",
         "PHARO_integration": "v8l50zm7jbrccqj",
         "shane_quickstart": "q6m6ls2x2186u3p",
+        "readpharo_test": "l8fi3100v5flufp",
     }
 
     def retrieve_extract(path):

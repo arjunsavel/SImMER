@@ -131,6 +131,15 @@ class ShARCS(Instrument):
         head = u.header_subsection(rawfile, self.npix, self.center)
         return thisimage, head
 
+    def read_data(self, night, rawfilename, newfilename):
+        raise NotImplementedError(
+            "Data need not be read through"
+            "this method for ShARCS. Instead,"
+            "please run the driver function of "
+            "your choice on folders containing "
+            "your raw data."
+        )
+
 
 class PHARO(Instrument):
     """
@@ -188,42 +197,55 @@ class PHARO(Instrument):
         thisimage = thisimage.astype(float)
         return thisimage
 
-    # def check_filestructure(self, night, rawfilename, newfilename):
+    def read_data(self, raw_dir, new_dir):
+        """
+        Reads data.
 
-    #     def readpharo(rawfilename, newfilename):
-    #         """
-    #         Read in the 4-quadrant data and flatten it
-    #         """
-    #         im_cube = pyfits.getdata(rawfilename)
-    #         header = pyfits.getheader(rawfilename)
+        Inputs:
+            :rawdir: (string) absolute path to directory containing raw data.
+                        File path should end with '/'.
+            :newdir: (string) absolute path to directory that will contain
+                        4-quadrant data. File path should end with '/'.
 
-    #         newfile = np.zeros((1024, 1024))
-    #         newfile[0:512, 512:1024] = im_cube[0, :, :] #Lower right
-    #         newfile[0:512, 0:512] = im_cube[1, :, :] #Lower left
-    #         newfile[512:1024, 0:512] = im_cube[2, :, :] #Upper leftß
-    #         newfile[512:1024, 512:1024] = im_cube[3, :, :] #Upper right
+        Outputs:
+            None
+        """
 
-    #         hdu = pyfits.PrimaryHDU(newfile, header=header)
-    #         hdu.writeto(newfilename, overwrite=True, output_verify='ignore')
+        def read_pharo(raw_file_name, new_file_name):
+            """
+            Read in the 4-quadrant data and flatten it.
 
-    #         return newfile
+            Inputs:
+                :raw_file_name: (string) name of raw file.
+                :new_file_name: (string) name of flattened 4-quadrant data.
+            """
+            im_cube = pyfits.getdata(raw_file_name)
+            header = pyfits.getheader(raw_file_name)
 
-    #     def convert_night(night):
-    #         """
-    #         Convert the cubes to flat files for a whole night
-    #         """
-    #         rawdir = aodirs.basedir() + night + '/'
-    #         flist = glob.glob(rawdir + '*.fits')
+            newfile = np.zeros((1024, 1024))
+            newfile[0:512, 512:1024] = im_cube[0, :, :]  # Lower right
+            newfile[0:512, 0:512] = im_cube[1, :, :]  # Lower left
+            newfile[512:1024, 0:512] = im_cube[2, :, :]  # Upper left
+            newfile[512:1024, 512:1024] = im_cube[3, :, :]  # Upper right
 
-    #         newdir = aodirs.basedir() + night + '/'
-    #         if not os.path.isdir(newdir):
-    #             os.mkdir(newdir)
+            hdu = pyfits.PrimaryHDU(newfile, header=header)
+            hdu.writeto(new_file_name, overwrite=True, output_verify="ignore")
 
-    #         for fpath in flist:
-    #             fname = fpath.split('/')[-1]
-    #             newfname = newdir + 's' + fname
+            return newfile
 
-    #             readpharo(fname, newfname)
+        def convert_night():
+            """
+            Convert the cubes to flat files for a whole night.
+            """
+            flist = glob.glob(raw_dir + "*.fits")
 
-    #     readpharo(rawfilename, newfilename)
-    #     convert_night(night)
+            if not os.path.isdir(new_dir):
+                os.mkdir(new_dir)
+
+            for fpath in flist:
+                fname = fpath.split("/")[-1]
+                newfname = new_dir + "s" + fname
+
+                read_pharo(fpath, newfname)
+
+        convert_night()
