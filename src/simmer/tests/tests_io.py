@@ -10,6 +10,7 @@ import astropy.io.fits as pyfits
 import simmer.schemas.custom_validator as validator
 import simmer.schemas.read_yml as read
 import simmer.insts as i
+import simmer.search_headers as search
 from simmer.tests.tests_reduction import (
     download_folder,
     delete_folder,
@@ -125,7 +126,7 @@ class TestConfig(unittest.TestCase):
         self.assertTrue(True)
 
 
-class TestReadPHARO(unittest.TestCase):
+class TestPHAROSpecific(unittest.TestCase):
     inst = i.PHARO()
 
     def test_readpharo_quadrants(self):
@@ -146,4 +147,29 @@ class TestReadPHARO(unittest.TestCase):
         flattened = pyfits.getdata(new_dir + "sph0436.fits")
         val = np.all(np.allclose(compare_flattened, flattened, equal_nan=True))
         delete_folder(raw_dir)
+        self.assertTrue(val)
+
+
+class TestShARCSSpecific(unittest.TestCase):
+    inst = i.ShARCS()
+
+    def test_search_headers(self):
+        try:
+            download_folder("sky_test")
+        except:
+            raise DataDownloadException(
+                "Could not download test data for skies."
+            )
+
+        raw_dir, write_dir = (
+            "src/simmer/tests/sky_test/",
+            "src/simmer/tests/sky_test/",
+        )
+        search.search_headers(raw_dir, write_dir)
+        val = True
+        f = open(write_dir + "headers_wrong.txt", "r")
+        for line in f:
+            if "INCOMPLETE" in line:
+                val = False
+        f.close()
         self.assertTrue(val)
