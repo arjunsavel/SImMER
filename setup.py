@@ -90,6 +90,7 @@ if __name__ == "__main__":
         packages=PACKAGES,
         package_dir={"": "src"},
         zip_safe=False,
+        python_requires=">3.6.0",
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
         options={"bdist_wheel": {"universal": "1"}},
