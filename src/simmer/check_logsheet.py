@@ -1,6 +1,7 @@
 # AS
 # Created: 7/17/19
 # Updated: 2/16/20
+# Updated: 6/16/20
 
 """
 Capability to check whether logsheet format is conducive to creating a config.
@@ -50,76 +51,68 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
             "Total_tint",
         ]
         missing = []
+        failed = 0
         for col in desired_cols:
             if not np.isin(col, frame_cols):
                 missing.append(col)
-        assert len(missing) == 0, f"Missing columns for {missing}."
-        print(f"1/9 tests passed for {tab}")
+        if len(missing) != 0:
+            print(f"Missing columns for {missing}.")
+            failed += 1
 
         objects = log_frame["Object"].dropna().values
         exptimes = log_frame["ExpTime"].dropna().values
-        assert len(exptimes) == len(objects), "Missing an exposure time."
-        print(f"2/9 tests passed for {tab}")
+        if len(exptimes) != len(objects):
+            print("Missing an exposure time.")
+            failed += 1
 
         filters = log_frame["Filter"].dropna().values
-        assert len(filters) == len(
+        if len(filters) != len(
             log_frame[log_frame["Object"] != "dark"]
-        ) or len(filters) == len(objects), "Missing a filter."
-        print(f"3/9 tests passed for {tab}")
+        ) or len(filters) != len(objects):
+            print("Missing a filter.")
+            failed += 1
 
         starts = log_frame["Start"].dropna().values
-        assert len(starts) == len(objects), "Missing a start exposure."
-        print(f"4/9 tests passed for {tab}")
+        if len(starts) != len(objects):
+            print("Missing a start exposure.")
+            failed += 1
 
         ends = log_frame["End"].dropna().values
-        assert len(ends) == len(objects), "Missing a start exposure."
-        print(f"5/9 tests passed for {tab}")
+        if len(ends) != len(objects):
+            print("Missing a start exposure.")
+            failed += 1
 
         coadds = log_frame["Coadds"].dropna().values
-        assert len(coadds) == len(objects), "Missing a coadd."
-        print(f"6/9 tests passed for {tab}")
+        if len(coadds) != len(objects):
+            print("Missing a coadd.")
+            failed += 1
 
-        assert np.all(exptimes > 0), "There are negative or 0 exposure times."
-        print(f"7/9 tests passed for {tab}")
+        if not np.all(exptimes > 0):
+            print("There are negative or 0 exposure times.")
+            failed += 1
 
         inter = ends - starts
-        assert np.all(inter >= 0), "Check the start and end exposures."
-        print(f"8/9 tests passed for {tab}")
+        if not np.all(inter >= 0):
+            print("Check the start and end exposures.")
+            failed += 1
 
         exposes = log_frame["Expose"].dropna().values
-        assert np.all(
-            exposes == inter + 1
-        ), "Incorrect number of exposures for start and end exposure."
-        print(f"9/9 tests passed for {tab}")
+        if not np.all(exposes == inter + 1):
+            print("Incorrect number of exposures for start and end exposure.")
+            failed += 1
+        print(f"{9-failed}/9 tests passed for {tab}")
+        return failed
 
+    failed = 0
     if log_name[-3:] == "csv":
         log_frame = pd.read_csv(log_name)
     elif log_name[-4:] == "xlsx" or log[-3:] == "xls":
         log = pd.ExcelFile(log_name)
         log_frame = pd.read_excel(log, tab)
     if not tab:
+
         for sheet in log.sheet_names:
-            check_tab(sheet, inst, add_dark_times=add_dark_times)
+            failed += check_tab(sheet, inst, add_dark_times=add_dark_times)
     else:
-        check_tab(tab, inst, add_dark_times=add_dark_times)
-
-
-class checker:
-    def __init__(self):
-        return
-
-    def check_config(self, filepath):
-        try:
-            config = pd.read_csv(filepath)
-        except FileNotFoundError:
-            print("Incorrect file path.")
-        # check that it has the right columns
-        # check that it has the same rows in each column
-
-    def check_fits(self):
-        # go through all the raw data
-        # open and close it all, make sure it's all fits
-        return
-
-    def check_plot_config():
-        return
+        failed += check_tab(tab, inst, add_dark_times=add_dark_times)
+    return failed
