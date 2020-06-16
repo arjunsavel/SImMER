@@ -10,9 +10,10 @@ def create_config(tab, log, config_file):
     Create config csv file out of tab in logsheet.
 
     Inputs:
-        :inst: (Instrument object) Instrument to which the config is related.
+        :tab: (string) tab of logsheet to be turned into.
         :log: (string) path of the logsheet.
-        :config_file: (string) path of the desired concrete file
+        :config_file: (string) path of the desired concrete file, including the
+                    file name.
     """
     if log[-3:] == "csv":
         logdf = pd.read_csv(log)
@@ -31,7 +32,7 @@ def create_config(tab, log, config_file):
             },
         )
     logdf = logdf[pd.notna(logdf["Start"])]
-    savedf = logdf.ix[:, ["Object", "ExpTime", "Filter", "Comments"]]
+    savedf = logdf[["Object", "ExpTime", "Filter", "Comments"]]
 
     nrows = len(logdf)
 

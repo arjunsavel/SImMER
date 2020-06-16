@@ -1,7 +1,8 @@
 """Search for issues in FITS file headers similar
     to s0512.fits from night 2015_10_26, which did not
     contain either/both DATAFILE or/and FRAMENUM in
-    the header."""
+    the header. These issues are only known to occur
+    with ShARCS data."""
 
 from glob import glob
 

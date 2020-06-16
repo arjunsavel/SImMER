@@ -5,11 +5,14 @@
 import yaml
 import unittest
 
+import pandas as pd
 import numpy as np
 import astropy.io.fits as pyfits
 import simmer.schemas.custom_validator as validator
 import simmer.schemas.read_yml as read
 import simmer.insts as i
+import simmer.create_config as c
+import simmer.check_logsheet as check
 import simmer.search_headers as search
 from simmer.tests.tests_reduction import (
     download_folder,
@@ -119,11 +122,45 @@ class TestYml(unittest.TestCase):
 
 
 class TestConfig(unittest.TestCase):
-    def test_check_logsheet_incorrect(self):
-        self.assertFalse(False)
+    def test_create_config_csv(self):
+        try:
+            download_folder("config_test")
+        except:
+            raise DataDownloadException(
+                "Could not download test data for config_test."
+            )
+        tab = "Sheet1"
+        excel_path = "src/simmer/Examples/PHARO/logsheet.csv"
+        c.create_config(tab, excel_path, "created_frame.csv")
+        created_frame = pd.read_csv("created_frame.csv")
+        compare_frame = pd.read_csv(
+            "src/simmer/tests/config_test/compare_frame_csv.csv"
+        )
+        delete_folder("src/simmer/tests/config_test")
+        self.assertTrue(created_frame.equals(compare_frame))
 
-    def test_check_logsheet_correct(self):
-        self.assertTrue(True)
+    def test_create_config_xlsx(self):
+        try:
+            download_folder("config_test")
+        except:
+            raise DataDownloadException(
+                "Could not download test data for config_test."
+            )
+        tab = "Sheet1"
+        excel_path = "src/simmer/Examples/Shane/logsheet.xlsx"
+        c.create_config(tab, excel_path, "created_frame.csv")
+        created_frame = pd.read_csv("created_frame.csv")
+        compare_frame = pd.read_csv(
+            "src/simmer/tests/config_test/created_frame_xlsx.csv"
+        )
+        delete_folder("src/simmer/tests/config_test")
+        self.assertTrue(created_frame.equals(compare_frame))
+
+    # def test_check_logsheet_incorrect(self):
+    #     self.assertFalse(False)
+    #
+    # def test_check_logsheet_correct(self):
+    #     self.assertTrue(True)
 
 
 class TestPHAROSpecific(unittest.TestCase):
@@ -146,7 +183,7 @@ class TestPHAROSpecific(unittest.TestCase):
         zero = np.zeros(np.shape(compare_flattened))
         flattened = pyfits.getdata(new_dir + "sph0436.fits")
         val = np.all(np.allclose(compare_flattened, flattened, equal_nan=True))
-        delete_folder(raw_dir)
+        delete_folder("src/simmer/tests/readpharo_test")
         self.assertTrue(val)
 
 

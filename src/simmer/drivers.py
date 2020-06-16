@@ -31,7 +31,8 @@ def all_driver(inst, config_file, raw_dir, reddir, plotting_yml=None):
     config = pd.read_csv(config_file)
     config.Object = config.Object.astype(str)
 
-    search.search_headers(raw_dir)
+    if inst.name == "ShARCS":
+        search.search_headers(raw_dir)
 
     if plotting_yml:
         pl.initialize_plotting(plotting_yml)
