@@ -108,7 +108,7 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
     failed = 0
     if log_name[-3:] == "csv":
         log_frame = pd.read_csv(log_name)
-    elif log_name[-4:] == "xlsx" or log[-3:] == "xls":
+    elif log_name[-4:] == "xlsx" or log_name[-3:] == "xls":
         log = pd.ExcelFile(log_name)
         if not tab:
             for sheet in log.sheet_names:
