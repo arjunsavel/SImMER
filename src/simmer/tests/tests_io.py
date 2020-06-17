@@ -156,11 +156,17 @@ class TestConfig(unittest.TestCase):
         delete_folder("src/simmer/tests/config_test")
         self.assertTrue(created_frame.equals(compare_frame))
 
-    # def test_check_logsheet_incorrect(self):
-    #     self.assertFalse(False)
-    #
-    # def test_check_logsheet_correct(self):
-    #     self.assertTrue(True)
+    def test_check_logsheet_incorrect(self):
+        inst = i.ShARCS()
+        excel_path = "src/simmer/Examples/Shane/logsheet.xlsx"
+        failed = check.check_logsheet(inst, excel_path)
+        self.assertTrue(failed == 1)
+
+    def test_check_logsheet_correct(self):
+        inst = i.ShARCS()
+        excel_path = "src/simmer/Examples/PHARO/logsheet.csv"
+        failed = check.check_logsheet(inst, excel_path)
+        self.assertTrue(failed == 0)
 
 
 class TestPHAROSpecific(unittest.TestCase):

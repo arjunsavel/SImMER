@@ -23,6 +23,8 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
         :tab: (string) tab of interest,
         :add_dark_times: (bool) if true, runs the script within add_dark_exp to add the data from the
                         automated dark script to the log sheet.
+    Outputs:
+        :failed: (int) number of failed tests.
     """
 
     def check_tab(tab, inst, add_dark_times):
@@ -108,11 +110,11 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
         log_frame = pd.read_csv(log_name)
     elif log_name[-4:] == "xlsx" or log[-3:] == "xls":
         log = pd.ExcelFile(log_name)
-        log_frame = pd.read_excel(log, tab)
-    if not tab:
-
-        for sheet in log.sheet_names:
-            failed += check_tab(sheet, inst, add_dark_times=add_dark_times)
-    else:
-        failed += check_tab(tab, inst, add_dark_times=add_dark_times)
+        if not tab:
+            for sheet in log.sheet_names:
+                log_frame = pd.read_excel(log, sheet)
+                failed += check_tab(sheet, inst, add_dark_times=add_dark_times)
+        else:
+            log_frame = pd.read_excel(log, tab)
+            failed += check_tab(tab, inst, add_dark_times=add_dark_times)
     return failed
