@@ -73,7 +73,7 @@ def add_dark_exp(tab, inst, log, raw_dir):
         )
         writer.save()
 
-    find_itimes(inst)
+    find_itimes(inst, raw_dir)
     initial_frame = pd.read_excel(pd.ExcelFile(log), tab)
     # testing that writing works well.
     # then going to create a new dataframe for the darks and append it.

@@ -81,7 +81,7 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
 
         ends = log_frame["End"].dropna().values
         if len(ends) != len(objects):
-            print("Missing a start exposure.")
+            print("Missing an end exposure.")
             failed += 1
 
         coadds = log_frame["Coadds"].dropna().values
@@ -92,14 +92,23 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
         if not np.all(exptimes > 0):
             print("There are negative or 0 exposure times.")
             failed += 1
-
-        inter = ends - starts
-        if not np.all(inter >= 0):
+        try:
+            inter = ends - starts
+            if not np.all(inter >= 0):
+                print("Check the start and end exposures.")
+                failed += 1
+        except ValueError:
             print("Check the start and end exposures.")
             failed += 1
 
         exposes = log_frame["Expose"].dropna().values
-        if not np.all(exposes == inter + 1):
+        try:
+            if not np.all(exposes == inter + 1):
+                print(
+                    "Incorrect number of exposures for start and end exposure."
+                )
+                failed += 1
+        except UnboundLocalError:
             print("Incorrect number of exposures for start and end exposure.")
             failed += 1
         print(f"{9-failed}/9 tests passed for {tab}")

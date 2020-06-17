@@ -8,6 +8,7 @@ import unittest
 import pandas as pd
 import numpy as np
 import astropy.io.fits as pyfits
+import simmer.add_dark_exp as ad
 import simmer.schemas.custom_validator as validator
 import simmer.schemas.read_yml as read
 import simmer.insts as i
@@ -158,15 +159,30 @@ class TestConfig(unittest.TestCase):
 
     def test_check_logsheet_incorrect(self):
         inst = i.ShARCS()
-        excel_path = "src/simmer/Examples/Shane/logsheet.xlsx"
+        excel_path = "src/simmer/Examples/Shane/logsheet_incorrect.xlsx"
         failed = check.check_logsheet(inst, excel_path)
-        self.assertTrue(failed == 1)
+        print(failed)
+        self.assertTrue(failed == 9)
 
     def test_check_logsheet_correct(self):
         inst = i.ShARCS()
         excel_path = "src/simmer/Examples/PHARO/logsheet.csv"
         failed = check.check_logsheet(inst, excel_path)
         self.assertTrue(failed == 0)
+
+    def test_add_dark_exposure(self):
+        try:
+            download_folder("dark_test")
+        except:
+            raise DataDownloadException(
+                "Could not download test data for darks."
+            )
+        from shutil import copyfile
+
+        copyfile(src, dst)
+        raw_dir = "src/simmer/tests/dark_test/"
+        inst = i.ShARCS()
+        ad.add_dark_exp()
 
 
 class TestPHAROSpecific(unittest.TestCase):
