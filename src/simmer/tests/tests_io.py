@@ -4,6 +4,8 @@
 
 import yaml
 import unittest
+from shutil import copyfile
+import os
 
 import pandas as pd
 import numpy as np
@@ -177,12 +179,16 @@ class TestConfig(unittest.TestCase):
             raise DataDownloadException(
                 "Could not download test data for darks."
             )
-        from shutil import copyfile
-
-        copyfile(src, dst)
+        excel_path = "src/simmer/Examples/Shane/logsheet.xlsx"
+        copy_path = "src/simmer/Examples/Shane/logsheet_copy.xlsx"
+        copyfile(excel_path, copy_path)
         raw_dir = "src/simmer/tests/dark_test/"
+        tab = "Sheet1"
         inst = i.ShARCS()
-        ad.add_dark_exp()
+        ad.add_dark_exp(tab, inst, copy_path, raw_dir)
+        os.remove(copy_path)
+        delete_folder(raw_dir)
+        self.assertTrue(True)
 
 
 class TestPHAROSpecific(unittest.TestCase):

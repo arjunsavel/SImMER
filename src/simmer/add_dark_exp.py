@@ -36,6 +36,7 @@ def add_dark_exp(tab, inst, log, raw_dir):
         """
         if file[1] == "0":
             number = literal_eval(file[2:5])  # just a safer eval
+        print(file)
         number = literal_eval(file[1:5])
         return number
 
@@ -143,7 +144,7 @@ def find_itimes(inst, raw_dir):
     # Set directories
     outdir = raw_dir
 
-    files = glob.glob(raw_dir + "*.fits")
+    files = glob.glob(raw_dir + inst.file_prefix + "*.fits")
     #     lastitime = 0
     with open(outdir + "_dark_itimes.txt", "w") as outfile:
         for file in files:
