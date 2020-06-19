@@ -163,7 +163,7 @@ class TestConfig(unittest.TestCase):
         inst = i.ShARCS()
         excel_path = "src/simmer/Examples/Shane/logsheet_incorrect.xlsx"
         failed = check.check_logsheet(inst, excel_path)
-        self.assertTrue(failed == 9)
+        self.assertTrue(failed == 7)
 
     def test_check_logsheet_correct(self):
         inst = i.ShARCS()
