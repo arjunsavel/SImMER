@@ -5,7 +5,7 @@ Creates config file from logsheet. Will move into either utils or example folder
 import pandas as pd
 
 
-def create_config(log, config_file, tab):
+def create_config(log, config_file, tab=None):
     """
     Create config csv file out of tab in logsheet.
 
