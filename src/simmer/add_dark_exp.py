@@ -18,13 +18,13 @@ import pandas as pd
 from openpyxl import load_workbook
 
 
-def add_dark_exp(tab, inst, log, raw_dir):
+def add_dark_exp(inst, log, raw_dir, tab=None):
     """Adds dark exposures to the end of log sheet if not specified.
 
     Inputs:
         :tab: (string) tab of Excel sheet to be used.
-        :log: (string path of the logsheet.
         :inst: (Instrument object) instrument for which data is being reduced.
+        :log: (string path of the logsheet.
         :raw_dir: (string) path of the directory containing the raw data.
     """
 
@@ -75,7 +75,10 @@ def add_dark_exp(tab, inst, log, raw_dir):
         writer.save()
 
     find_itimes(inst, raw_dir)
-    initial_frame = pd.read_excel(pd.ExcelFile(log), tab)
+    if tab:
+        initial_frame = pd.read_excel(pd.ExcelFile(log), tab)
+    else:
+        initial_frame = pd.read_csv(log)
     # testing that writing works well.
     # then going to create a new dataframe for the darks and append it.
 
