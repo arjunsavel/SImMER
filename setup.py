@@ -33,7 +33,7 @@ INSTALL_REQUIRES = [
     "scipy>=1.1.0",
     "matplotlib>=3.0.2",
     "Scikit-image>=0.16.2",
-    "pillow",
+    "pillow>=6.2.0",
     "pyyaml>=5.3.1",
     "cerberus>=1.3.2",
     "nbsphinx==0.5.1",
