@@ -27,20 +27,21 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
         :failed: (int) number of failed tests.
     """
 
-    def check_tab(tab, inst, add_dark_times):
+    def check_tab(inst, add_dark_times, tab=None):
         """
         Checks for typos for one day in the observing run,
         assuming each day corresponds to a new sheet.
 
         Inputs:
-            :tab: (string) tab of interest
             :inst: (Instrument object) instrument for which data is being reduced.
             :add_dark_times: (bool) if true, runs the script within add_dark_exp to add the data from the
                             automated dark script to the log sheet.
+            :tab: (string) tab of interest. None for a CSV.
+
 
         """
         if add_dark_times:
-            ad.add_dark_exp(tab, inst)
+            ad.add_dark_exp(inst, log, raw_dir, tab=None)
         frame_cols = log_frame.columns
         desired_cols = [
             "Object",
@@ -48,9 +49,7 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
             "End",
             "Expose",
             "ExpTime",
-            "Coadds",
             "Filter",
-            "Total_tint",
         ]
         missing = []
         failed = 0
@@ -68,9 +67,7 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
             failed += 1
 
         filters = log_frame["Filter"].dropna().values
-        if len(filters) != len(
-            log_frame[log_frame["Object"] != "dark"]
-        ) or len(filters) != len(objects):
+        if len(filters) != len(log_frame[log_frame["Object"] != "dark"]):
             print("Missing a filter.")
             failed += 1
 
@@ -111,18 +108,21 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
         except UnboundLocalError:
             print("Incorrect number of exposures for start and end exposure.")
             failed += 1
-        print(f"{9-failed}/9 tests passed for {tab}")
+        print(f"{9-failed}/9 tests passed.")
         return failed
 
     failed = 0
     if log_name[-3:] == "csv":
         log_frame = pd.read_csv(log_name)
+        failed += check_tab(inst, add_dark_times=add_dark_times)
     elif log_name[-4:] == "xlsx" or log_name[-3:] == "xls":
         log = pd.ExcelFile(log_name)
         if not tab:
             for sheet in log.sheet_names:
                 log_frame = pd.read_excel(log, sheet)
-                failed += check_tab(sheet, inst, add_dark_times=add_dark_times)
+                failed += check_tab(
+                    inst, add_dark_times=add_dark_times, tab=sheet
+                )
         else:
             log_frame = pd.read_excel(log, tab)
             failed += check_tab(tab, inst, add_dark_times=add_dark_times)
