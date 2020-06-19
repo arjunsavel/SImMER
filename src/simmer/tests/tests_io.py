@@ -163,7 +163,6 @@ class TestConfig(unittest.TestCase):
         inst = i.ShARCS()
         excel_path = "src/simmer/Examples/Shane/logsheet_incorrect.xlsx"
         failed = check.check_logsheet(inst, excel_path)
-        print(failed)
         self.assertTrue(failed == 9)
 
     def test_check_logsheet_correct(self):
@@ -185,7 +184,7 @@ class TestConfig(unittest.TestCase):
         raw_dir = "src/simmer/tests/dark_test/"
         tab = "Sheet1"
         inst = i.ShARCS()
-        ad.add_dark_exp(tab, inst, copy_path, raw_dir)
+        ad.add_dark_exp(inst, copy_path, raw_dir, tab)
         os.remove(copy_path)
         delete_folder(raw_dir)
         self.assertTrue(True)
