@@ -134,7 +134,7 @@ class TestConfig(unittest.TestCase):
             )
         tab = "Sheet1"
         excel_path = "src/simmer/Examples/PHARO/logsheet.csv"
-        c.create_config(tab, excel_path, "created_frame.csv")
+        c.create_config(excel_path, "created_frame.csv", tab)
         created_frame = pd.read_csv("created_frame.csv")
         compare_frame = pd.read_csv(
             "src/simmer/tests/config_test/compare_frame_csv.csv"
@@ -151,7 +151,7 @@ class TestConfig(unittest.TestCase):
             )
         tab = "Sheet1"
         excel_path = "src/simmer/Examples/Shane/logsheet.xlsx"
-        c.create_config(tab, excel_path, "created_frame.csv")
+        c.create_config(excel_path, "created_frame.csv", tab)
         created_frame = pd.read_csv("created_frame.csv")
         compare_frame = pd.read_csv(
             "src/simmer/tests/config_test/created_frame_xlsx.csv"

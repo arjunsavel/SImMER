@@ -65,14 +65,18 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             :end: (int) previous end of columns.
             :new_frame: (pandas DataFrame) new frame to be written into.
         """
-        book = load_workbook(log)
-        writer = pd.ExcelWriter(log, engine="openpyxl")
-        writer.book = book
-        writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
-        new_frame.to_excel(
-            writer, tab, index=False, startrow=end, header=False
-        )
-        writer.save()
+        if tab:
+            book = load_workbook(log)
+            writer = pd.ExcelWriter(log, engine="openpyxl")
+            writer.book = book
+            writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
+            new_frame.to_excel(
+                writer, tab, index=False, startrow=end, header=False
+            )
+            writer.save()
+        else:
+            os.remove(log)
+            new_frame.to_csv(log)
 
     find_itimes(inst, raw_dir)
     if tab:

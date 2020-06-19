@@ -1,31 +1,4 @@
-﻿Repeats,Pattern,Start,End,Expose,Object,Filter,Airmass,ExpTime,Dither Tint,Total_tint,Comments,Coadds
-10,1,34,43,10,flat,Ks,-,19.824,198.24,,flat,1
-10,1,44,53,10,flat,J,-,9.912,99.12,,flat,1
-10,1,54,63,10,dark,,-,9.912,99.12,,dark,1
-1,15,79,93,15,HIP49081,BrG,1.12,29.736,446.04,,Lea Target - double filter super bright,1
-1,15,94,108,15,HIP49699,Ks,1.12,29.736,446.04,,Lea Target - double filter super bright,1
-1,15,109,123,15,HIP50384,BrG,1.02,29.736,446.04,,Lea Target - double filter super bright,1
-1,15,124,138,15,HIP50505,Ks,1.02,1.416,21.24,,Lea Target - double filter super bright,1
-1,15,139,153,15,HIP63366,BrG,1.47,1.416,21.24,,Lea Target - crap seeing,1
-1,15,154,168,15,HIP63366,BrG,1.47,1.416,21.24,,Lea Target - crap seeing,1
-1,15,169,183,15,HIP63366,BrG,1.47,1.416,21.24,,Lea Target - crap seeing,1
-1,15,184,198,15,HIP56997,BrG,1.47,19.824,297.36,,Lea Target - double filter super bright,1
-1,15,199,213,15,HIP62207,BrG,1.47,1.416,21.24,,Lea Target - double filter super bright,1
-1,15,214,228,15,HIP62207,BrG,1.47,1.416,21.24,,BAD DITHER DELETE,1
-1,15,229,243,15,HIP66193,BrG,1,2.832,42.48,,244 BAD FRAME,1
-1,15,245,259,15,HIP64394,BrG,1.47,19.824,297.36,,Lea Target - double filter super bright,1
-1,15,260,274,15,HIP69526,BrG,1.47,1.416,21.24,,,1
-1,15,275,289,15,HIP70950,BrG,1,1.416,21.24,,,1
-1,15,290,304,15,HIP70873,BrG,1,1.416,21.24,,Lea Target - double filter super bright,1
-1,15,305,319,15,HIP72567,BrG,1,29.736,446.04,,,1
-1,15,320,334,15,HIP72875,BrG,1.016,9.912,148.68,,,1
-1,15,335,349,15,HIP72659,BrG,1.016,29.736,446.04,,,1
-1,15,350,364,15,HIP64797,BrG,1.17,29.736,446.04,,,1
-1,15,365,379,15,HIP67275,BrG,1.15,29.736,446.04,,,1
-1,15,380,394,15,HIP68030,BrG,1.15,29.736,446.04,,,1
-1,15,395,409,15,HIP68682,BrG,1.15,29.736,446.04,,,1
-1,15,410,424,15,HIP71395,BrG,1.15,29.736,446.04,,,1
-1,15,425,439,15,HIP72848,BrG,1.15,29.736,446.04,,,1
-1,15,440,454,15,HIP73005,BrG,1.15,43.896,658.44,,,1
-1,15,455,469,15,HIP73100,BrG,1.15,29.736,446.04,,,1
-1,15,470,484,15,HD141399,BrG,1.15,19.824,297.36,,,1
+,Object,Start,End,ExpTime,Coadds,Expose,Total_tint,Filter,"Dither ("")",Aperture,TUB,Airmass,PT,KepMag,Companion,Comments
+0,dark,1356,1356,2,,1,,,,,,,,,,
+1,dark,1357,1366,3,,10,,,,,,,,,,
+2,dark,1377,1386,8,,10,,,,,,,,,,
