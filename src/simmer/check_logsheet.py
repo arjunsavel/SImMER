@@ -125,5 +125,5 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
                 )
         else:
             log_frame = pd.read_excel(log, tab)
-            failed += check_tab(tab, inst, add_dark_times=add_dark_times)
+            failed += check_tab(inst, add_dark_times=add_dark_times, tab=tab)
     return failed
