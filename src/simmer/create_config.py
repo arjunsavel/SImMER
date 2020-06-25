@@ -32,6 +32,10 @@ def create_config(log, config_file, tab=None):
                 "Filter": str,
             },
         )
+    else:
+        raise NotImplementedError(
+            "Specified log file is of an " "unsupported file type."
+        )
     logdf = logdf[pd.notna(logdf["Start"])]
     savedf = logdf[["Object", "ExpTime", "Filter", "Comments"]]
 
