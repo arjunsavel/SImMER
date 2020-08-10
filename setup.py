@@ -27,7 +27,7 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     "numpy",
     "tqdm",
-    "pandas",
+    "pandas==1.0",
     "astropy>=3.1.2",
     "openpyxl>=2.5.12",
     "scipy>=1.1.0",
