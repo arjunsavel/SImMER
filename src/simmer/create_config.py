@@ -2,14 +2,14 @@
 Creates config file from logsheet. Will move into either utils or example folder.
 """
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 class LogsheetError(ValueError):
-    ""
+    """
     For incorrect values within a logsheet that 
     can break `create_config` with opaque error messages.
-    ""
+    """
     pass
 
 
