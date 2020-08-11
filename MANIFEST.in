@@ -1,0 +1,4 @@
+include src/simmer/tests/*.csv
+include src/simmer/tests/*.yml
+include src/simmer/schemas/*.yml
+include src/simmer/badpix.fits

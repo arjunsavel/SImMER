@@ -2,7 +2,17 @@
 Creates config file from logsheet. Will move into either utils or example folder.
 """
 
+import numpy as np
 import pandas as pd
+
+
+class LogsheetError(ValueError):
+    """
+    For incorrect values within a logsheet that
+    can break `create_config` with opaque error messages.
+    """
+
+    pass
 
 
 def create_config(log, config_file, tab=None):
@@ -45,6 +55,10 @@ def create_config(log, config_file, tab=None):
     for row in range(0, nrows):
         start = logdf["Start"].iloc[row]
         end = logdf["End"].iloc[row]
+        if np.isnan(start) or np.isnan(end):
+            raise LogsheetError(
+                f"Check for empty start or end entry in row {row}."
+            )
         filelist = range(start, end + 1)
         filenums.append(filelist)
 
