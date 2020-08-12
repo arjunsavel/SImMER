@@ -72,21 +72,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
     "nbsphinx",
-    "rtds_action",
 ]
-
-# The name of your GitHub repository
-rtds_action_github_repo = "arjunsavel/simmer"
-
-# The path where the artifact should be extracted
-# Note: this is relative to the conf.py file!
-rtds_action_path = "pages"
-
-# The "prefix" used in the `upload-artifact` step of the action
-rtds_action_artifact_prefix = "notebooks-for-"
-
-# A GitHub personal access token is required, more info below
-rtds_action_github_token = os.environ["GITHUB_TOKEN"]
 
 nbsphinx_prolog = """
 This notebook is available at
