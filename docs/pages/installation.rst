@@ -18,7 +18,7 @@ SImMER is developed on `GitHub <https://github.com/arjunsavel/simmer>`_. If you 
 Test the installation
 ---------------------
 
-To ensure that the installation has been performed smoothly, feel free to run the unit and integration tests included with the package. The entire test suite should take on the order of 10 minutes to run. In the process, a few (~2) gigabytes of data will be downloaded from this project's `Amazon S3 bucket <https://aws.amazon.com/s3/>`_; they'll be automatically deleted once the test suite is finished. 
+To ensure that the installation has been performed smoothly, feel free to run the unit and integration tests included with the package. The entire test suite should take on the order of 10 minutes to run. In the process, a few (~2) gigabytes of data will be downloaded from this project's associated Dropbox files; they'll be automatically deleted once the test suite is finished. 
 
 From the :code:`simmer` directory, then run
 
