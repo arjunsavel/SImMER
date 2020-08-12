@@ -75,6 +75,9 @@ extensions = [
     "rtds_action",
 ]
 
+# The name of your GitHub repository
+rtds_action_github_repo = "arjunsavel/simmer"
+
 # The path where the artifact should be extracted
 # Note: this is relative to the conf.py file!
 rtds_action_path = "pages"
