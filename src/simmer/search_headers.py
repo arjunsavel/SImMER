@@ -48,7 +48,6 @@ def search_headers(raw_dir, write_dir=None):
             head_k2 = head[key2]
 
             if int(head_k1[1:]) != head_k2:
-                print(int(head_k1[1:]), head_k2, file)
                 textfile.write(f"{file}\n")
 
         else:
