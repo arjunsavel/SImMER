@@ -2,6 +2,7 @@
 Creates config file from logsheet. Will move into either utils or example folder.
 """
 
+
 import numpy as np
 import pandas as pd
 
@@ -46,7 +47,9 @@ def create_config(log, config_file, tab=None):
         raise NotImplementedError(
             "Specified log file is of an " "unsupported file type."
         )
+
     logdf = logdf[pd.notna(logdf["Start"])]
+    # TODO: add error in case a tab was not selected and should have been
     savedf = logdf[["Object", "ExpTime", "Filter", "Comments"]]
 
     nrows = len(logdf)

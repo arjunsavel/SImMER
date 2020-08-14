@@ -72,7 +72,9 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
     "nbsphinx",
+    "rtds_action",
 ]
+
 
 nbsphinx_prolog = """
 This notebook is available at
