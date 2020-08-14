@@ -8,6 +8,12 @@ plot_config = None
 
 
 def initialize_plotting(yml_filename=None):
+    """
+    Function to set up globabl plotting within SImMER.
+    
+    Inputs:
+        yml_filename: (string) defaults to None. Path to yml.
+    """
     global plot_config
     plot_config = read.get_plotting_args(
         yml_filename
@@ -79,6 +85,16 @@ def add_colorbars(fig, plot_type, cim, mode):
 
 
 def get_array_len(im_array):
+    """
+    Determines length of image array, assuming that they are
+    cast as 3D arrays.
+    
+    Inputs:
+        im_array: (3D numpy array) array containing image data.
+    
+    Outputs:
+        array_len: (int) length of image array.
+    """
     if len(np.shape(im_array)) > 2:
         array_len = np.shape(im_array)[0]
     elif len(np.shape(im_array)) == 2:
@@ -190,9 +206,8 @@ def plot_array(
 
     array_len = get_array_len(im_array)
 
-    if array_len == 1:
-        if plot_type == "final_im":
-            im_array = np.array([im_array])
+    if array_len == 1 and plot_type == "final_im":
+        im_array = np.array([im_array])
 
     if array_len <= 5:
         fig, cim = plot_few(func)
