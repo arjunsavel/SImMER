@@ -1,7 +1,5 @@
 Quickstart
 ============
-.. warning::
-    There are a few notebooks included within the package that are merely skeletons and not fully fleshed out examples. They can be modified to run with your specifications, but they are not currently expected to run as provided.
 
 PHARO reduction
 ---------------
