@@ -6,7 +6,7 @@ available integrations and services, which are summarized below:
 
 Code distribution
 -----------------
-We aim to make :code:`SImMER` available via the standard method of Python package distribution.
+We aim to make :code:`SImMER` available via the standard methods of Python package distribution.
 
 - `conda-forge <https://conda-forge.org/>`_: :code:`SImMER` is available through `conda <https://docs.conda.io/en/latest/>`_ thanks to conda-forge, an open-source organization managing `conda recipes <https://docs.conda.io/projects/conda-build/en/latest/concepts/recipe.html>`_. Our associated feedstock (where our conda recipe is stored and managed) can be found `here <https://github.com/conda-forge/simmer-feedstock>`_.
 
