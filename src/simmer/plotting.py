@@ -50,12 +50,21 @@ def zoom(image, zoom_scale):
     return zoomed
 
 
-def add_colorbars(fig, plot_type, cim):
+def add_colorbars(fig, plot_type, cim, mode):
     """
     Inputs:
         fig: (figure object) This is where the colorbars are added.
         plot_type: (string) The type of plot to add colorbars to.
+        mode: (string) either 'many' or 'few'. Determines the size of
+            the colorbar text.
     """
+    if mode == "many":
+        colorbar_ticksize = 40
+        colorbar_labelsisze = 80
+
+    elif mode == "few":
+        colorbar_ticksize = 15
+        colorbar_labelsisze = 20
     scaling = plot_config[plot_type][0]["scaling"]
     text_dict = {
         "rots": "Residuals",
@@ -65,8 +74,18 @@ def add_colorbars(fig, plot_type, cim):
     cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
     cbar = fig.colorbar(cim, cax=cbar_ax)
     text = f"{text_dict[plot_type]}, {scaling} scaling"
-    cbar.set_label(text)
-    cbar.ax.tick_params(labelsize=50)
+    cbar.set_label(text, size=colorbar_labelsisze)
+    cbar.ax.tick_params(labelsize=colorbar_ticksize)
+
+
+def get_array_len(im_array):
+    if len(np.shape(im_array)) > 2:
+        array_len = np.shape(im_array)[0]
+    elif len(np.shape(im_array)) == 2:
+        array_len = 1
+    else:
+        raise ValueError("Cannot determine size of image array.")
+    return array_len
 
 
 def plot_array(
@@ -89,7 +108,7 @@ def plot_array(
     """
 
     def plot_few(func):
-        fig = plt.figure(figsize=(30, 6))
+        fig = plt.figure(figsize=(6 * array_len, 6))
         for i in range(array_len):
             ax = fig.add_subplot(
                 1, array_len, i + 1
@@ -104,7 +123,12 @@ def plot_array(
                 norm=co.Normalize(vmin=vmin, vmax=vmax),
                 extent=extent,
             )
+            ax.set_xlabel("pixels", fontsize=25)
+            if i == 0:
+                ax.set_ylabel("pixels", fontsize=25)
             ax.tick_params(axis="both", which="major", labelsize=20)
+        if plot_config[plot_type][0]["colorbars"]:
+            add_colorbars(fig, plot_type, cim, mode="few")
         return fig, cim
 
     def plot_many(func):
@@ -131,11 +155,19 @@ def plot_array(
                 norm=co.Normalize(vmin=vmin, vmax=vmax),
                 extent=extent,
             )
+            ax.set_xlabel("pixels", fontsize=50)
+
+            if i % ncols == 0:  # if it is on the leftmost column
+                ax.set_ylabel("pixels", fontsize=50)
+
             ax.tick_params(axis="both", which="major", labelsize=40)
             if filename == "centers.png":
                 ax.plot([50], [50], "wo", markersize=8)
                 ax.set_xlim([0, 100])
                 ax.set_ylim([0, 100])
+
+        if plot_config[plot_type][0]["colorbars"]:
+            add_colorbars(fig, plot_type, cim, mode="many")
         return fig, cim
 
     if not plot_config:
@@ -156,7 +188,11 @@ def plot_array(
 
     func = func_dict[plot_config[plot_type][0]["scaling"]]
 
-    array_len = np.shape(im_array)[0]
+    array_len = get_array_len(im_array)
+
+    if array_len == 1:
+        if plot_type == "final_im":
+            im_array = np.array([im_array])
 
     if array_len <= 5:
         fig, cim = plot_few(func)
@@ -168,8 +204,7 @@ def plot_array(
         fig, cim = plot_many(func)
 
     fig.subplots_adjust(right=0.8)
-    if plot_config[plot_type][0]["colorbars"]:
-        add_colorbars(fig, plot_type, cim)
-    plt.savefig(directory + filename)
+
+    plt.savefig(directory + filename, bbox_inches="tight")
     plt.close("all")
     return fig
