@@ -72,7 +72,6 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
     "nbsphinx",
-    "rtds_action",
 ]
 
 
