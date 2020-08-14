@@ -1,5 +1,5 @@
 name: Docs
-on: [push, release]
+on: [release]
 
 jobs:
   notebooks:
@@ -22,14 +22,7 @@ jobs:
         run: |
           python docs/execute_notebooks.py
 
-      - uses: actions/upload-artifact@v2
+      - name: Committing changes
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          name: notebooks-for-${{ github.sha }}
-          path: docs/pages
-
-      - name: Trigger RTDs build
-        uses: dfm/rtds-action@v1.0.0
-        with:
-          webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
-          webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
-          commit_ref: ${{ github.ref }}
+          commit_message: Running tutorial notebooks on newest release
