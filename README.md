@@ -6,5 +6,23 @@
 Repository for developing the ```SImMER``` image reduction pipeline. If you'd like to help out, take a look at our [ways to contribute](https://github.com/arjunsavel/simmer/blob/master/CONTRIBUTING.md).
 
 
+## Installation
+To install with conda (the recommended method), run
+```
+conda config --add channels conda-forge
+conda install simmer
+```
+To install with pip, run
+```
+pip install simmer
+```
+Or, to install from source, run
+```
+python3 -m pip install -U pip
+python3 -m pip install -U setuptools setuptools_scm pep517
+git clone https://github.com/arjunsavel/SImMER.git
+cd simmer
+python3 -m pip install -e .
+```
 ## Documentation
 To get started, read the docs at [our readthedocs site](https://simmer.readthedocs.io/en/latest/pages/about.html).
