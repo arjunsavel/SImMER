@@ -124,7 +124,7 @@ def create_config(log, config_file, tab=None):
 
     savedf = isolate_columns(logdf)
 
-    filenums = get_filnums(logdf)
+    filenums = get_filenums(logdf)
 
     savedf["Filenums"] = pd.Series(filenums)
 
