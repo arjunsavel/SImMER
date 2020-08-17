@@ -86,6 +86,26 @@ def get_filenums(logdf):
     return filenums
 
 
+def isolate_columns(logdf):
+    """
+    Isolates the subset of columns in a DataFrame log that are
+    relevant to data reduction.
+
+    Inputs:
+        logdf: (pd.DataFrame) logsheet in Pandas DataFrame.
+
+    Outputs:
+        savedf: (pd.DataFrame) Pandas DataFrame to be used in reduction.
+    """
+    if "Method" not in logdf.columns:
+        savedf = logdf[["Object", "ExpTime", "Filter", "Comments"]]
+        savedf.Method = "saturated"  # default for now
+    else:
+        savedf = logdf[["Object", "ExpTime", "Filter", "Comments", "Method"]]
+
+    return savedf
+
+
 def create_config(log, config_file, tab=None):
     """
     Create config csv file out of tab in logsheet.
@@ -102,11 +122,7 @@ def create_config(log, config_file, tab=None):
     logdf = logdf[pd.notna(logdf["Start"])]
     # TODO: add error in case a tab was not selected and should have been
 
-    if "Method" not in logdf.columns:
-        savedf = logdf[["Object", "ExpTime", "Filter", "Comments"]]
-        savedf.Method = "saturated"  # default for now
-    else:
-        savedf = logdf[["Object", "ExpTime", "Filter", "Comments", "Method"]]
+    savedf = isolate_columns(logdf)
 
     filenums = get_filnums(logdf)
 
