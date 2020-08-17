@@ -1,6 +1,24 @@
 Installation
 ============
 
+Installing with conda
+-----------------------
+SImMER is distributed through `conda-forge <https://conda-forge.org/>`_, and can be installed via conda. 
+This is the recommended installation method. To do so, run
+
+.. code-block:: bash
+
+    conda config --add channels conda-forge
+    conda install simmer
+
+Installing with pip
+-----------------------
+SImMER is also distributed on `PyPI <https://pypi.org/>`_. It can be installed with
+
+.. code-block:: bash
+
+    pip install simmer
+
 Installing from source
 -----------------------
 
