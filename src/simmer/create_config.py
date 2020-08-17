@@ -3,6 +3,8 @@ Creates config file from logsheet. Will move into either utils or example folder
 """
 
 
+import warnings
+
 import numpy as np
 import pandas as pd
 
@@ -30,6 +32,14 @@ def read_logsheet(log, tab=None):
     if log[-3:] == "csv":
         logdf = pd.read_csv(log)
     elif log[-4:] == "xlsx" or log[-3:] == "xls":
+
+        xl = pd.ExcelFile(log)
+        num_sheets = len(xl.sheet_names)
+        if num_sheets > 1 and not tab:
+            warnings.warn(
+                "Warning — more than one tab in logsheet, but no tab selected. Reading entire logsheet."
+            )
+
         logdf = pd.read_excel(
             log,
             sheet_name=tab,
