@@ -20,7 +20,7 @@ About SImMER
 .. image:: https://badge.fury.io/py/simmer.svg
     :target: https://badge.fury.io/py/simmer
     :alt: PyPI badge
-.. image:: https://img.shields.io/conda/vn/conda-forge/simmer.svg
+.. image:: https://img.shields.io/conda/v/conda-forge/simmer?color=g&label=conda-forge%20%20%20%20%20&logo=conda-forge
     :target: https://anaconda.org/conda-forge/simmer
     :alt: Conda badge
     
