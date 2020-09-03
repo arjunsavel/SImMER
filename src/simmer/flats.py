@@ -14,7 +14,7 @@ CENTER = (750, 1100)  # row,col
 MPIX = 600
 
 
-class DarkNotFoundError(FileNotFoundError):
+class DarkOpeningError(FileNotFoundError):
     pass
 
 
@@ -34,7 +34,7 @@ def open_darks(darkfile):
             """Currently, SImMER only supports darks in FITS files."""
         )
     if not path.exists(darkfile):
-        raise DarkNotFoundError(
+        raise DarkOpeningError(
             """The requested dark file can't be found. Please check that you have a dark
             file corresponding to every exposure setting used in your observations and flats."""
         )
