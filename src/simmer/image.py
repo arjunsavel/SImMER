@@ -34,7 +34,7 @@ def open_flats(flatfile):
         raise FlatOpeningError(
             """Currently, SImMER only supports flats in FITS files."""
         )
-    if not path.exists(flatfile):
+    if not os.path.exists(flatfile):
         raise FlatOpeningError(
             """The requested flat file can't be found. Please check that you have a flat
             file corresponding to every filter used in your observations."""
