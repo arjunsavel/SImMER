@@ -15,7 +15,7 @@ from . import registration as reg
 from . import utils as u
 
 
-class FlatNotFoundError(FileNotFoundError):
+class FlatOpeningError(ValueError):
     pass
 
 
@@ -30,8 +30,12 @@ def open_flats(flatfile):
     Outputs:
         :dark: (array) data from darks FITS file.
     """
+    if flatfile[-4:] != "fits":
+        raise FlatOpeningError(
+            """Currently, SImMER only supports flats in FITS files."""
+        )
     if not path.exists(flatfile):
-        raise FlatNotFoundError(
+        raise FlatOpeningError(
             """The requested flat file can't be found. Please check that you have a flat
             file corresponding to every filter used in your observations."""
         )
