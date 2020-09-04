@@ -121,12 +121,12 @@ class TestExceptions(unittest.TestCase):
     def test_dark_not_fits(self):
         wrong_file_type = "4242.yml"
         with self.assertRaises(flats.DarkOpeningError):
-            flats.open_flats(wrong_file_type)
+            flats.open_darks(wrong_file_type)
 
     def test_dark_non_existent(self):
         non_existent_flat = "4242.fits"
         with self.assertRaises(flats.DarkOpeningError):
-            flats.open_flats(non_existent_flat)
+            flats.open_darks(non_existent_flat)
 
 
 class TestCreation(unittest.TestCase):
