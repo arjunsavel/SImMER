@@ -190,6 +190,12 @@ class TestConfig(unittest.TestCase):
         self.assertTrue(True)
 
     def test_LogsheetError(self):
+        try:
+            download_folder("config_test")
+        except:
+            raise DataDownloadException(
+                "Could not download test data for config_test."
+            )
         compare_frame = pd.read_csv(
             "src/simmer/tests/config_test/compare_frame_csv.csv"
         )
