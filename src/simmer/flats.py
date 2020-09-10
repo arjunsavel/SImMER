@@ -1,6 +1,8 @@
 """
 Functions to work with flats.
 """
+from os import path
+
 import astropy.io.fits as pyfits
 import numpy as np
 from tqdm import tqdm
@@ -10,6 +12,35 @@ from . import utils as u
 
 CENTER = (750, 1100)  # row,col
 MPIX = 600
+
+
+class DarkOpeningError(FileNotFoundError):
+    pass
+
+
+def open_darks(darkfile):
+    """
+    Opens dark files. Essentially a wrapper around pyfits.getdata that
+    also includes a descriptive exception if the file doesn't exist.
+
+    Inputs:
+        :darkfile: (str) path to dark to be opened.
+
+    Outputs:
+        :dark: (array) data from darks FITS file.
+    """
+    if darkfile[-4:] != "fits":
+        raise DarkOpeningError(
+            """Currently, SImMER only supports darks in FITS files."""
+        )
+    if not path.exists(darkfile):
+        raise DarkOpeningError(
+            """The requested dark file can't be found. Please check that you have a dark
+            file corresponding to every exposure setting used in your observations and flats."""
+        )
+    else:
+        dark = pyfits.getdata(darkfile, 0)
+        return dark
 
 
 def flat_driver(raw_dir, reddir, config, inst, plotting_yml=None):
@@ -36,6 +67,8 @@ def flat_driver(raw_dir, reddir, config, inst, plotting_yml=None):
             _flats[_flats.Filter == filter_name].Filenums.values[0]
         )  # pylint: disable=eval-used
         itime = _flats[_flats.Filter == filter_name].ExpTime.values[0]
+
+        # darks are matched with flats by exposure time
         darkfile = reddir + f"dark_{int(round(itime))}sec.fits"
         create_flats(
             raw_dir, reddir, flatlist, darkfile, inst, filter_name=filter_name
@@ -56,6 +89,9 @@ def create_flats(
         :npix: (int) number of pixels in image.
         :pl: (Bool) determines whether plots are produced.
         :filter: filter name given if head['FILT1NAM'] == 'Unknown'
+
+    Outputs:
+        :final_flat: (array) median-filtered flat.
     """
     nflats = len(flatlist)
     flatfiles = u.make_filelist(raw_dir, flatlist, inst)
@@ -67,7 +103,8 @@ def create_flats(
     if test:
         dark = 0.0
     else:
-        dark = pyfits.getdata(darkfile, 0)
+        dark = open_darks(darkfile)
+
     for i in range(nflats):
         flat_array[i, :, :] = flat_array[i, :, :] - dark
         flat_array[i, :, :] = flat_array[i, :, :] / np.median(

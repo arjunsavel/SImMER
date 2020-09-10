@@ -15,6 +15,35 @@ from . import registration as reg
 from . import utils as u
 
 
+class FlatOpeningError(ValueError):
+    pass
+
+
+def open_flats(flatfile):
+    """
+    Opens flats files. Essentially a wrapper around pyfits.getdata that
+    also includes a descriptive exception if the file doesn't exist.
+
+    Inputs:
+        :flatfile: (str) path to dark to be opened.
+
+    Outputs:
+        :dark: (array) data from darks FITS file.
+    """
+    if flatfile[-4:] != "fits":
+        raise FlatOpeningError(
+            """Currently, SImMER only supports flats in FITS files."""
+        )
+    if not os.path.exists(flatfile):
+        raise FlatOpeningError(
+            """The requested flat file can't be found. Please check that you have a flat
+            file corresponding to every filter used in your observations."""
+        )
+    else:
+        flat = pyfits.getdata(flatfile, 0)
+        return flat
+
+
 def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     """Do flat division, sky subtraction, and initial alignment via coords in header.
     Returns Python list of each registration method used per star.
@@ -123,7 +152,7 @@ def create_imstack(
         inst.name == "PHARO" and filt == "Br-gamma"
     ):  # not sure whether this is generalizable
         flatfile = reddir + "flat_K_short.fits"
-    flat = pyfits.getdata(flatfile, 0)
+    flat = open_flats(flatfile)
 
     skyfile = sf_dir + "sky.fits"
     sky = pyfits.getdata(skyfile, 0)
