@@ -196,17 +196,20 @@ class TestConfig(unittest.TestCase):
             raise DataDownloadException(
                 "Could not download test data for config_test."
             )
-        compare_frame = pd.read_csv(
-            "src/simmer/tests/config_test/compare_frame_csv.csv"
-        )
-        compare_frame.loc[20, "Start"] = np.nan
-
-        nan_start_config_path = (
-            "src/simmer/tests/config_test/nan_start_config_test.csv"
-        )
-        compare_frame.to_csv(nan_start_config_path)
-
+            
         tab = "Sheet1"
+        logsheet_path = "src/simmer/Examples/PHARO/logsheet.csv"
+        frame = pd.read_csv(
+            logsheet_path
+        )
+        
+        nan_start_config_path = (
+            "src/simmer/tests/nan_start_config_test.csv"
+        )
+        
+        frame.loc[20, "Start"] = np.nan
+        frame.to_csv(nan_start_config_path)
+        
         self.assertRaises(
             c.LogsheetError,
             c.create_config,
