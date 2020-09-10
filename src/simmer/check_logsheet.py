@@ -24,7 +24,7 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
         :add_dark_times: (bool) if true, runs the script within add_dark_exp to add the data from the
                         automated dark script to the log sheet.
     Outputs:
-        :failed: (int) number of failed tests.
+        :failed: (int) number of failed logsheet checks.
     """
 
     def check_tab(inst, add_dark_times, tab=None):
@@ -108,7 +108,7 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
         except UnboundLocalError:
             print("Incorrect number of exposures for start and end exposure.")
             failed += 1
-        print(f"{9-failed}/9 tests passed.")
+        print(f"{9-failed}/9 logsheet checks passed.")
         return failed
 
     failed = 0
