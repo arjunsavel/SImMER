@@ -43,9 +43,17 @@ def all_driver(inst, config_file, raw_dir, reddir, plotting_yml=None):
     methods = image.image_driver(raw_dir, reddir, config, inst)
 
     star_dirlist = glob(reddir + "*/")
+
+    # we want to ensure that the code doesn't attempt to reduce folders
+    # that are in the reduced directory but not in the config
+    cleaned_star_dirlist = list(set(star_dirlist) & set(config.Object))
+
     i = 0  # can't use tqdm on zipped objects, I believe
     for s_dir in tqdm(
-        star_dirlist, desc="Running registration", position=0, leave=True
+        cleaned_star_dirlist,
+        desc="Running registration",
+        position=0,
+        leave=True,
     ):
         image.create_im(s_dir, 10, method=methods[i])
         i += 1
