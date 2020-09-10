@@ -30,7 +30,7 @@ def open_darks(darkfile):
         :dark: (array) data from darks FITS file.
     """
     if darkfile[-4:] != "fits":
-        raise FlatOpeningError(
+        raise DarkOpeningError(
             """Currently, SImMER only supports darks in FITS files."""
         )
     if not path.exists(darkfile):
