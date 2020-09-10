@@ -189,6 +189,26 @@ class TestConfig(unittest.TestCase):
         delete_folder(raw_dir)
         self.assertTrue(True)
 
+    def test_LogsheetError(self):
+        compare_frame = pd.read_csv(
+            "src/simmer/tests/config_test/compare_frame_csv.csv"
+        )
+        compare_frame.loc[20, "Start"] = np.nan
+
+        nan_start_config_path = (
+            "src/simmer/tests/config_test/nan_start_config_test.csv"
+        )
+        compare_frame.to_csv(nan_start_config_path)
+
+        tab = "Sheet1"
+        self.assertRaises(
+            c.LogsheetError,
+            c.create_config,
+            nan_start_config_path,
+            "created_frame.csv",
+            tab,
+        )
+
 
 class TestPHAROSpecific(unittest.TestCase):
     inst = i.PHARO()
