@@ -76,9 +76,11 @@ def get_filenums(logdf):
     for row in range(0, nrows):
         start = logdf["Start"].iloc[row]
         end = logdf["End"].iloc[row]
-        if np.isnan(start) or np.isnan(end):
+        if not np.issubdtype(start, np.integer) or not np.issubdtype(
+            end, np.integer
+        ):
             raise LogsheetError(
-                f"Check for empty start or end entry in row {row}."
+                f"Check that the start and end entries in row {row} are integers and not empty."
             )
         filelist = range(start, end + 1)
         filenums.append(filelist)
