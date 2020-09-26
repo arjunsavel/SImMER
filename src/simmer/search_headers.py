@@ -42,8 +42,7 @@ def search_headers(raw_dir, write_dir=None):
         # check keywords
         key1 = "DATAFILE"
         key2 = "FRAMENUM"
-
-        if key1 and key2 in keys:
+        if key1 in keys and key2 in keys:
             head_k1 = head[key1]
             head_k2 = head[key2]
 
