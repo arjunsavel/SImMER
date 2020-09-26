@@ -23,6 +23,21 @@ from simmer.tests.tests_reduction import (
     DataDownloadException,
 )
 
+from contextlib import contextmanager
+from io import StringIO
+import sys
+
+
+@contextmanager
+def captured_output():
+    new_out, new_err = StringIO(), StringIO()
+    old_out, old_err = sys.stdout, sys.stderr
+    try:
+        sys.stdout, sys.stderr = new_out, new_err
+        yield sys.stdout, sys.stderr
+    finally:
+        sys.stdout, sys.stderr = old_out, old_err
+
 
 class TestYml(unittest.TestCase):
     default_config = {
@@ -196,20 +211,16 @@ class TestConfig(unittest.TestCase):
             raise DataDownloadException(
                 "Could not download test data for config_test."
             )
-            
+
         tab = "Sheet1"
         logsheet_path = "src/simmer/Examples/PHARO/logsheet.csv"
-        frame = pd.read_csv(
-            logsheet_path
-        )
-        
-        nan_start_config_path = (
-            "src/simmer/tests/nan_start_config_test.csv"
-        )
-        
+        frame = pd.read_csv(logsheet_path)
+
+        nan_start_config_path = "src/simmer/tests/nan_start_config_test.csv"
+
         frame.loc[20, "Start"] = np.nan
         frame.to_csv(nan_start_config_path)
-        
+
         self.assertRaises(
             c.LogsheetError,
             c.create_config,
@@ -245,6 +256,62 @@ class TestPHAROSpecific(unittest.TestCase):
 
 class TestShARCSSpecific(unittest.TestCase):
     inst = i.ShARCS()
+
+    def test_search_headers_no_framenum(self):
+        """
+        Tests the search_headers function against
+        the original file that caused the issue.
+        """
+        try:
+            download_folder("search_headers")
+        except:
+            raise DataDownloadException(
+                "Could not download test data for skies."
+            )
+        raw_dir = "src/simmer/tests/test_search_header/"
+        data, header = pyfits.getdata(
+            raw_dir + "wrong_header.fits", header=True
+        )
+        del header["FRAMENUM"]
+        pyfits.writeto(
+            raw_dir + "wrong_header.fits", data, header, overwrite=True
+        )
+
+        with captured_output() as (out, err):
+            search.search_headers(raw_dir)
+        anticipated_string = "Header Incomplete in src/simmer/tests/test_search_header/wrong_header.fits!!!"
+        # This can go inside or outside the `with` block
+        output = out.getvalue().strip()
+        delete_folder(raw_dir)
+        self.assertEqual(output, anticipated_string)
+
+    def test_search_headers_no_datafile(self):
+        """
+        Tests the search_headers function against
+        the original file that caused the issue.
+        """
+        try:
+            download_folder("search_headers")
+        except:
+            raise DataDownloadException(
+                "Could not download test data for skies."
+            )
+        raw_dir = "src/simmer/tests/test_search_header/"
+        data, header = pyfits.getdata(
+            raw_dir + "wrong_header.fits", header=True
+        )
+        del header["DATAFILE"]
+        pyfits.writeto(
+            raw_dir + "wrong_header.fits", data, header, overwrite=True
+        )
+
+        with captured_output() as (out, err):
+            search.search_headers(raw_dir)
+        anticipated_string = "Header Incomplete in src/simmer/tests/test_search_header/wrong_header.fits!!!"
+        # This can go inside or outside the `with` block
+        output = out.getvalue().strip()
+        delete_folder(raw_dir)
+        self.assertEqual(output, anticipated_string)
 
     def test_search_headers(self):
         try:
