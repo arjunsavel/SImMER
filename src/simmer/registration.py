@@ -107,7 +107,7 @@ def register_bruteforce(image, rough_center=None):
     return image_centered
 
 
-def find_wide_binary(image):
+def find_wide_binary(image, event=None):
     """
     Performs the first step of image registration for a science image that
     contains a wide binary. User input selects which target is the primary star
@@ -117,7 +117,8 @@ def find_wide_binary(image):
         :image: (2-d array) photon counts at each pixel of each science image.
 
     outputs:
-        :image_centered: (2-d array) image cenered by the rotations method.
+        :rough_center: (2-element tuple) rough center of image, as determined
+                        by the user.
     """
 
     def onclick(event):
@@ -139,7 +140,7 @@ def find_wide_binary(image):
     plt.show(1)
 
     # fig.canvas.mpl_connect('button_press_event', onclick)
-    return rough_center
+    return rough_center[0]
 
 
 def register_saturated(image, searchsize1, newshifts1, rough_center=None):
