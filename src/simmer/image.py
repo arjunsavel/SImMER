@@ -93,7 +93,7 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
                 obj[obj.Comments != "sky"].Filenums.values[n]
             )  # pylint: disable=eval-used # liter_eval issues
             # cast obj_methods as list so that elementwise comparison isn't performed
-            obj_methods = list(config[config.Object == star].Method.values)
+            obj_methods = list(config[config.Object == star].Method.values)[0]
             if "saturated" and "wide" in obj_methods:
                 methods.append("saturated wide")
             elif "saturated" in obj_methods and "wide" not in obj_methods:
@@ -231,7 +231,6 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
             image = frames[i, :, :]
             # image_centered, rot, newshifts1 = reg.register_saturated(image, ssize1, newshifts1)
             # rots[i, :, :] = rot
-
             if method == "saturated":
                 image_centered, rot, newshifts1 = reg.register_saturated(
                     image, ssize1, newshifts1
@@ -251,9 +250,10 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
                     rots[i, :, :] = rot
             elif method == "saturated wide":
                 rough_center = reg.find_wide_binary(image)
-                image_centered = reg.register_bruteforce(
-                    image, rough_center=rough_center
+                image_centered, rot, newshifts1 = reg.register_saturated(
+                    image, ssize1, newshifts1, rough_center=rough_center
                 )
+                rots[i, :, :] = rot
             elif method == "wide":
                 rough_center = reg.find_wide_binary(image)
                 image_centered = reg.register_bruteforce(
