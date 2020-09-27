@@ -8,6 +8,7 @@ from glob import glob
 
 import astropy.io.fits as pyfits
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 from . import plotting as pl
@@ -94,18 +95,18 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
             )  # pylint: disable=eval-used # liter_eval issues
             # cast obj_methods as list so that elementwise comparison isn't performed
             obj_methods = config[config.Object == star].Method.values
-            if np.all(np.isnan(obj_methods)):
+
+            # use pd.isnull because it can check against strings
+            if np.all(pd.isnull(obj_methods)):
                 methods.append("default")
             else:
                 obj_method = obj_methods[~np.isnan(obj_method)][0]
-            if "saturated" and "wide" in obj_method:
-                methods.append("saturated wide")
-            elif "saturated" in obj_method and "wide" not in obj_method:
-                methods.append("saturated")
-            elif "saturated" not in obj_method and "wide" in obj_method:
-                methods.append("wide")
-            else:
-                methods.append("default")
+                if "saturated" and "wide" in obj_method:
+                    methods.append("saturated wide")
+                elif "saturated" in obj_method and "wide" not in obj_method:
+                    methods.append("saturated")
+                elif "saturated" not in obj_method and "wide" in obj_method:
+                    methods.append("wide")
             create_imstack(
                 raw_dir, reddir, s_dir, imlist, inst, filter_name=filter_name
             )
