@@ -36,7 +36,6 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
         """
         if file[1] == "0":
             number = literal_eval(file[2:5])  # just a safer eval
-        print(file)
         number = literal_eval(file[1:5])
         return number
 
@@ -52,9 +51,11 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
         for i, item in enumerate(column):
             if not isinstance(item, str) and not isinstance(item, int):
                 end = i
-                return end
-        end = len(column)
-        return len(column)
+        if i == len(column):
+            end = len(column)
+        if not end:
+            end = len(initial_frame["Object"])
+        return end
 
     def log_to_csv(log, tab, end, new_frame):
         """Writes a log to a csv file in current directory.
@@ -134,8 +135,6 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
     new_frame = pd.DataFrame(data=data_dict)
 
     end = find_end(initial_frame["Object"])
-    if not end:
-        end = len(initial_frame["Object"])
 
     log_to_csv(log, tab, end, new_frame)
 
@@ -152,7 +151,6 @@ def find_itimes(inst, raw_dir):
     outdir = raw_dir
 
     files = glob.glob(raw_dir + inst.file_prefix + "*.fits")
-    #     lastitime = 0
     with open(outdir + "_dark_itimes.txt", "w") as outfile:
         for file in files:
             # load in header:
