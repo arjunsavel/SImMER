@@ -93,12 +93,16 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
                 obj[obj.Comments != "sky"].Filenums.values[n]
             )  # pylint: disable=eval-used # liter_eval issues
             # cast obj_methods as list so that elementwise comparison isn't performed
-            obj_methods = list(config[config.Object == star].Method.values)[0]
-            if "saturated" and "wide" in obj_methods:
+            obj_methods = config[config.Object == star].Method.values
+            if np.all(np.isnan(obj_methods)):
+                methods.append("default")
+            else:
+                obj_method = obj_methods[~np.isnan(obj_method)][0]
+            if "saturated" and "wide" in obj_method:
                 methods.append("saturated wide")
-            elif "saturated" in obj_methods and "wide" not in obj_methods:
+            elif "saturated" in obj_method and "wide" not in obj_method:
                 methods.append("saturated")
-            elif "saturated" not in obj_methods and "wide" in obj_methods:
+            elif "saturated" not in obj_method and "wide" in obj_method:
                 methods.append("wide")
             else:
                 methods.append("default")
