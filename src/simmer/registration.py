@@ -14,7 +14,13 @@ from .scipy_utils import *
 
 
 def roll_shift(image, shifts, cval=0.0):
-    """Enter shifts as (drow, dcol)"""
+    """
+    Rolls and shifts image.
+
+    inputs:
+        :image: (2-d array) photon counts at each pixel of each science image.
+        :shifts: (1-d array of tuples) Enter shifts as (drow, dcol).
+    """
     first_roll = np.roll(image, shifts[0], axis=0)
     if shifts[0] >= 0:
         first_roll[0 : shifts[0], :] = cval
@@ -311,9 +317,7 @@ def calc_shifts(
 
     # interpolate
     interped_out = imresize(out)
-    # im = Image.fromarray(out) # trying PIL
-    # size = tuple((np.array(im.size) * 100.).astype(int))
-    # interped_out = np.array(im.resize(size, Image.BICUBIC))
+
     if find == "max":
         pix = np.unravel_index(np.argmax(interped_out), interped_out.shape)
     elif find == "min":
@@ -369,7 +373,6 @@ def run_rot(image, searchsize, center, newsize):
     ]
     newcent = (newsize / 2, newsize / 2)
 
-    # (xshift, yshift), res = r.rotSearch(im, newcent[0], newcent[1], searchsize, searchsize)
     (xshift, yshift), res = calc_shifts(
         cut_image,
         newcent[0],

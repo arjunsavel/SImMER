@@ -89,7 +89,6 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
         ].Filter.values  # array of filters as strings
         for n, filter_name in enumerate(filts):
             obj = config[config.Object == star]
-            #             imlist = literal_eval(obj[obj.Comments != 'sky'].Filenums.values[n])
             imlist = eval(
                 obj[obj.Comments != "sky"].Filenums.values[n]
             )  # pylint: disable=eval-used # liter_eval issues
@@ -131,7 +130,6 @@ def create_imstack(
         :im_array: (3d array) array of 2d images.
         :shifts_all: recording of all the x-y shifts made
     """
-    #     method = 'brute force' # the default
     if plotting_yml:
         pl.initialize_plotting(plotting_yml)
 
@@ -161,7 +159,7 @@ def create_imstack(
 
     skyfile = sf_dir + "sky.fits"
     sky = pyfits.getdata(skyfile, 0)
-    sky[sky != sky] = 0.0  # set nans from flat=0 pixels to 0 in sky
+    sky[np.isnan(sky)] = 0.0  # set nans from flat=0 pixels to 0 in sky
 
     shifts_all = []
     for i in range(nims):
@@ -182,10 +180,6 @@ def create_imstack(
         )  # put it at the center
 
         shifts_all.append(shifts)
-
-        #         if tests: # want to perform tests after dark subtraction and flat-fielding
-        #             wides.append(reg.test_wide_binary)
-        #             saturateds.append(reg.test_saturated)
 
         im_array[i, :, :] = shifted_im
         hdu = pyfits.PrimaryHDU(shifted_im, header=current_head)
@@ -220,7 +214,6 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
 
     for sf_dir in fdirs:  # each filter
 
-        # files = glob(sf_dir + 'sh*.fits') #reduced image files
         files = glob(
             sf_dir + f"s*.fits"
         )  # might need to change to file_prefix
@@ -231,21 +224,15 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
         arrsize1 = ssize1 * 2 + 1
         rots = np.zeros((nims, arrsize1, arrsize1))
         newshifts1 = []
-        # newshifts2 = []
         for i in range(nims):  # each image
             image = frames[i, :, :]
-            # image_centered, rot, newshifts1 = reg.register_saturated(image, ssize1, newshifts1)
-            # rots[i, :, :] = rot
             if method == "saturated":
                 image_centered, rot, newshifts1 = reg.register_saturated(
                     image, ssize1, newshifts1
                 )
                 rots[i, :, :] = rot
             elif method == "default":
-                for j in range(len(image)):
-                    for k in range(len(image[i])):  # change to j
-                        if image[j][k] < 0.0:
-                            image[j][k] = 0.0
+                image[image < 0.0] = 0.0
                 image_centered = reg.register_bruteforce(image)
                 if len(image_centered) == 0:
                     print("Resorting to saturated mode.")

@@ -27,15 +27,15 @@ class Instrument:
         self.take_skies = take_skies
 
     def bad_pix(self, image):
-        """Read in bp file, cut down to size, replace bad
+        """Read in bp file, cut down to size, replace NaN
         pixels with median of surrounding pixels.
         """
         c_im = image.copy()
 
         for i in range(3):
             filtered = median_filter(c_im, size=10)
-            bad = np.where(c_im != c_im)  # check this
-            c_im[bad] = filtered[bad]
+            nan_indices = np.where(np.isnan(c_im))
+            c_im[nan_indices] = filtered[nan_indices]
 
         return c_im
 
