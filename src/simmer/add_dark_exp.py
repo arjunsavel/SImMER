@@ -51,10 +51,8 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
         for i, item in enumerate(column):
             if not isinstance(item, str) and not isinstance(item, int):
                 end = i
-        if i == len(column):
-            end = len(column)
-        if not end:
-            end = len(initial_frame["Object"])
+                return end
+        end = len(column)
         return end
 
     def log_to_csv(log, tab, end, new_frame):
