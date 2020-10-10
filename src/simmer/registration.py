@@ -36,6 +36,27 @@ def roll_shift(image, shifts, cval=0.0):
     return second_roll
 
 
+def zoom_image(image, rough_center):
+    """
+    Zooms in around a smaller portion of the image
+    for further registration.
+
+    inputs:
+        :image: (2-d array) photon counts at each pixel of each science image.
+        :rough_center: (2-d array, default None) location of primary star. This
+                    argument is only passed in the wide binary case.
+
+    outputs:
+        zoomed_image : (2-d array) image zoomed around the provided center.
+    """
+    scale = round(np.shape(image)[0] / 50)
+    zoomed_image = image[
+        rough_center[0] - scale : rough_center[0] + scale,
+        rough_center[1] - scale : rough_center[1] + scale,
+    ]
+    return zoomed_image
+
+
 def register_bruteforce(image, rough_center=None):
     """
     Performs the default image registration scheme. Shifts the center of the
@@ -59,11 +80,11 @@ def register_bruteforce(image, rough_center=None):
             :image: (2d array) image data to be searched.
 
         outputs:
-            :coordinates: (list) a m x 2 array
+            :coordinates: (list) an m x 2 array
 
         """
         max_val = np.max(image)
-        min_val = 0  # no negative values will be out peak
+        min_val = 0  # no negative values will be our peak
 
         # now perform binary search; first initialize lower, upper bounds
         lower_bound = min_val
@@ -83,12 +104,9 @@ def register_bruteforce(image, rough_center=None):
 
     im_shape = np.shape(image)
     cent = (im_shape[0] / 2, im_shape[1] / 2)
-    if rough_center:
-        scale = np.floor(im_shape[0] / 50)
-        small_image = image[
-            rough_center[0] - scale : rough_center[0] + scale,
-            rough_center[1] - scale : rough_center[1] + scale,
-        ]
+    if rough_center is not None:
+        small_image = zoom_image(image, rough_center)
+
         # now do binary search
         small_coordinates = search_threshold(small_image)
         coordinates_y = [
@@ -123,7 +141,8 @@ def find_wide_binary(image):
         :image: (2-d array) photon counts at each pixel of each science image.
 
     outputs:
-        :image_centered: (2-d array) image cenered by the rotations method.
+        :rough_center: (2-element tuple) rough center of image, as determined
+                        by the user.
     """
 
     def onclick(event):
@@ -142,10 +161,17 @@ def find_wide_binary(image):
     cid = fig.canvas.mpl_connect("button_press_event", onclick)
 
     rough_center = []
-    plt.show(1)
+    plt.show(block=1)
 
-    # fig.canvas.mpl_connect('button_press_event', onclick)
-    return rough_center
+    if len(rough_center) == 0:
+        raise ValueError(
+            "No star selected. If you are currently \
+            running this code in a Jupyter environment, please \
+            move to the command line/Python interpreter."
+        )
+
+    # cast as integers for later slicing
+    return np.round(rough_center[0]).astype(int)
 
 
 def register_saturated(image, searchsize1, newshifts1, rough_center=None):
@@ -168,14 +194,15 @@ def register_saturated(image, searchsize1, newshifts1, rough_center=None):
     """
     im_shape = np.shape(image)
     cent = (im_shape[0] / 2, im_shape[1] / 2)
-    if rough_center:
-        scale = np.floor(im_shape[0] / 50)
-        image = image[
-            rough_center[0] - scale : rough_center[0] + scale,
-            rough_center[1] - scale : rough_center[1] + scale,
-        ]
-
-    res1, im1, (xshift1, yshift1) = run_rot(image, searchsize1, cent, 200)
+    if rough_center is not None:
+        zoomed_image = zoom_image(image, rough_center)
+        res1, im1, (xshift1, yshift1) = run_rot(
+            zoomed_image, searchsize1, cent, 200
+        )
+        xshift1 += rough_center[1]
+        yshift1 += rough_center[0]
+    else:
+        res1, im1, (xshift1, yshift1) = run_rot(image, searchsize1, cent, 200)
     if np.max(res1) == 0:
         rot = np.empty(res1.shape)
         rot.fill(np.nan)

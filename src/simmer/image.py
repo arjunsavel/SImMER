@@ -8,6 +8,7 @@ from glob import glob
 
 import astropy.io.fits as pyfits
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 from . import plotting as pl
@@ -92,15 +93,19 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
                 obj[obj.Comments != "sky"].Filenums.values[n]
             )  # pylint: disable=eval-used # liter_eval issues
             # cast obj_methods as list so that elementwise comparison isn't performed
-            obj_methods = list(config[config.Object == star].Method.values)
-            if "saturated" and "wide" in obj_methods:
-                methods.append("saturated wide")
-            elif "saturated" in obj_methods and "wide" not in obj_methods:
-                methods.append("saturated")
-            elif "saturated" not in obj_methods and "wide" in obj_methods:
-                methods.append("wide")
-            else:
+            obj_methods = config[config.Object == star].Method.values
+
+            # use pd.isnull because it can check against strings
+            if np.all(pd.isnull(obj_methods)):
                 methods.append("default")
+            else:
+                obj_method = obj_methods[~pd.isnull(obj_methods)][0]
+                if "saturated" and "wide" in obj_method:
+                    methods.append("saturated wide")
+                elif "saturated" in obj_method and "wide" not in obj_method:
+                    methods.append("saturated")
+                elif "saturated" not in obj_method and "wide" in obj_method:
+                    methods.append("wide")
             create_imstack(
                 raw_dir, reddir, s_dir, imlist, inst, filter_name=filter_name
             )
@@ -221,7 +226,6 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
         newshifts1 = []
         for i in range(nims):  # each image
             image = frames[i, :, :]
-
             if method == "saturated":
                 image_centered, rot, newshifts1 = reg.register_saturated(
                     image, ssize1, newshifts1
@@ -238,9 +242,10 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
                     rots[i, :, :] = rot
             elif method == "saturated wide":
                 rough_center = reg.find_wide_binary(image)
-                image_centered = reg.register_bruteforce(
-                    image, rough_center=rough_center
+                image_centered, rot, newshifts1 = reg.register_saturated(
+                    image, ssize1, newshifts1, rough_center=rough_center
                 )
+                rots[i, :, :] = rot
             elif method == "wide":
                 rough_center = reg.find_wide_binary(image)
                 image_centered = reg.register_bruteforce(
