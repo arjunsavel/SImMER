@@ -25,7 +25,7 @@ repos:
         exclude: src/simmer/tests
 
   - repo: https://github.com/psf/black
-    rev: 19.3b0
+    rev: 20.8b1
     hooks:
       - id: black
         exclude: src/simmer/__init__.py
