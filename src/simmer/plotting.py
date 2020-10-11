@@ -1,3 +1,9 @@
+"""
+Module that controls all plotting performed by SImMER. Largely involves
+checking user input via a yml file, checking it against a schema, and
+performing corresponding Matplotlib plotting.
+"""
+
 import matplotlib.colors as co
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +16,7 @@ plot_config = None
 def initialize_plotting(yml_filename=None):
     """
     Function to set up globabl plotting within SImMER.
-    
+
     Inputs:
         yml_filename: (string) defaults to None. Path to yml.
     """
@@ -88,10 +94,10 @@ def get_array_len(im_array):
     """
     Determines length of image array, assuming that they are
     cast as 3D arrays.
-    
+
     Inputs:
         im_array: (3D numpy array) array containing image data.
-    
+
     Outputs:
         array_len: (int) length of image array.
     """
