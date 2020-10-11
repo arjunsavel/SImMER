@@ -1,5 +1,5 @@
 """
-Module for driving large reduction processes.
+Module for driving reduction processes. Contains highest-level API.
 """
 
 from glob import glob
