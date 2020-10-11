@@ -3,5 +3,4 @@ build:
 
 python:
   version: 3.7
-  install:
-    - setup_py_install: true
+  setup_py_install: true
