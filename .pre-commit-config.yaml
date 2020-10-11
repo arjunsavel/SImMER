@@ -28,6 +28,7 @@ repos:
     rev: 20.8b1
     hooks:
       - id: black
+        language_version: python3 # Should be a command that runs python3.6+
         exclude: src/simmer/__init__.py
 
   - repo: https://github.com/dfm/black_nbconvert
