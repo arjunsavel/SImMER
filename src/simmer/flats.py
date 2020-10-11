@@ -51,7 +51,7 @@ def flat_driver(raw_dir, reddir, config, inst, plotting_yml=None):
         :reddir: (string) directory for the reduced data
         :config: (pandas DataFrame) dataframe corresponding to config sheet for data.
         :inst: (Instrument object) instrument for which data is being reduced.
-        :plot: (bool) determines whether or not intermediate plots should be produced.
+        :plotting_yml: (string) path to the plotting configuration file.
 
     """
     if plotting_yml:
@@ -87,8 +87,9 @@ def create_flats(
         :inst: (inst object) instrument for which data is being reduced.
         :center: (tuple) two-element tuple dictating where the center of each image is.
         :npix: (int) number of pixels in image.
-        :pl: (Bool) determines whether plots are produced.
-        :filter: filter name given if head['FILT1NAM'] == 'Unknown'
+        :filter_name: (str) filter name given if head['FILT1NAM'] == 'Unknown'
+        :plotting_yml: (string) path to the plotting configuration file.
+        :test: (bool) Boolean flag used for testing purposes.
 
     Outputs:
         :final_flat: (array) median-filtered flat.

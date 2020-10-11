@@ -21,9 +21,9 @@ def all_driver(inst, config_file, raw_dir, reddir, plotting_yml=None):
         :inst: (Instrument object) instrument for which data is being reduced.
         :config_file: (string) path of the config file containing plotting
             specifications. Optional.
-        :plotting_yml: (string) path to the y
         :raw_dir: (string) path of the directory containing the raw data.
         :reddir: (string) path of the directory to contain the raw data.
+        :plotting_yml: (string) path to the plotting configuration file.
 
     """
 

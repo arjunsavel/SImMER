@@ -54,7 +54,7 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
         :reddir: (string) directory for the reduced data
         :config: (pandas DataFrame) dataframe corresponding to config sheet for data.
         :inst: (Instrument object) instrument for which data is being reduced.
-        :plot: (bool) determines whether or not intermediate plots should be produced.
+        :plotting_yml: (string) path to the plotting configuration file.
 
     """
     # Save these images to the appropriate folder.
@@ -118,13 +118,13 @@ def create_imstack(
     """Create the stack of images by performing flat division, sky subtraction.
 
     Inputs:
-        :raw_dir: (string) directory for the raw data
-        :reddir: (string) directory for the reduced data
-        :s_dir: (string) directory corresponding to a specific star.
+        :raw_dir: (string) path to directory containing raw data
+        :reddir: (string) path to directory containing reduced data
+        :s_dir: (string) path to directory corresponding to a specific star.
         :imlist: (list) list of strings of paths pointing to image files.
         :inst: (Instrument object) instrument for which data is being reduced.
         :plot: (bool) determines whether or not intermediate plots should be produced.
-        :fiilter_name: (string) name of the filter used for the images in question.
+        :filter_name: (string) name of the filter used for the images in question.
 
     Outputs:
         :im_array: (3d array) array of 2d images.
@@ -205,6 +205,13 @@ def create_imstack(
 def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
     """Take the shifted, cut down images from before, then perform registration
     and combine. Tests should happen before this, as this is a per-star basis.
+
+    Inputs:
+        :s_dir: (str) directory for the raw data
+        :ssize1: (int) initial pixel search size of box.
+        :plotting_yml: (str) path to the plotting configuration file.
+        :fdirs: (list of str) file directories.
+        :method: (str) image registration method.
     """
     if plotting_yml:
         pl.initialize_plotting(plotting_yml)

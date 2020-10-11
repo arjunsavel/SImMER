@@ -25,7 +25,7 @@ def sky_driver(raw_dir, reddir, config, inst, plotting_yml=None):
         :reddir: (string) directory for the reduced data
         :config: (pandas DataFrame) dataframe corresponding to config sheet for data.
         :inst: (Instrument object) instrument for which data is being reduced.
-        :plot: (bool) determines whether or not intermediate plots should be produced.
+        :plotting_yml: (string) path to the plotting configuration file.
     """
 
     if inst.take_skies:
@@ -79,7 +79,7 @@ def create_skies(
         :s_dir: (string) directory corresponding to a specific star.
         :skylist: (list) list of strings of paths pointing to sky files.
         :inst: (Instrument object) instrument for which data is being reduced.
-        :plot: (bool) determines whether or not intermediate plots should be produced.
+        :plotting_yml: (string) path to the plotting configuration file.
 
     Outputs:
         :final_sky: (2D array) medianed sky image.

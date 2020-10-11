@@ -22,7 +22,7 @@ def dark_driver(raw_dir, reddir, config, inst, plotting_yml=None):
         :reddir: (string) directory for the reduced data
         :config: (pandas DataFrame) dataframe corresponding to config sheet for data.
         :inst: (Instrument object) instrument for which data is being reduced.
-        :plot: (bool) determines whether or not intermediate plots should be produced.
+        :plotting_yml: (string) path to the plotting configuration file.
 
     """
     if plotting_yml:
