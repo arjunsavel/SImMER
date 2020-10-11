@@ -29,4 +29,4 @@ cd simmer
 python3 -m pip install -e .
 ```
 ## Documentation
-To get started, read the docs at [our readthedocs site](https://simmer.readthedocs.io/en/latest/pages/about.html).
+To get started, read the docs at [our readthedocs site](https://simmer.readthedocs.io/en/latest/pages/about/).
