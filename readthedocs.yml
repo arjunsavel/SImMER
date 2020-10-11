@@ -4,4 +4,4 @@ build:
 python:
   version: 3.7
   install:
-    - requirements: docs/notebook_requirements.txt
+    - setup_py_install: true
