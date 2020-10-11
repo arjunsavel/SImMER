@@ -225,7 +225,7 @@ def rot_search(dat, x_initial, y_initial, xrad, yrad):
         :yrad: (int) radius in y to search.
 
     outputs:
-        :(xshift, yshift): (tuple) record of how much the image was shifted in x a dny
+        :(xshift, yshift): (tuple) record of how much the image was shifted in x and y
         :out: (2d array) output shifted image
     """
     # calculate offset from center

@@ -79,7 +79,7 @@ def add_colorbars(fig, plot_type, cim, mode):
         colorbar_labelsisze = 20
     scaling = plot_config[plot_type][0]["scaling"]
     text_dict = {
-        "rots": "Residuals",
+        "rots": "Norm. residuals",
         "final_im": "Counts",
         "intermediate": "Counts",
     }
