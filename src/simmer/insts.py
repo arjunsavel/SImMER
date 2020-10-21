@@ -14,7 +14,7 @@ from . import utils as u
 
 class Instrument:
     """
-    Instantiates an object that dictates instrument-specific reduction techniques.
+    Instantiates an object that implements instrument-specific reduction techniques.
     """
 
     name = None
@@ -27,8 +27,15 @@ class Instrument:
         self.take_skies = take_skies
 
     def bad_pix(self, image):
-        """Read in bp file, cut down to size, replace NaN
+        """Read in bad pixel file, cut down to size, and replace NaN
         pixels with median of surrounding pixels.
+
+        Inputs:
+            :image: (2D numpy array) image to be filtered for bad pixels.
+
+        Outputs:
+            :iamge: (2D numpy array) image, now filtered for bad pixels.
+                    Same dimensions as input image.
         """
         c_im = image.copy()
 
@@ -47,7 +54,7 @@ class ShARCS(Instrument):
     """
 
     name = "ShARCS"
-    center = (750, 1100)  # row,col
+    center = (750, 1100)  # row, col
     npix = 600
 
     plate_scale = 0.033  # arcsec/pixel
@@ -85,12 +92,27 @@ class ShARCS(Instrument):
     def head(self, file):
         """
         Given a FITS file, returns its head.
+
+        Inputs:
+            :file: (str) path to file.
+
         """
         return u.header_subsection(file, self.npix, self.center)
 
     def filt(self, nims, head, filter_name):
         """
         Given the header of a FITS file, returns its filter.
+
+        Inputs:
+            :nims: (int) number of images.
+            :head: (astropy.io.fits header object) head
+                    of object of interest.
+            :filter_name: (str) name of filter to use
+                    in the event that the filter is
+                    unknown in the header.
+        Outputs:
+            :filt: (str) name of filter used to observe
+                    object of interest.
         """
         if head["FILT1NAM"] == "Unknown":
             filt = filter_name
@@ -102,12 +124,28 @@ class ShARCS(Instrument):
         """
         Given a FITS header, returns the true integration time
         for a file.
+
+        Inputs:
+            :head: (astropy.io.fits header object) head
+                    of object of interest.
+
+        Outputs:
+            :itime_val: (float) integration time for object of
+                    interest.
         """
-        return head["ITIME0"] * 1e-6
+        itime_val = head["ITIME0"] * 1e-6
+        return itime_val
 
     def bad_pix(self, image):
-        """Read in bp file, cut down to size, replace bad
+        """Read in bad pixel file, cut down to size, replace bad
         pixels with median of surrounding pixels.
+
+        Inputs:
+            :image: (2D numpy array) image to be filtered for bad pixels.
+
+        Outputs:
+            :iamge: (2D numpy array) image, now filtered for bad pixels.
+                    Same dimensions as input image.
         """
         script_dir = os.path.dirname(
             __file__
@@ -133,7 +171,7 @@ class ShARCS(Instrument):
 
     def read_data(self, night, rawfilename, newfilename):
         raise NotImplementedError(
-            "Data need not be read through"
+            "Data should not be read through"
             "this method for ShARCS. Instead,"
             "please run the driver function of "
             "your choice on folders containing "
@@ -176,6 +214,17 @@ class PHARO(Instrument):
     def filt(self, nims, head, filter_name):
         """
         Given the header of a FITS file, returns its filter.
+
+        Inputs:
+            :nims: (int) number of images.
+            :head: (astropy.io.fits header object) head
+                    of object of interest.
+            :filter_name: (str) name of filter to use
+                    in the event that the filter is
+                    unknown in the header.
+        Outputs:
+            :filt: (str) name of filter used to observe
+                    object of interest.
         """
         filt = head["FILTER"]
         return filt
@@ -183,6 +232,10 @@ class PHARO(Instrument):
     def head(self, file):
         """
         Returns the head of a FITS file.
+
+        Inputs:
+            :file: (str) path to FITS file of interest.
+
         """
         return pyfits.getheader(file)
 
@@ -190,8 +243,17 @@ class PHARO(Instrument):
         """
         Given a FITS header, returns the true integration time
         for a file.
+
+        Inputs:
+            :head: (astropy.io.fits header object) head
+                    of object of interest.
+
+        Outputs:
+            :itime_val: (float) integration time for object of
+                    interest.
         """
-        return head["T_INT"] / 1000.0
+        itime_val = head["T_INT"] / 1000.0
+        return itime_val
 
     def adjust_thisimage(self, thisimage):
         thisimage = thisimage.astype(float)
