@@ -79,6 +79,9 @@ def delete_folder(folder):
     Inputs:
         :folder: (str) path to folder to be deleted.
     """
+    if not os.path.exists(folder):
+        print("Nothing to delete.")
+        return
     if os.listdir(folder):
         for f in os.listdir(folder):
             if folder[-1] == "/":
