@@ -58,7 +58,7 @@ def all_driver(
     ]
     for i, s_dir in enumerate(
         tqdm(
-            np.unique(cleaned_star_dirlist),
+            cleaned_star_dirlist,
             desc="Running registration",
             position=0,
             leave=True,
