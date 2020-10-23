@@ -76,7 +76,7 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     methods = []
 
     for star in tqdm(
-        stars, desc="Running image driver", position=0, leave=True
+        np.unique(stars), desc="Running image driver", position=0, leave=True
     ):
         s_dir = reddir + star + "/"
         if (
