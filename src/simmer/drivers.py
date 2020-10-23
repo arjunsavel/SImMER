@@ -4,6 +4,7 @@ Module for driving reduction processes. Contains highest-level API.
 
 from glob import glob
 
+import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
@@ -13,7 +14,9 @@ from . import search_headers as search
 from . import sky
 
 
-def all_driver(inst, config_file, raw_dir, reddir, plotting_yml=None):
+def all_driver(
+    inst, config_file, raw_dir, reddir, plotting_yml=None, searchsize=10
+):
     """
     Runs all drivers, performing an end-to-end reduction.
 
@@ -53,16 +56,15 @@ def all_driver(inst, config_file, raw_dir, reddir, plotting_yml=None):
         for ob in config.Object
         if ob in star_dir
     ]
-
     for i, s_dir in enumerate(
         tqdm(
-            cleaned_star_dirlist,
+            np.unique(cleaned_star_dirlist),
             desc="Running registration",
             position=0,
             leave=True,
         )
     ):
-        image.create_im(s_dir, 10, method=methods[i])
+        image.create_im(s_dir, searchsize, method=methods[i])
 
 
 def config_driver(inst, config_file, raw_dir, reddir):
