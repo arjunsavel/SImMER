@@ -12,7 +12,7 @@ from astropy.io import fits
 import math
 import photutils
 
-
+os.chdir(K2)
 from CC_test_py import contrast_curve_3 as cc
 
 '''class ArrayClass:
