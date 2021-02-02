@@ -8,7 +8,7 @@ import math
 
 
 
-def contrast_curve_3(data,center=None,remove_hot=False,background_method='outside',radius_size=1):
+def contrast_curve_3(data,center=None,remove_hot=False,background_method='astropy',radius_size=1):
     
     star_data=data.copy()
     
@@ -104,15 +104,18 @@ def contrast_curve_3(data,center=None,remove_hot=False,background_method='outsid
     
     
     
+
     #print(background_mean,background_std)
     
     
     rbv_count = 0
     for i in radii_bin_vals:
         rbv_count+=1
-        if np.mean(i)>0:
+        try:
             radii_deltas.append(-2.5 * math.log((np.mean(i) + 5*np.std(i))/center_val,10))
-        else:
-            print('mean less than zero in bin',rbv_count,'val of',np.mean(i))
+        except:
+            print('mean less than/equal to zero in bin',rbv_count,'val of',np.mean(i))
+            radii_deltas.append(np.NaN)
     radii_deltas=np.array(radii_deltas)
     return np.array([lim_arc_length,radii_deltas])
+
