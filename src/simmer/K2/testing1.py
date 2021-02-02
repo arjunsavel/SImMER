@@ -12,7 +12,6 @@ from astropy.io import fits
 import math
 import photutils
 
-
 from CC_test_py import contrast_curve_3 as cc
 
 '''class ArrayClass:
