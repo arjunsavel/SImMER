@@ -33,7 +33,7 @@ class TestContrastCurve(unittest.TestCase):
         rows,cols = (600,600)
         arr = np.array([[1000]*cols]*rows)
         result = cc(arr)
-        self.assertTrue(all_same(result[1])
+        self.assertTrue(all_same(result[1]))
     
     def test_radius_size(self):
         #arr = ArrayClass(600,0).arr
