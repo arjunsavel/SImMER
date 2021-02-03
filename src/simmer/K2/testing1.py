@@ -44,7 +44,7 @@ class TestContrastCurve(unittest.TestCase):
         rad_6_result=cc(arr,radius_size=6)
         self.assertTrue(all([len(rad1_result[0])>len(rad3_result[0]),
                              len(rad3_result[0])>len(rad6_result[0])]))
-    def test_output_array_dim():
+    def test_output_array_dim(self):
         rows,cols = (600,600)
         arr = np.array([[1000]*cols]*rows)
         rad1_result = cc(arr,radius_size=1)
@@ -52,7 +52,7 @@ class TestContrastCurve(unittest.TestCase):
         rad6_result = cc(arr,radius_size=6)
         self.assertTrue(all ([len(rad1_result[0])==len(rad1_result[1]),len(rad3_result[0])==len(rad3_result[1]),
                  len(rad6_result[0])==len(rad6_result[1])]))
-    def test_pseudo_star_mag():
+    def test_pseudo_star_mag(self):
         rows,cols = (600,600)
         arr = np.array([[1]*cols]*rows)
         arr[299:301,299:301] = 1000
@@ -60,7 +60,7 @@ class TestContrastCurve(unittest.TestCase):
         correct = [7.5] * (len(result[1])-1)
         self.assertTrue(all([result[1][0] == 0, np.allclose(correct,result[1][1:])]))
 
-    def test_arclength():
+    def test_arclength(self):
         rows,cols = (600,600)
         arr = np.array([[1000]*cols]*rows)
         result = cc(arr)
@@ -70,7 +70,7 @@ class TestContrastCurve(unittest.TestCase):
             correct.append(x)
         self.assertTrue(np.allclose(correct,result[0]))
 
-    def test_0_vals():
+    def test_0_vals(self):
         arr = np.zeros((600,600))
         result = cc(arr)
         correct = [np.NaN] * len(result[1])
