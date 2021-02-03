@@ -24,10 +24,11 @@ from CC_py import contrast_curve_3 as cc
         self.arr = np.array([[val]*cols]*rows)'''
 
 
+def all_same(items):
+        return all(x == items[0] for x in items)
+
 class TestContrastCurve(unittest.TestCase):
 
-    def all_same(items):
-        return all(x == items[0] for x in items)
 
     def test_constant_flux(self):
         rows,cols = (600,600)
