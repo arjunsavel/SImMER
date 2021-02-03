@@ -13,7 +13,7 @@ import math
 import photutils
 
 
-#from CC_test_py import contrast_curve_3 as cc
+from CC_py_py import contrast_curve_3 as cc
 
 '''class ArrayClass:
     
