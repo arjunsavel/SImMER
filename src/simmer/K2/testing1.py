@@ -42,7 +42,7 @@ class TestContrastCurve(unittest.TestCase):
         arr = np.array([[1000]*cols]*rows)
         rad1_result = cc(arr,radius_size=2)
         rad3_result = cc(arr,radius_size=3)
-        rad_6_result=cc(arr,radius_size=6)
+        rad6_result=cc(arr,radius_size=6)
         self.assertTrue(all([len(rad1_result[0])>len(rad3_result[0]),
                              len(rad3_result[0])>len(rad6_result[0])]))
     def test_output_array_dim(self):
