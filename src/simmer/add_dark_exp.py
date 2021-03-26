@@ -79,7 +79,9 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
 
     find_itimes(inst, raw_dir)
     if tab:
-        initial_frame = pd.read_excel(pd.ExcelFile(log), tab)
+        initial_frame = pd.read_excel(
+            pd.ExcelFile(log, engine="openpyxl"), tab, engine="openpyxl"
+        )
     else:
         initial_frame = pd.read_csv(log)
     # testing that writing works well.
