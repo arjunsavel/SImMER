@@ -30,7 +30,7 @@ def read_logsheet(log, tab=None):
         logdf: (pd.DataFrame) logsheet in Pandas DataFrame.
     """
     if log[-3:] == "csv":
-        logdf = pd.read_csv(log, engine="openpyxl")
+        logdf = pd.read_csv(log)
     elif log[-4:] == "xlsx" or log[-3:] == "xls":
 
         xl = pd.ExcelFile(log, engine="openpyxl")

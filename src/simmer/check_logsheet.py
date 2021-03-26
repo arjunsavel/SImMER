@@ -116,14 +116,14 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
         log_frame = pd.read_csv(log_name)
         failed += check_tab(inst, add_dark_times=add_dark_times)
     elif log_name[-4:] == "xlsx" or log_name[-3:] == "xls":
-        log = pd.ExcelFile(log_name)
+        log = pd.ExcelFile(log_name, engine="openpyxl")
         if not tab:
             for sheet in log.sheet_names:
-                log_frame = pd.read_excel(log, sheet)
+                log_frame = pd.read_excel(log, sheet, engine="openpyxl")
                 failed += check_tab(
                     inst, add_dark_times=add_dark_times, tab=sheet
                 )
         else:
-            log_frame = pd.read_excel(log, tab)
+            log_frame = pd.read_excel(log, tab, engine="openpyxl")
             failed += check_tab(inst, add_dark_times=add_dark_times, tab=tab)
     return failed
