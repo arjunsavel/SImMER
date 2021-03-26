@@ -8,12 +8,12 @@ trigger:
   - master
 
 schedules:
-- cron: "0 0 1 * *"
-  displayName: Monthly build
-  branches:
-    include:
-    - releases/*
-  always: true
+  - cron: "0 0 1 * *"
+    displayName: Monthly build
+    branches:
+      include:
+      - releases/*
+    always: true
 
 variables:
   codecov.token: "9c990c5a-0b27-4918-a5b6-3d5e10d05c4f"
