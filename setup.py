@@ -27,7 +27,7 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     "numpy",
     "tqdm",
-    "pandas==1.0",
+    "pandas==1.2.3",
     "astropy <4.1, >=3.1.2",
     "openpyxl>=2.5.12",
     "scipy <1.5.3, >=1.1.0",
@@ -39,7 +39,6 @@ INSTALL_REQUIRES = [
     "nbsphinx==0.5.1",
     "nbconvert==5.6.1",
     "pygments>=2.4.2",
-    "xlrd>=1.2.0",
 ]
 
 ###################################################################
