@@ -456,6 +456,49 @@ class TestDrivers(unittest.TestCase):
             delete_folder(raw_dir)
             self.assertTrue(False)
 
+    def test_image_driver_mixed_case(self):
+        """
+        Previously, methods all needed to be lower case...
+        """
+        print("Testing image driver mixed case")
+
+        try:
+            download_folder("image_test")
+        except:
+            raise DataDownloadException(
+                "Could not download test data for images."
+            )
+
+        raw_dir, reddir = (
+            "src/simmer/tests/image_test/",
+            "src/simmer/tests/image_test/",
+        )
+        config = pd.read_csv(
+            os.getcwd() + "/src/simmer/tests/test_config_test_case.csv"
+        )
+        try:
+            method = image.image_driver(raw_dir, reddir, config, self.inst)
+            remove_files = [
+                "sh00.fits",
+                "sh01.fits",
+                "sh02.fits",
+                "sh03.fits",
+                "shifts.txt",
+            ]
+            val = np.all(
+                [
+                    r in os.listdir(raw_dir + f"K09203794/Ks")
+                    for r in remove_files
+                ]
+            )
+            delete_folder(raw_dir)
+            self.assertTrue(val)
+        except:
+            e = sys.exc_info()[0]
+            print(e)
+            delete_folder(raw_dir)
+            self.assertTrue(False)
+
 
 class TestIntegration(unittest.TestCase):
     p = i.PHARO()

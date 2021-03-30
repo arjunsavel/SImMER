@@ -33,7 +33,7 @@ def read_logsheet(log, tab=None):
         logdf = pd.read_csv(log)
     elif log[-4:] == "xlsx" or log[-3:] == "xls":
 
-        xl = pd.ExcelFile(log)
+        xl = pd.ExcelFile(log, engine="openpyxl")
         num_sheets = len(xl.sheet_names)
         if num_sheets > 1 and not tab:
             warnings.warn(
@@ -44,6 +44,7 @@ def read_logsheet(log, tab=None):
             log,
             sheet_name=tab,
             header=0,
+            engine="openpyxl",
             converters={
                 "Comments": str,
                 "Start": int,

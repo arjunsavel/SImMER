@@ -99,7 +99,7 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
             if np.all(pd.isnull(obj_methods)):
                 methods.append("default")
             else:
-                obj_method = obj_methods[~pd.isnull(obj_methods)][0]
+                obj_method = obj_methods[~pd.isnull(obj_methods)][0].lower()
                 if "saturated" and "wide" in obj_method:
                     methods.append("saturated wide")
                 elif "saturated" in obj_method and "wide" not in obj_method:
