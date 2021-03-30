@@ -44,7 +44,6 @@ def read_logsheet(log, tab=None):
             log,
             sheet_name=tab,
             header=0,
-            parse_columns=11,
             converters={
                 "Comments": str,
                 "Start": int,
