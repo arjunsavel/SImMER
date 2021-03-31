@@ -10,9 +10,9 @@ import photutils
 import unittest
 from photutils import datasets
 from astropy.table import Table
-from simmer.Contrast import ConCur as cc
-from simmer.Contrast import twoD_weighted_std as wstd
-from simmer.Contrast import find_best_center
+from simmer.contrast import ConCur as cc
+from simmer.contrast import twoD_weighted_std as wstd
+from simmer.contrast import find_best_center
 
 
 def all_same(items):
