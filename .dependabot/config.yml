@@ -5,3 +5,8 @@ update_configs:
   - package_manager: "python"
     directory: "/"
     update_schedule: "daily"
+    allow:
+      # Allow only direct updates for
+      # pandas and any packages starting "pandas"
+      - dependency-name: "pandas*"
+        dependency-type: "direct"
