@@ -31,38 +31,25 @@ import simmer.sky as sky
 
 def download_folder(folder, path=None):
     """
-    Downloads a .zip file from this projects S3 testing bucket, unzips it,
+    Downloads a .zip file from this project's git-lfs testing repo, unzips it,
     and deletes the .zip file.
 
     Inputs:
         folder : (string) name of the folder to be downloaded.
     """
+    try:
+        os.system("git clone https://github.com/arjunsavel/simmer-data.git")
+    except:
+        pass  # if it's already been cloned
+    os.chdir("simmer-data")
 
-    folder_dict = {
-        "sky_test": "hhs5w81dvok5wp8",
-        "dark_test": "ao1ug1kvlr5l4y3",
-        "flat_test": "r0gntctnfrjh5zd",
-        "PHARO_config_driver": "p3wv7l800fdqx5q",
-        "image_test": "9qwa6ojfsk1l5pq",
-        "PHARO_image_driver": "p9uivslz7hoym5c",
-        "PHARO_integration": "v8l50zm7jbrccqj",
-        "shane_quickstart": "q6m6ls2x2186u3p",
-        "readpharo_test": "l8fi3100v5flufp",
-        "config_test": "q0vqvy1ejd6rn14",
-        "search_headers": "7q20lgxae5yb3bz",
-    }
+    # only download the folder that we care about
+    os.system(f"git lfs pull --include={folder}" + ".zip")
 
     def retrieve_extract(path):
         with zipfile.ZipFile(folder + ".zip", "r") as zip_ref:
             zip_ref.extractall(path)
 
-    url = f"https://www.dropbox.com/s/{folder_dict[folder]}/{folder}.zip?dl=1"
-    u = urllib.request.urlopen(url)
-    data = u.read()
-    u.close()
-
-    with open(f"{folder}.zip", "wb") as f:
-        f.write(data)
     if path:
         retrieve_extract(path)
     elif "src" in os.listdir():  # if we're actually running tests
