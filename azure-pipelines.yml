@@ -12,7 +12,7 @@ schedules:
     displayName: Monthly build
     branches:
       include:
-      - releases/*
+        - releases/*
     always: true
 
 variables:
@@ -41,6 +41,7 @@ steps:
       python -m pip install --upgrade pip
       python3 -m pip install -e .
       pip3 install codecov
+      git lfs install --skip-smudge
     displayName: 'Install dependencies'
     condition: not(contains(variables['Build.SourceVersionMessage'],
       '[skip ci]'))
