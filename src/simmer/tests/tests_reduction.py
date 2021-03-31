@@ -57,6 +57,7 @@ def download_folder(folder, path=None):
     else:  # we're running this in an arbitrary directory
         retrieve_extract("")
     os.remove(folder + ".zip")
+    os.chdir("..")
 
 
 def delete_folder(folder):
