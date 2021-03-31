@@ -10,3 +10,13 @@ update_configs:
       # pandas and any packages starting "pandas"
       - dependency-name: "pandas*"
         dependency-type: "direct"
+        
+      # Allow only direct updates for
+      # pandas and any packages starting "pandas"
+      - dependency-name: "numpy*"
+        dependency-type: "direct"
+        
+      # Allow only direct updates for
+      # pandas and any packages starting "pandas"
+      - dependency-name: "photutils*"
+        dependency-type: "direct"
