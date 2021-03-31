@@ -7,6 +7,7 @@ from astropy.io import fits
 import math
 from numpy import random
 import photutils
+import unittest
 from photutils import datasets
 from astropy.table import Table
 from simmer.Contrast import ConCur as cc
