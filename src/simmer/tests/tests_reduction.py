@@ -39,7 +39,8 @@ def download_folder(folder, path=None):
         folder : (string) name of the folder to be downloaded.
     """
     try:
-        os.system(f"""git clone https://{B64_PAT}@dev.azure.com/asavel/SImMER/_git/simmer-data""")
+        if not os.path.exists('simmer-data'):
+            os.system(f"""git clone https://{B64_PAT}@dev.azure.com/asavel/SImMER/_git/simmer-data""")
     except Exception as e:
         print(e)
         pass  # if it's already been cloned
