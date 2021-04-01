@@ -29,10 +29,7 @@ import simmer.sky as sky
 # that'll be used.
 
 # need to revert to git repo otherwise...
-try:
-    B64_PAT = os.environ['B64_PAT']
-except:
-    B64_PAT = None
+B64_PAT = os.get_env('B64_PAT')
 
 def download_folder(folder, path=None):
     """
@@ -50,7 +47,7 @@ def download_folder(folder, path=None):
         pass  # if it's already been cloned
     print(os.listdir())
     
-    os.chdir("simmer-data")
+    os.chdir(os.environ['REFERENCE_DIR'])
 
     # only download the folder that we care about
     if B64_PAT is not None:
@@ -62,12 +59,14 @@ def download_folder(folder, path=None):
 
     if path:
         retrieve_extract(path)
+    if os.getenv('REPO_DIR') is not None:
+        retrieve_extract(os.getenv('REPO_DIR') + "/src/simmer/tests/")
     elif "src" in os.listdir():  # if we're actually running tests
         retrieve_extract("../src/simmer/tests/")
     else:  # we're running this in an arbitrary directory
         retrieve_extract("")
     os.remove(folder + ".zip")
-    os.chdir("..")
+    os.chdir(os.getenv('REPO_DIR'))
 
 
 def delete_folder(folder):
