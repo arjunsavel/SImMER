@@ -38,7 +38,7 @@ def download_folder(folder, path=None):
         folder : (string) name of the folder to be downloaded.
     """
     try:
-        os.system("git clone https://github.com/arjunsavel/simmer-data.git")
+        os.system("git clone https://asavel@dev.azure.com/asavel/SImMER/_git/simmer-data")
     except:
         pass  # if it's already been cloned
     os.chdir("simmer-data")
@@ -53,7 +53,7 @@ def download_folder(folder, path=None):
     if path:
         retrieve_extract(path)
     elif "src" in os.listdir():  # if we're actually running tests
-        retrieve_extract("src/simmer/tests/")
+        retrieve_extract("../src/simmer/tests/")
     else:  # we're running this in an arbitrary directory
         retrieve_extract("")
     os.remove(folder + ".zip")
