@@ -48,6 +48,7 @@ def download_folder(folder, path=None):
     except Exception as e:
         print(e)
         pass  # if it's already been cloned
+    print(os.listdir())
     
     os.chdir("simmer-data")
 
