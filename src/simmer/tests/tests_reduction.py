@@ -28,6 +28,7 @@ import simmer.sky as sky
 # Before we get into testing, there are a few utility functions
 # that'll be used.
 
+read_token = 'tc7vu2klwdsf4aalaevtjc5d4ajr6tnxr4fnhyjzgz7d77l7llda'
 
 def download_folder(folder, path=None):
     """
@@ -38,7 +39,7 @@ def download_folder(folder, path=None):
         folder : (string) name of the folder to be downloaded.
     """
     try:
-        os.system("git clone https://asavel@dev.azure.com/asavel/SImMER/_git/simmer-data")
+        os.system(f"git clone https://{testing_token}@dev.azure.com/asavel/SImMER/_git/simmer-data")
     except:
         pass  # if it's already been cloned
     os.chdir("simmer-data")
