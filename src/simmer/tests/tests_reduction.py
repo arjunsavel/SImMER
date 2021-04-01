@@ -28,6 +28,7 @@ import simmer.sky as sky
 # Before we get into testing, there are a few utility functions
 # that'll be used.
 
+# need to revert to git repo otherwise...
 B64_PAT = os.environ['B64_PAT']
 
 def download_folder(folder, path=None):
@@ -44,14 +45,13 @@ def download_folder(folder, path=None):
     except Exception as e:
         print(e)
         pass  # if it's already been cloned
-    print(os.listdir())
+    
     os.chdir("simmer-data")
 
     # only download the folder that we care about
     os.system("""git -c http.extraHeader="Authorization: """ + f'Basic {B64_PAT}' + f"""" lfs pull --include={folder}""" + ".zip")
 
     def retrieve_extract(path):
-        print('file exists?' + str(os.path.exists(folder + ".zip")))
         with zipfile.ZipFile(folder + ".zip", "r") as zip_ref:
             zip_ref.extractall(path)
 
