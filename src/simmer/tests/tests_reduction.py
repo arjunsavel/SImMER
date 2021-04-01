@@ -40,9 +40,10 @@ def download_folder(folder, path=None):
     """
     try:
         os.system(f"""git clone https://{B64_PAT}@dev.azure.com/asavel/SImMER/_git/simmer-data""")
-        os.system(f"git ")
-    except:
+    except Exception as e:
+        print(e)
         pass  # if it's already been cloned
+    print(os.listdir)
     os.chdir("simmer-data")
 
     # only download the folder that we care about
