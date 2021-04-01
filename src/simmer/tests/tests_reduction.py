@@ -29,7 +29,10 @@ import simmer.sky as sky
 # that'll be used.
 
 # need to revert to git repo otherwise...
-B64_PAT = os.environ['B64_PAT']
+try:
+    B64_PAT = os.environ['B64_PAT']
+except:
+    B64_PAT = None
 
 def download_folder(folder, path=None):
     """
@@ -40,7 +43,7 @@ def download_folder(folder, path=None):
         folder : (string) name of the folder to be downloaded.
     """
     try:
-        if not os.path.exists('simmer-data') and os.environ['DOWNLOADED_DATA'] != '1':
+        if not os.path.exists('simmer-data') and B64_PAT is not None:
             os.system(f"""git clone https://{B64_PAT}@dev.azure.com/asavel/SImMER/_git/simmer-data""")
     except Exception as e:
         print(e)
@@ -49,7 +52,7 @@ def download_folder(folder, path=None):
     os.chdir("simmer-data")
 
     # only download the folder that we care about
-    if os.environ['DOWNLOADED_DATA'] != '1':
+    if B64_PAT is not None:
         os.system("""git -c http.extraHeader="Authorization: """ + f'Basic {B64_PAT}' + f"""" lfs pull --include={folder}""" + ".zip")
 
     def retrieve_extract(path):
