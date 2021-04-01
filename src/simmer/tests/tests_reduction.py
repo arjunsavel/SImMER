@@ -40,7 +40,7 @@ def download_folder(folder, path=None):
         folder : (string) name of the folder to be downloaded.
     """
     try:
-        if not os.path.exists('simmer-data'):
+        if not os.path.exists('simmer-data') and os.environ['DOWNLOADED_DATA'] != '1':
             os.system(f"""git clone https://{B64_PAT}@dev.azure.com/asavel/SImMER/_git/simmer-data""")
     except Exception as e:
         print(e)
@@ -49,7 +49,8 @@ def download_folder(folder, path=None):
     os.chdir("simmer-data")
 
     # only download the folder that we care about
-    os.system("""git -c http.extraHeader="Authorization: """ + f'Basic {B64_PAT}' + f"""" lfs pull --include={folder}""" + ".zip")
+    if os.environ['DOWNLOADED_DATA'] != '1':
+        os.system("""git -c http.extraHeader="Authorization: """ + f'Basic {B64_PAT}' + f"""" lfs pull --include={folder}""" + ".zip")
 
     def retrieve_extract(path):
         with zipfile.ZipFile(folder + ".zip", "r") as zip_ref:
