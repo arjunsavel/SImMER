@@ -50,7 +50,7 @@ steps:
       MY_PAT=$(azure_token)
       B64_PAT=$(printf ":$MY_PAT" | base64)
       git config --local http.version HTTP/1.1
-      export B64_PAT=B64_PAT     
+      export B64_PAT=B64_PAT
       coverage run -m unittest discover src
     displayName: 'unit test'
     condition: not(contains(variables['Build.SourceVersionMessage'],
