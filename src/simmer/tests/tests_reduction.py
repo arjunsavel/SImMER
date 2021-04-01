@@ -50,6 +50,7 @@ def download_folder(folder, path=None):
     os.system(f"""git -c http.extraHeader="Authorization: Basic {B64_PAT}" lfs pull --include={folder}" + ".zip""")
 
     def retrieve_extract(path):
+        print('file exists?' + os.path.exists(folder + ".zip"))
         with zipfile.ZipFile(folder + ".zip", "r") as zip_ref:
             zip_ref.extractall(path)
 
