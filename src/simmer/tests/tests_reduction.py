@@ -28,7 +28,7 @@ import simmer.sky as sky
 # Before we get into testing, there are a few utility functions
 # that'll be used.
 
-read_token = os.environ['B64_PAT']
+B64_PAT = os.environ['B64_PAT']
 
 def download_folder(folder, path=None):
     """
@@ -43,7 +43,7 @@ def download_folder(folder, path=None):
     except Exception as e:
         print(e)
         pass  # if it's already been cloned
-    print(os.listdir)
+    print(os.listdir())
     os.chdir("simmer-data")
 
     # only download the folder that we care about
