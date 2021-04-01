@@ -28,7 +28,7 @@ import simmer.sky as sky
 # Before we get into testing, there are a few utility functions
 # that'll be used.
 
-read_token = 'tc7vu2klwdsf4aalaevtjc5d4ajr6tnxr4fnhyjzgz7d77l7llda'
+read_token = os.environ['B64_PAT']
 
 def download_folder(folder, path=None):
     """
@@ -39,13 +39,14 @@ def download_folder(folder, path=None):
         folder : (string) name of the folder to be downloaded.
     """
     try:
-        os.system(f"git clone https://{read_token}@dev.azure.com/asavel/SImMER/_git/simmer-data")
+        os.system(f"""git clone https://{B64_PAT}@dev.azure.com/asavel/SImMER/_git/simmer-data""")
+        os.system(f"git ")
     except:
         pass  # if it's already been cloned
     os.chdir("simmer-data")
 
     # only download the folder that we care about
-    os.system(f"git lfs pull --include={folder}" + ".zip")
+    os.system(f"""git -c http.extraHeader="Authorization: Basic {B64_PAT}" lfs pull --include={folder}" + ".zip""")
 
     def retrieve_extract(path):
         with zipfile.ZipFile(folder + ".zip", "r") as zip_ref:
