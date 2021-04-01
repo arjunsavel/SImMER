@@ -39,7 +39,7 @@ def download_folder(folder, path=None):
         folder : (string) name of the folder to be downloaded.
     """
     try:
-        os.system(f"git clone https://{testing_token}@dev.azure.com/asavel/SImMER/_git/simmer-data")
+        os.system(f"git clone https://{read_token}@dev.azure.com/asavel/SImMER/_git/simmer-data")
     except:
         pass  # if it's already been cloned
     os.chdir("simmer-data")
