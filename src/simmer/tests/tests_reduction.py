@@ -33,7 +33,7 @@ B64_PAT = os.environ['B64_PAT']
 
 def download_folder(folder, path=None):
     """
-    Downloads a .zip file from this project's git-lfs testing repo, unzips it,
+    Downloads a .zip file from this project's git-lfs Azure testing repo, unzips it,
     and deletes the .zip file.
 
     Inputs:
