@@ -48,7 +48,7 @@ def download_folder(folder, path=None):
     os.chdir("simmer-data")
 
     # only download the folder that we care about
-    os.system(f"""git -c http.extraHeader="Authorization: Basic {B64_PAT}" lfs pull --include={folder}""" + ".zip")
+    os.system("""git -c http.extraHeader="Authorization: """ + f'Basic {B64_PAT}' + """" lfs pull --include={folder}""" + ".zip")
 
     def retrieve_extract(path):
         print('file exists?' + os.path.exists(folder + ".zip"))
