@@ -29,7 +29,7 @@ import simmer.sky as sky
 # that'll be used.
 
 # need to revert to git repo otherwise...
-B64_PAT = os.get_env('B64_PAT')
+B64_PAT = os.getenv('B64_PAT')
 
 def download_folder(folder, path=None):
     """
