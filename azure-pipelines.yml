@@ -60,7 +60,7 @@ steps:
 
   - script: |
       python3 -c "import os; print(os.listdir()); print(os.getcwd())"
-      python3 -c "import os; print(os.listdir(..))"
+      python3 -c "import os; print(os.listdir('..'))"
       cd ../simmer-data
       export REFERENCE_DIR=$(pwd)
       printf $(pwd)
