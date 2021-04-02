@@ -59,9 +59,9 @@ steps:
 
   - script: |
       cd ../simmer-data
-      export REFERENCE_DIR=pwd
+      export REFERENCE_DIR=$(pwd)
       cd ../SImMER
-      export REPO_DIR=pwd
+      export REPO_DIR=$(pwd)
       coverage run -m unittest discover src
     displayName: 'unit test'
     condition: not(contains(variables['Build.SourceVersionMessage'],
