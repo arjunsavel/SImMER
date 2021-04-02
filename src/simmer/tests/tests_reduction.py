@@ -56,15 +56,17 @@ def download_folder(folder, path=None):
     def retrieve_extract(path):
         with zipfile.ZipFile(folder + ".zip", "r") as zip_ref:
             zip_ref.extractall(path)
-
-    if path:
-        retrieve_extract(path)
-    if os.getenv('REPO_DIR') is not None:
-        retrieve_extract(os.getenv('REPO_DIR') + "/src/simmer/tests/")
-    elif "src" in os.listdir():  # if we're actually running tests
-        retrieve_extract("../src/simmer/tests/")
-    else:  # we're running this in an arbitrary directory
-        retrieve_extract("")
+    try:
+        if path:
+            retrieve_extract(path)
+        if os.getenv('REPO_DIR') is not None:
+            retrieve_extract(os.getenv('REPO_DIR') + "/src/simmer/tests/")
+        elif "src" in os.listdir():  # if we're actually running tests
+            retrieve_extract("../src/simmer/tests/")
+        else:  # we're running this in an arbitrary directory
+            retrieve_extract("")
+    except Exception as e:
+        print(e)
     os.remove(folder + ".zip")
     os.chdir(os.getenv('REPO_DIR'))
 
