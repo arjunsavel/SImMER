@@ -62,9 +62,9 @@ def download_folder(folder, path=None):
         if os.getenv('REPO_DIR') is not None:
             retrieve_extract(os.getenv('REPO_DIR') + "/src/simmer/tests/")
         elif "src" in os.listdir():  # if we're actually running tests
-            retrieve_extract("../src/simmer/tests/")
+            retrieve_extract("src/simmer/tests/")
         else:  # we're running this in an arbitrary directory
-            retrieve_extract("")
+            retrieve_extract("..")
     except Exception as e:
         print(e)
     os.remove(folder + ".zip")
