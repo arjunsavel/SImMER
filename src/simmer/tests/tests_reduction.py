@@ -68,7 +68,7 @@ def download_folder(folder, path=None):
     except Exception as e:
         print(e)
     os.remove(folder + ".zip")
-    os.chdir(os.getenv('REPO_DIR'))
+    os.chdir('..')
 
 
 def delete_folder(folder):
