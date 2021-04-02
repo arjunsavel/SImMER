@@ -49,7 +49,7 @@ def download_folder(folder, path=None):
     print(os.environ['REFERENCE_DIR'])
     
     os.chdir(os.environ['REFERENCE_DIR'])
-    print(os.listdir())
+    print(os.listdir(os.environ['REPO_DIR']))
     # only download the folder that we care about
     if B64_PAT is not None:
         os.system("""git -c http.extraHeader="Authorization: """ + f'Basic {B64_PAT}' + f"""" lfs pull --include={folder}""" + ".zip")
