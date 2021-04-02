@@ -51,16 +51,18 @@ steps:
       MY_PAT=$(azure_token)
       B64_PAT=$(printf ":$MY_PAT" | base64)
       git -c http.extraHeader="Authorization: Basic ${B64_PAT}" clone https://asavel@dev.azure.com/asavel/SImMER/_git/simmer-dat
-      cd simmer-data; git -c http.extraHeader="Authorization: Basic ${B64_PAT}" lfs fetch --all
-      export REFERENCE_DIR=pwd 
+      cd simmer-data; git -c http.extraHeader="Authorization: Basic ${B64_PAT}" lfs fetch --all 
       cd ..
     displayName: 'Fetch reference data'
     condition: not(contains(variables['Build.SourceVersionMessage'],
       '[skip ci]'))
 
   - script: |
-      coverage run -m unittest discover src
+      cd ../simmer-data
+      export REFERENCE_DIR=pwd
+      cd ../SImMER
       export REPO_DIR=pwd
+      coverage run -m unittest discover src
     displayName: 'unit test'
     condition: not(contains(variables['Build.SourceVersionMessage'],
       '[skip ci]'))
