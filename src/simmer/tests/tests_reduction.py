@@ -47,7 +47,8 @@ def download_folder(folder, path=None):
         pass  # if it's already been cloned
     print('reference dir:')
     print(os.listdir())
-    os.chdir('simmer-data')
+    if 'simmer-data' in os.listdir():
+        os.chdir('simmer-data')
     
     # only download the folder that we care about
     if B64_PAT is not None:
