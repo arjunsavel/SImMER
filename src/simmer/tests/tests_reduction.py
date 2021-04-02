@@ -48,7 +48,7 @@ def download_folder(folder, path=None):
     print('reference dir:')
     print(os.environ['REFERENCE_DIR'])
     
-    os.chdir('simmer-data)
+    os.chdir('simmer-data')
     print(os.listdir())
     # only download the folder that we care about
     if B64_PAT is not None:
