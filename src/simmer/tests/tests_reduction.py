@@ -66,8 +66,8 @@ def download_folder(folder, path=None):
             retrieve_extract("src/simmer/tests/")
         else:  # we're running this in an arbitrary directory
             retrieve_extract("../src/simmer/tests/")
-    except Exception as e:
-        print(e)
+    except:
+        pass
     os.remove(folder + ".zip")
     os.chdir('..')
 
