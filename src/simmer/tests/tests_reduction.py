@@ -46,9 +46,9 @@ def download_folder(folder, path=None):
         print(e)
         pass  # if it's already been cloned
     print('reference dir:')
-    
-    os.chdir('simmer-data')
     print(os.listdir())
+    os.chdir('simmer-data')
+    
     # only download the folder that we care about
     if B64_PAT is not None:
         os.system("""git -c http.extraHeader="Authorization: """ + f'Basic {B64_PAT}' + f"""" lfs pull --include={folder}""" + ".zip")
