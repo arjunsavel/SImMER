@@ -46,7 +46,6 @@ def download_folder(folder, path=None):
         print(e)
         pass  # if it's already been cloned
     print('reference dir:')
-    print(os.environ['REFERENCE_DIR'])
     
     os.chdir('simmer-data')
     print(os.listdir())
