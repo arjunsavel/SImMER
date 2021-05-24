@@ -20,6 +20,7 @@ jobs:
         MY_PAT=${{ secrets.AZURE_TOKEN }}
         B64_PAT=$(printf ":$MY_PAT" | base64)
         git -c http.extraHeader="Authorization: Basic ${B64_PAT}" clone https://asavel@dev.azure.com/asavel/SImMER/_git/simmer-data
+        python3 -c "print('cloned!')"
         cd simmer-data; git -c http.extraHeader="Authorization: Basic ${B64_PAT}" lfs fetch --include=dark_test.zip 
         python3 -c "import os; print(os.listdir()); print(os.getcwd())"
         cd ..
