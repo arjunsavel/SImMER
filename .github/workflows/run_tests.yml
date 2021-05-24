@@ -24,6 +24,7 @@ jobs:
         cd simmer-data; git -c http.extraHeader="Authorization: Basic ${B64_PAT}" lfs fetch --include=dark_test.zip 
         python3 -c "import os; print(os.listdir()); print(os.getcwd())"
         cd ..
+        python3 -c "print('Done with refdata!')"
     - name: Install dependencies
       run: |
         python3 -c "import os; print(os.listdir()); print(os.getcwd())"
