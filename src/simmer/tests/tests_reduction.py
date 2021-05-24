@@ -63,8 +63,10 @@ def download_folder(folder, path=None):
         if os.getenv('REPO_DIR') is not None:
             retrieve_extract(os.getenv('REPO_DIR') + "/src/simmer/tests/")
         elif "src" in os.listdir():  # if we're actually running tests
+            print('Retrieving to /src/simmer/tests/')
             retrieve_extract("src/simmer/tests/")
         else:  # we're running this in an arbitrary directory
+            print('Retrieving to ../src/simmer/tests/')
             retrieve_extract("../src/simmer/tests/")
     except:
         pass
