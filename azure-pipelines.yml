@@ -9,7 +9,7 @@ trigger:
 
 schedules:
   - cron: "0 0 1 * *"
-    displayName: Monthly build
+    displayName: Monthly build..
     branches:
       include:
       - releases/*
