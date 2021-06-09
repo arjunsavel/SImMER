@@ -12,7 +12,7 @@ schedules:
     displayName: Monthly build..
     branches:
       include:
-      - releases/*
+        - releases/*
     always: true
 
 variables:
