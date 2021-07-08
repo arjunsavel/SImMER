@@ -36,7 +36,7 @@ INSTALL_REQUIRES = [
     "pillow>=6.2.0",
     "pyyaml>=5.3.1",
     "cerberus>=1.3.2",
-    "nbsphinx==0.5.1",
+    "nbsphinx==0.8.6",
     "nbconvert==5.6.1",
     "pygments>=2.4.2",
     "photutils>=0.7.2",
