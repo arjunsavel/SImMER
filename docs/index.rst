@@ -16,6 +16,7 @@ Welcome to SImMER's documentation!
    pages/PHARO_reduction
    pages/Shane_reduction
    pages/plotting
+   pages/common_aberrations
    pages/FAQ
 
 .. toctree::
