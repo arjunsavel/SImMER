@@ -10,20 +10,24 @@ repos:
 
       - id: debug-statements
 
-  - repo: https://github.com/asottile/seed-isort-config
-    rev: v1.9.2
-    hooks:
-      - id: seed-isort-config
-        args: [--application-directories=src]
-
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v4.3.20
+  - repo: https://github.com/pycqa/isort
+    rev: 5.8.0
     hooks:
       - id: isort
-        args: []
-        additional_dependencies: [toml]
+        name: isort (python)
+	additional_dependencies: [toml]
         exclude: src/simmer/tests
-
+      - id: isort
+        name: isort (cython)
+        types: [cython]
+	additional_dependencies: [toml]
+        exclude: src/simmer/tests
+      - id: isort
+        name: isort (pyi)
+        types: [pyi]
+	additional_dependencies: [toml]
+        exclude: src/simmer/tests
+      
   - repo: https://github.com/psf/black
     rev: 20.8b1
     hooks:
