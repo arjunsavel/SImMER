@@ -178,7 +178,7 @@ def ConCur(
         center = np.array([center_vals[0], center_vals[1]])
 
     radii = np.sqrt((x - center[0]) ** 2 + (y - center[1]) ** 2)
-    radii = radii.astype(np.int)
+    radii = radii.astype(np.int64)
 
     ones = np.array([[1] * len(data)] * len(data[0]))
 
