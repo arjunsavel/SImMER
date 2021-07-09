@@ -222,7 +222,7 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
     for sf_dir in fdirs:  # each filter
 
         files = glob(
-            sf_dir + f"s*.fits"
+            sf_dir + f"sh*.fits"
         )  # might need to change to file_prefix
         nims = len(files)
         frames = u.read_imcube(files)
