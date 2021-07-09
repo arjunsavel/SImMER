@@ -39,7 +39,7 @@ def download_folder(folder, path=None):
     """
 
     folder_dict = {
-        "sky_test": "hhs5w81dvok5wp8",
+        "sky_test": "n4gvrr7ta5rg7n5",
         "dark_test": "ao1ug1kvlr5l4y3",
         "flat_test": "r0gntctnfrjh5zd",
         "PHARO_config_driver": "p3wv7l800fdqx5q",
@@ -60,7 +60,6 @@ def download_folder(folder, path=None):
     u = urllib.request.urlopen(url)
     data = u.read()
     u.close()
-
     with open(f"{folder}.zip", "wb") as f:
         f.write(data)
     if path:
