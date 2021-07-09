@@ -1,7 +1,7 @@
 final_im:
   plot: true
   zoom_scale: 10
-  colorbars: true
+  colorbars: false
   colormap: "plasma"
   scaling: "linear"
 
