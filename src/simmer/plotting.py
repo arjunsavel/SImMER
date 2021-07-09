@@ -194,7 +194,6 @@ def plot_array(
 
     if not plot_config:
         initialize_plotting()
-
     # if this shouldn't be plotted, just return
     if not plot_config[plot_type]["plot"]:
         return
