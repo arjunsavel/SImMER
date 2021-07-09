@@ -15,7 +15,7 @@ repos:
     hooks:
       - id: isort
         name: isort (python)
-	additional_dependencies: [toml]
+        additional_dependencies: [toml]
         exclude: src/simmer/tests
       - id: isort
         name: isort (cython)
@@ -27,7 +27,7 @@ repos:
         types: [pyi]
 	additional_dependencies: [toml]
         exclude: src/simmer/tests
-      
+
   - repo: https://github.com/psf/black
     rev: 20.8b1
     hooks:
