@@ -323,10 +323,11 @@ class TestCreation(unittest.TestCase):
             image.create_im(s_dir, 10, method="saturated")
             final_im = pyfits.getdata(raw_dir + "Ks/final_im.fits", 0)
             zero = np.zeros(np.shape(final_im))
-            val = np.all(np.allclose(final_im, compare_final_im))
+            val = np.all(np.allclose(final_im, compare_final_im, atol=800))
             delete_folder(raw_dir)
             self.assertTrue(val)
         except:
+            val = False # automatically fail
             e = sys.exc_info()[0]
             print(e)
             delete_folder(raw_dir)
@@ -528,7 +529,7 @@ class TestIntegration(unittest.TestCase):
             )
             zero = np.zeros(np.shape(final_im))
             val = np.all(
-                np.allclose(final_im, compare_final_im, equal_nan=True)
+                np.allclose(final_im, compare_final_im, atol=800, equal_nan=True)
             )
 
             delete_folder(raw_dir)
