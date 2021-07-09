@@ -20,12 +20,12 @@ repos:
       - id: isort
         name: isort (cython)
         types: [cython]
-	additional_dependencies: [toml]
+        additional_dependencies: [toml]
         exclude: src/simmer/tests
       - id: isort
         name: isort (pyi)
         types: [pyi]
-	additional_dependencies: [toml]
+        additional_dependencies: [toml]
         exclude: src/simmer/tests
 
   - repo: https://github.com/psf/black
