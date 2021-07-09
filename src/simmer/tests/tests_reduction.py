@@ -327,7 +327,7 @@ class TestCreation(unittest.TestCase):
             delete_folder(raw_dir)
             self.assertTrue(val)
         except:
-            val = False # automatically fail
+            val = False
             e = sys.exc_info()[0]
             print(e)
             delete_folder(raw_dir)
@@ -529,7 +529,9 @@ class TestIntegration(unittest.TestCase):
             )
             zero = np.zeros(np.shape(final_im))
             val = np.all(
-                np.allclose(final_im, compare_final_im, atol=800, equal_nan=True)
+                np.allclose(
+                    final_im, compare_final_im, atol=800, equal_nan=True
+                )
             )
 
             delete_folder(raw_dir)
