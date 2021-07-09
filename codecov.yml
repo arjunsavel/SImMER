@@ -7,3 +7,5 @@ coverage:
     - "src/simmer/aodirs.py"
     - "src/simmer/__init__.py"
     - "__init__.py"
+codecov:
+  disable_default_path_fixes: true
