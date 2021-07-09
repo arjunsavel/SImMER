@@ -1,3 +1,11 @@
+"""
+Module to compute contrast curves.
+
+author: @holdengill
+
+isort:skip_file
+"""
+
 import yaml
 import numpy as np
 import scipy as sp
