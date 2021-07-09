@@ -1,7 +1,5 @@
-# For plotting purposes. Descriptions provided as meta.
+# For plotting purposes. Descriptions provided in the meta fields.
 final_im:
-  type: "list"
-  schema:
     type: "dict"
     schema:
       plot:
@@ -35,8 +33,6 @@ final_im:
           log (base 10), sine, quadratic, or exponential.
 
 rots:
-  type: "list"
-  schema:
     type: "dict"
     schema:
       plot:
@@ -70,8 +66,6 @@ rots:
           log (base 10), sine, or exponential.
 
 intermediate:
-  type: "list"
-  schema:
     type: "dict"
     schema:
       plot:

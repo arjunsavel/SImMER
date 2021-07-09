@@ -77,7 +77,7 @@ def add_colorbars(fig, plot_type, cim, mode):
     elif mode == "few":
         colorbar_ticksize = 15
         colorbar_labelsisze = 20
-    scaling = plot_config[plot_type][0]["scaling"]
+    scaling = plot_config[plot_type]["scaling"]
     text_dict = {
         "rots": "Norm. residuals",
         "final_im": "Counts",
@@ -149,7 +149,7 @@ def plot_array(
             if i == 0:
                 ax.set_ylabel("pixels", fontsize=25)
             ax.tick_params(axis="both", which="major", labelsize=20)
-        if plot_config[plot_type][0]["colorbars"]:
+        if plot_config[plot_type]["colorbars"]:
             add_colorbars(fig, plot_type, cim, mode="few")
         return fig, cim
 
@@ -173,7 +173,7 @@ def plot_array(
             cim = ax.imshow(
                 scaled_pltim,
                 origin="lower",
-                cmap=plot_config[plot_type][0]["colormap"],
+                cmap=plot_config[plot_type]["colormap"],
                 norm=co.Normalize(vmin=vmin, vmax=vmax),
                 extent=extent,
             )
@@ -188,7 +188,7 @@ def plot_array(
                 ax.set_xlim([0, 100])
                 ax.set_ylim([0, 100])
 
-        if plot_config[plot_type][0]["colorbars"]:
+        if plot_config[plot_type]["colorbars"]:
             add_colorbars(fig, plot_type, cim, mode="many")
         return fig, cim
 
@@ -196,7 +196,7 @@ def plot_array(
         initialize_plotting()
 
     # if this shouldn't be plotted, just return
-    if not plot_config[plot_type][0]["plot"]:
+    if not plot_config[plot_type]["plot"]:
         return
     check_plot_type(plot_type)
     func_dict = {
@@ -208,7 +208,7 @@ def plot_array(
         "square root": np.sqrt,
     }
 
-    func = func_dict[plot_config[plot_type][0]["scaling"]]
+    func = func_dict[plot_config[plot_type]["scaling"]]
 
     array_len = get_array_len(im_array)
 

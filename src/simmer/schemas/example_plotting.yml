@@ -1,12 +1,12 @@
 final_im:
   plot: true
   zoom_scale: 10
-  colorbars: false
-  colormap: viridis
-  scaling: "square root"
+  colorbars: true
+  colormap: "plasma"
+  scaling: "linear"
 
 rots:
   plot: false
 
 intermediate:
-  scaling: "exponential"
+  scaling: "linear"
