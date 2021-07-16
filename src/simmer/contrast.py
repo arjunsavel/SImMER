@@ -254,9 +254,7 @@ def ConCur(
     delta_mags = np.array(delta_mags)
     if delta_mags[1] < 0:
         warnings.warn(
-            "First annulus has negative relative flux of value,",
-            "%.5f" % delta_mags[1],
-            "consider changing center or radius size",
+            f"First annulus has negative relative flux of value, {delta_mags[1]}, consider changing center or radius size",
         )
 
     return (lim_arc_lengths, delta_mags, all_stds)
