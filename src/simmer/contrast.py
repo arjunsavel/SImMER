@@ -156,6 +156,9 @@ def ConCur(
     find_hots=False,
     find_center=False,
 ):
+    """
+    Main function for computing contrast curves.
+    """
 
     data = star_data.copy()
 
