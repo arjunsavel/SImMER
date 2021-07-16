@@ -13,6 +13,9 @@ from photutils.aperture import (
     aperture_photometry,
 )
 
+import warnings
+
+
 
 def twoD_weighted_std(data, weights):
     wm = np.sum(weights * data) / (np.sum(weights))
@@ -252,8 +255,8 @@ def ConCur(
     delta_mags = delta_mags[: len(lim_arc_lengths)]
     delta_mags = np.array(delta_mags)
     if delta_mags[1] < 0:
-        print(
-            "Warning: first annulus has negative relative flux of value,",
+        warnings.warn(
+            "First annulus has negative relative flux of value,",
             "%.5f" % delta_mags[1],
             "consider changing center or radius size",
         )
