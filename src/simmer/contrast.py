@@ -1,20 +1,15 @@
 import math
 import os
+import warnings
 
 import numpy as np
-import photutils
-import scipy as sp
 import scipy.optimize
-from astropy.io import fits
 from astropy.stats import SigmaClip, sigma_clipped_stats
 from photutils.aperture import (
     CircularAnnulus,
     CircularAperture,
     aperture_photometry,
 )
-
-import warnings
-
 
 
 def twoD_weighted_std(data, weights):
