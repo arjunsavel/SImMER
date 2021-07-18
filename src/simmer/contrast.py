@@ -1,3 +1,12 @@
+"""
+Scripts to calculate contrast curves for images.
+
+author: @holdengill
+
+isort:skip_file
+"""
+
+
 import math
 import os
 import warnings
@@ -10,6 +19,38 @@ from photutils.aperture import (
     CircularAperture,
     aperture_photometry,
 )
+
+
+def hot_pixels(star_data, center, background_mean, background_std):
+
+    data = star_data.copy()
+
+    hots = []
+    for i in range(len(data)):
+        for j in range(len(data[i])):
+            if data[i, j] > (background_mean + 10 * background_std):
+
+                counter = 0
+
+                # draw a box around pixel, see how many are 'hot'
+                for ii in range(i - 3, i + 4):
+                    for jj in range(j - 3, j + 4):
+                        if data[ii, jj] > (
+                            background_mean + 10 * background_std
+                        ):
+                            counter += 1
+
+                # make sure its not a large clump - hot pixel not a star/cosmic ray/etc
+                if counter < 7:
+                    hots.append(np.array([i, j, data[i, j]]))
+                    print(f"Hot pixel detected at {i,j}")
+
+    print("found", len(hots), "hot pixels")
+
+    # array of locations and values
+    hots = np.array(hots)
+
+    return hots
 
 
 def twoD_weighted_std(data, weights):
