@@ -111,7 +111,7 @@ def get_array_len(im_array):
 
 
 def plot_array(
-    plot_type, im_array, vmin, vmax, directory, filename, extent=None
+    plot_type, im_array, vmin, vmax, directory, filename, extent=None, snames=None, filts=None
 ):  # pylint: disable=too-many-arguments
     """
     Plots arrays produced in the process of the pipeline.
@@ -249,16 +249,16 @@ def plot_array(
         im_array = np.array([im_array])
 
     if "all_stars" in filename:
-        fig, cim = plot_all-stars(func, snames=snames, filts=filts)
+        fig, cim = plot_all_stars(func, snames=snames, filts=filts)
 
     elif array_len <= 5:
-        fig, cim = plot_few(func)
+        fig, cim = plot_few(func, snames=snames)
 
     elif array_len > 50:
         print("Too many images to plot.")
         return
     else:  # 11 images? 13 images? make it 4xn
-        fig, cim = plot_many(func)
+        fig, cim = plot_many(func, snames=snames)
 
     fig.subplots_adjust(right=0.8)
 
