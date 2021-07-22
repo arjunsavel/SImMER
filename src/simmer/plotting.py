@@ -248,7 +248,10 @@ def plot_array(
     if array_len == 1 and plot_type == "final_im":
         im_array = np.array([im_array])
 
-    if array_len <= 5:
+    if "all_stars" in filename:
+        fig, cim = plot_all-stars(func, snames=snames, filts=filts)
+
+    elif array_len <= 5:
         fig, cim = plot_few(func)
 
     elif array_len > 50:
