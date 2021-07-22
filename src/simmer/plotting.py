@@ -216,8 +216,8 @@ def plot_array(
             ax.set_xlabel(snames[i], fontsize=50)
             ax.annotate(filts[i], xy=(2,2), zorder=1000, color='w',fontsize=50)
 
-            if i % ncols == 0 #if it is on the leftmost column
-            ax.set_ylabel('pixels',fontsize=50)
+            if (i % ncols) == 0: #if it is on the leftmost column
+                ax.set_ylabel('pixels',fontsize=50)
 
             ax.tick_params(axis='both', which='major',labelsize=40)
 
