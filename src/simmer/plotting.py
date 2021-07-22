@@ -129,7 +129,7 @@ def plot_array(
         :fig: (Matplotlib figure) plotted figure.
     """
 
-    def plot_few(func):
+    def plot_few(func, snames=None):
         fig = plt.figure(figsize=(6 * array_len, 6))
         for i in range(array_len):
             ax = fig.add_subplot(
@@ -145,7 +145,11 @@ def plot_array(
                 norm=co.Normalize(vmin=vmin, vmax=vmax),
                 extent=extent,
             )
-            ax.set_xlabel("pixels", fontsize=25)
+            if snames:
+                ax.set_xlabel(snames[i], fontsize=25)
+            else:
+                ax.set_xlabel("pixels", fontsize=25)
+
             if i == 0:
                 ax.set_ylabel("pixels", fontsize=25)
             ax.tick_params(axis="both", which="major", labelsize=20)
@@ -153,7 +157,7 @@ def plot_array(
             add_colorbars(fig, plot_type, cim, mode="few")
         return fig, cim
 
-    def plot_many(func):
+    def plot_many(func, snames=None):
         nrows = 4
         ncols = int(np.ceil((array_len / 4.0)))
         rowheight = nrows * 10
@@ -168,6 +172,8 @@ def plot_array(
                 pltim = np.rot90(im_array[i, 250:350, 250:350], 2)
             else:
                 pltim = np.rot90(im_array[i, :, :], 2)
+            if snames:
+                ax.set_xlabel(snames[i], fontsize=25)
             scaled_pltim = func(pltim)
 
             cim = ax.imshow(
@@ -191,6 +197,34 @@ def plot_array(
         if plot_config[plot_type]["colorbars"]:
             add_colorbars(fig, plot_type, cim, mode="many")
         return fig, cim
+
+    def plot_all_stars(func, snames=snames, filts=filts, nrows=4):
+        ncols = int(np.ceil((array_len /nrows)))
+        rowheight = nrows * 10
+        colheight = ncols * 10
+
+        fig = plt.figure(figsize=(colheight, rowheight))
+        for i in range(array_len):
+            ax = fig.add_subplot(nrows, ncols, i + 1)
+            pltim = np.rot90(im_array[i,:,:],2)
+            scaled_pltim = func(pltim)
+
+            cim = ax.imshow(scaled_pltim, origin='lower',
+                cmap=plot_config[plot_type][0]["colormap"],
+                norm=co.Normalize(vmin=vmin, vmax=vmax),extent=extent)
+
+            ax.set_xlabel(snames[i], fontsize=50)
+            ax.annotate(filts[i], xy=(2,2), zorder=1000, color='w',fontsize=50)
+
+            if i % ncols = 0 #if it is on the leftmost column
+            ax.set_ylabel('pixels',fontsize=50)
+
+            ax.tick_params(axis='both', which='major',labelsize=40)
+
+        if plot_config[plot_type][0]["colorbars"]:
+            add_colsorbars(fig, plot_type, cim, mode='many')
+        return fig, cim
+
 
     if not plot_config:
         initialize_plotting()
