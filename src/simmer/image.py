@@ -136,6 +136,12 @@ def create_imstack(
     nims = len(imlist)
     imfiles = u.make_filelist(raw_dir, imlist, inst)
 
+    #Keep track of original filenames so that we can annotate the shift1_cube
+    #image arrays and easily decide which images to exclude
+    original_fnames=imfiles.copy()
+    for jj in np.arange(len(imfiles)):
+        original_fnames[jj] = os.path.basename(imfiles[jj]).split('.')[0]
+
     im_array = u.read_imcube(imfiles)
 
     im_array = inst.adjust_array(im_array, nims)
@@ -190,7 +196,7 @@ def create_imstack(
         )
 
     pl.plot_array(
-        "intermediate", im_array, -10.0, 10000.0, sf_dir, "shift1_cube.png"
+        "intermediate", im_array, -10.0, 10000.0, sf_dir, "shift1_cube.png",snames=original_fnames
     )
 
     # write shifts to file
