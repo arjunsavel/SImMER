@@ -26,7 +26,7 @@ def all_driver(
         :config_file: (string) path of the config file containing plotting
             specifications. Optional.
         :raw_dir: (string) path of the directory containing the raw data.
-        :reddir: (string) path of the directory to contain the raw data.
+        :reddir: (string) path of the directory to contain the reduced data.
         :plotting_yml: (string) path to the plotting configuration file.
 
     """
