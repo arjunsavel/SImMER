@@ -161,6 +161,11 @@ def create_imstack(
         inst.name == "PHARO" and filt == "Br-gamma"
     ):  # not sure whether this is generalizable
         flatfile = reddir + "flat_K_short.fits"
+
+    #For ShARCS, use Ks flat instead of BrG-2.16 if necessary
+    if (inst.name == "ShARCS" and filt == "BrG-2.16"):
+        if os.path.exists(flatfile) == False:
+            flatfile = reddir + 'flat_Ks.fits'
     flat = open_flats(flatfile)
 
     skyfile = sf_dir + "sky.fits"
