@@ -71,10 +71,7 @@ def create_darks(raw_dir, reddir, darklist, inst):
         f"dark_cube_{int(round(itime))}sec.png",
     )
 
-    # CDD update
-    # head.update('DATAFILE', str(darklist)) #add all file names
     head.set("DATAFILE", str(darklist))  # add all file names
-    # end CDD update
 
     hdu = pyfits.PrimaryHDU(
         final_dark, header=head
