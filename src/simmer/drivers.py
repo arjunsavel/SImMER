@@ -6,6 +6,7 @@ from glob import glob
 
 import numpy as np
 import pandas as pd
+import os as os
 from tqdm import tqdm
 
 from . import darks, flats, image
@@ -15,7 +16,7 @@ from . import sky
 
 
 def all_driver(
-    inst, config_file, raw_dir, reddir, plotting_yml=None, searchsize=10
+    inst, config_file, raw_dir, reddir, plotting_yml=None, searchsize=10, verbose=True
 ):
     """
     Runs all drivers, performing an end-to-end reduction.
@@ -29,6 +30,11 @@ def all_driver(
         :plotting_yml: (string) path to the plotting configuration file.
 
     """
+    #check if desired reddir exists and create it if needed
+    if os.path.isdir(reddir) == False:
+        if verbose == True:
+            print('Making reduction directory ', reddir)
+        os.mkdir(reddir)
 
     # obtain file list from config file
     config = pd.read_csv(config_file)
