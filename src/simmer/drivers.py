@@ -16,7 +16,7 @@ from . import sky
 
 
 def all_driver(
-    inst, config_file, raw_dir, reddir, plotting_yml=None, searchsize=10, verbose=True
+    inst, config_file, raw_dir, reddir, plotting_yml=None, searchsize=10, just_images=False, verbose=True
 ):
     """
     Runs all drivers, performing an end-to-end reduction.
@@ -46,9 +46,11 @@ def all_driver(
     if plotting_yml:
         pl.initialize_plotting(plotting_yml)
 
-    darks.dark_driver(raw_dir, reddir, config, inst)
-    flats.flat_driver(raw_dir, reddir, config, inst)
-    sky.sky_driver(raw_dir, reddir, config, inst)
+    #If this is a re-reduction, it's possible to save time by using existing darks, flats, and skies
+    if just_images == False:
+        darks.dark_driver(raw_dir, reddir, config, inst)
+        flats.flat_driver(raw_dir, reddir, config, inst)
+        sky.sky_driver(raw_dir, reddir, config, inst)
     methods = image.image_driver(raw_dir, reddir, config, inst)
 
     star_dirlist = glob(reddir + "*/")
