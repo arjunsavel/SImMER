@@ -209,9 +209,13 @@ def plot_array(
             pltim = np.rot90(im_array[i,:,:],2)
             scaled_pltim = func(pltim)
 
-            cim = ax.imshow(scaled_pltim, origin='lower',
-                cmap=plot_config[plot_type][0]["colormap"],
-                norm=co.Normalize(vmin=vmin, vmax=vmax),extent=extent)
+            cim = ax.imshow(
+                scaled_pltim,
+                origin="lower",
+                cmap=plot_config[plot_type]["colormap"],
+                norm=co.Normalize(vmin=vmin, vmax=vmax),
+                extent=extent,
+            )
 
             ax.set_xlabel(snames[i], fontsize=50)
             ax.annotate(filts[i], xy=(2,2), zorder=1000, color='w',fontsize=50)
@@ -221,8 +225,8 @@ def plot_array(
 
             ax.tick_params(axis='both', which='major',labelsize=40)
 
-        if plot_config[plot_type][0]["colorbars"]:
-            add_colsorbars(fig, plot_type, cim, mode='many')
+        if plot_config[plot_type]["colorbars"]:
+            add_colorbars(fig, plot_type, cim, mode="many")
         return fig, cim
 
 
