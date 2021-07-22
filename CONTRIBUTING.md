@@ -14,5 +14,5 @@ open your own issue/work on a pull request; for relevant issues, please use the
 sure to take a look at our
 [code of conduct](https://github.com/arjunsavel/SImMER/blob/master/CODE_OF_CONDUCT.md),
 [vision](https://github.com/arjunsavel/SImMER/blob/master/VISION.md),
-and [more detailed guidelines](https://simmer.readthedocs.io/en/latest/pages/contributing.html)
+and [more detailed guidelines](https://simmer.readthedocs.io/en/latest/pages/contributing/)
 before making any contributions. Thanks!

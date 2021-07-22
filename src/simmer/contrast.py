@@ -1,11 +1,9 @@
 import math
 import os
+import warnings
 
 import numpy as np
-import photutils
-import scipy as sp
 import scipy.optimize
-from astropy.io import fits
 from astropy.stats import SigmaClip, sigma_clipped_stats
 from photutils.aperture import (
     CircularAnnulus,
@@ -158,6 +156,9 @@ def ConCur(
     find_hots=False,
     find_center=False,
 ):
+    """
+    Main function for computing contrast curves.
+    """
 
     data = star_data.copy()
 
@@ -252,10 +253,8 @@ def ConCur(
     delta_mags = delta_mags[: len(lim_arc_lengths)]
     delta_mags = np.array(delta_mags)
     if delta_mags[1] < 0:
-        print(
-            "Warning: first annulus has negative relative flux of value,",
-            "%.5f" % delta_mags[1],
-            "consider changing center or radius size",
+        warnings.warn(
+            f"First annulus has negative relative flux of value, {delta_mags[1]}, consider changing center or radius size",
         )
 
     return (lim_arc_lengths, delta_mags, all_stds)
