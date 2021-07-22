@@ -35,8 +35,13 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             :file: (string) name of file of interest.
         """
         if file[1] == "0":
-            number = literal_eval(file[2:5])  # just a safer eval
-        number = literal_eval(file[1:5])
+            #check below needed because python raises an invalid token error when numbers have leading zeros
+            if file[2] == "0":
+                number = literal_eval(file[3:5])  # just a safer eval
+            else:
+                number = literal_eval(file[2:5])  # just a safer eval
+        else:
+            number = literal_eval(file[1:5])
         return number
 
     def find_end(column):
@@ -78,7 +83,7 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             #darks over and over if we rerun the pipeline
             parts = log.split('.')
             outlog = parts[0] + '_with_darks.'+parts[-1]
-            current_log = pd.read_csv('log')
+            current_log = pd.read_csv(log)
 
             #add the darks to the end of the data frame
             full_log = current_log.append(dark_log, ignore_index=True)
