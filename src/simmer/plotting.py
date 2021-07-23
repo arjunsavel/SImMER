@@ -114,6 +114,8 @@ def plot_contrast(dists, delta_mags, directory, filename):
     plt.plot(dists, delta_mags, '-o')
     plt.xlabel('Separation (")')
     plt.ylabel('Contrast (Magnitudes)')
+    ax = plt.gca()
+    ax.set_ylim(ax.get_ylim()[::-1])
     plt.savefig(directory + filename, bbox_inches="tight")
     plt.close("all")
     return
