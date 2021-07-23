@@ -14,7 +14,6 @@ from . import plotting as pl
 from . import search_headers as search
 from . import sky
 
-
 def all_driver(
     inst, config_file, raw_dir, reddir, plotting_yml=None, searchsize=10, just_images=False, verbose=True
 ):
@@ -77,7 +76,7 @@ def all_driver(
 
 def config_driver(inst, config_file, raw_dir, reddir):
     """
-    Runs all_drivers, terminating afrer running sky_driver.
+    Runs all_drivers, terminating after running sky_driver.
 
     Inputs:
         :inst: (Instrument object) instrument for which data is being reduced.
