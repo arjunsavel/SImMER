@@ -13,6 +13,7 @@ from . import darks, flats, image
 from . import plotting as pl
 from . import search_headers as search
 from . import sky
+from . import summarize as summarize
 
 def all_driver(
     inst, config_file, raw_dir, reddir, plotting_yml=None, searchsize=10, just_images=False, verbose=True
@@ -73,8 +74,14 @@ def all_driver(
     ):
         image.create_im(s_dir, searchsize, method=methods[i])
 
+    #make summary plot showing reduced images of all stars observed
+    summarize.image_grid(reddir)
 
-def config_driver(inst, config_file, raw_dir, reddir):
+    #make summary plot showing contrast curves for all stars observed
+    summarize.nightly_contrast_curve(reddir)
+
+
+
     """
     Runs all_drivers, terminating after running sky_driver.
 
