@@ -14,6 +14,7 @@ from tqdm import tqdm
 from . import plotting as pl
 from . import registration as reg
 from . import utils as u
+from . import contrast as contrast
 
 
 class FlatOpeningError(ValueError):
@@ -299,3 +300,10 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
         pl.plot_array(
             "intermediate", frames, 0.0, 10000.0, sf_dir, "centers.png"
         )
+
+        #calculate and save contrast curve
+        seps, delta_mags, all_stds = contrast.ConCur(final_im)
+        pl.plot_contrast(seps, delta_mags,sf_dir, 'contrast_curve.png')
+        condf = pd.DataFrame({'separation': seps, 'contrast': delta_mags})
+        ccfile = sf_dir + 'contrast_curve.csv'
+        condf.to_csv(ccfile, index=False)

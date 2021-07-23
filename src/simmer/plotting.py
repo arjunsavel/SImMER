@@ -110,6 +110,14 @@ def get_array_len(im_array):
     return array_len
 
 
+def plot_contrast(dists, delta_mags, directory, filename):
+    plt.plot(dists, delta_mags, '-o')
+    plt.xlabel('Separation (")')
+    plt.ylabel('Contrast (Magnitudes)')
+    plt.savefig(directory + filename, bbox_inches="tight")
+    plt.close("all")
+    return
+
 def plot_array(
     plot_type, im_array, vmin, vmax, directory, filename, extent=None, snames=None, filts=None
 ):  # pylint: disable=too-many-arguments
