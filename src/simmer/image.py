@@ -303,7 +303,7 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
 
         #calculate and save contrast curve
         seps, delta_mags, all_stds = contrast.ConCur(final_im)
-        pl.plot_contrast(seps, delta_mags,sf_dir, 'contrast_curve.png')
+        pl.plot_contrast(seps, delta_mags, sf_dir, 'contrast_curve.png')
         condf = pd.DataFrame({'separation': seps, 'contrast': delta_mags})
         ccfile = sf_dir + 'contrast_curve.csv'
         condf.to_csv(ccfile, index=False)
