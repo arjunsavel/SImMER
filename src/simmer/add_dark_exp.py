@@ -35,7 +35,7 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             :file: (string) name of file of interest.
         """
         if file[1] == "0":
-            #check below needed because python raises an invalid token error when numbers have leading zeros
+            # check below needed because python raises an invalid token error when numbers have leading zeros
             if file[2] == "0":
                 number = literal_eval(file[3:5])  # just a safer eval
             else:
@@ -79,17 +79,16 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             )
             writer.save()
         else:
-            #Save log with darks to a new file so that we don't end up adding
-            #darks over and over if we rerun the pipeline
-            parts = log.split('.')
-            outlog = parts[0] + '_with_darks.'+parts[-1]
+            # Save log with darks to a new file so that we don't end up adding
+            # darks over and over if we rerun the pipeline
+            parts = log.split(".")
+            outlog = parts[0] + "_with_darks." + parts[-1]
             current_log = pd.read_csv(log)
 
-            #add the darks to the end of the data frame
+            # add the darks to the end of the data frame
             full_log = current_log.append(dark_log, ignore_index=True)
             full_log.to_csv(outlog, index=False, header=True)
         return outlog
-
 
     find_itimes(inst, raw_dir)
     if tab:
@@ -128,27 +127,35 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
     ends += [get_number(end_file)]
     exposes += [get_number(end_file) - starts[len(starts) - 1] + 1]
 
-    #comment some of these out; when frame is merged with an existing log,
-    #any missing columns should be filled in. NOTE: This probably breaks the excel version,
-    #but works for the csv version.
+    # when frame is merged with an existing log,
+    # any missing columns should be filled in.
+
     data_dict = {
         "Object": objects,
         "Start": starts,
         "End": ends,
         "ExpTime": exptime,
-        #"Coadds": np.full(len(objects), np.nan),
         "Expose": exposes,
-        #"Total_tint": np.full(len(objects), np.nan),
-        #"Filter": np.full(len(objects), np.nan),
-        #"""Dither (")""": np.full(len(objects), np.nan),
-        #"Aperture": np.full(len(objects), np.nan),
-        #"TUB": np.full(len(objects), np.nan),
-        #"Airmass": np.full(len(objects), np.nan),
-        #"PT": np.full(len(objects), np.nan),
-        #"KepMag": np.full(len(objects), np.nan),
-        #"Companion": np.full(len(objects), np.nan),
-        #"Comments": np.full(len(objects), np.nan),
     }
+
+    # if these columns aren't added, .xlsx files will break here!
+    if log[-3:] != "csv":
+        keys_to_add = [
+            "Coadds",
+            "Total_tint",
+            "Filter",
+            """Dither (")""",
+            "Aperture",
+            "TUB",
+            "Airmass",
+            "PT",
+            "KepMag",
+            "Companion",
+            "Comments",
+        ]
+        for key in keys_to_add:
+            data_dict[key] = np.full(len(objects), np.nan)
+
     new_frame = pd.DataFrame(data=data_dict)
 
     end = find_end(initial_frame["Object"])
