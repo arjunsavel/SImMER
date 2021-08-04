@@ -14,6 +14,7 @@ from tqdm import tqdm
 from . import plotting as pl
 from . import registration as reg
 from . import utils as u
+from . import contrast as contrast
 
 
 class FlatOpeningError(ValueError):
@@ -136,6 +137,12 @@ def create_imstack(
     nims = len(imlist)
     imfiles = u.make_filelist(raw_dir, imlist, inst)
 
+    #Keep track of original filenames so that we can annotate the shift1_cube
+    #image arrays and easily decide which images to exclude
+    original_fnames=imfiles.copy()
+    for jj in np.arange(len(imfiles)):
+        original_fnames[jj] = os.path.basename(imfiles[jj]).split('.')[0]
+
     im_array = u.read_imcube(imfiles)
 
     im_array = inst.adjust_array(im_array, nims)
@@ -155,6 +162,11 @@ def create_imstack(
         inst.name == "PHARO" and filt == "Br-gamma"
     ):  # not sure whether this is generalizable
         flatfile = reddir + "flat_K_short.fits"
+
+    #For ShARCS, use Ks flat instead of BrG-2.16 if necessary
+    if (inst.name == "ShARCS" and filt == "BrG-2.16"):
+        if os.path.exists(flatfile) == False:
+            flatfile = reddir + 'flat_Ks.fits'
     flat = open_flats(flatfile)
 
     skyfile = sf_dir + "sky.fits"
@@ -190,7 +202,7 @@ def create_imstack(
         )
 
     pl.plot_array(
-        "intermediate", im_array, -10.0, 10000.0, sf_dir, "shift1_cube.png"
+        "intermediate", im_array, -10.0, 10000.0, sf_dir, "shift1_cube.png",snames=original_fnames
     )
 
     # write shifts to file
@@ -288,3 +300,10 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
         pl.plot_array(
             "intermediate", frames, 0.0, 10000.0, sf_dir, "centers.png"
         )
+
+        #calculate and save contrast curve
+        seps, delta_mags, all_stds = contrast.ConCur(final_im)
+        pl.plot_contrast(seps, delta_mags, sf_dir, 'contrast_curve.png')
+        condf = pd.DataFrame({'separation': seps, 'contrast': delta_mags})
+        ccfile = sf_dir + 'contrast_curve.csv'
+        condf.to_csv(ccfile, index=False)

@@ -249,12 +249,15 @@ def ConCur(
             (i * 0.033 + 0.033) * radius_size
         )  # make sure center radius size is correct
     arc_lengths = np.array(arc_lengths)
+
+    #Truncate all three arrays to the inner 10"
     lim_arc_lengths = arc_lengths[arc_lengths < 10]
     delta_mags = delta_mags[: len(lim_arc_lengths)]
     delta_mags = np.array(delta_mags)
+    lim_stds = all_stds[: len(lim_arc_lengths)]
     if delta_mags[1] < 0:
         warnings.warn(
             f"First annulus has negative relative flux of value, {delta_mags[1]}, consider changing center or radius size",
         )
 
-    return (lim_arc_lengths, delta_mags, all_stds)
+    return (lim_arc_lengths, delta_mags, lim_stds)

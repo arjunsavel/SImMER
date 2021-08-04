@@ -110,8 +110,18 @@ def get_array_len(im_array):
     return array_len
 
 
+def plot_contrast(dists, delta_mags, directory, filename):
+    plt.plot(dists, delta_mags, '-o')
+    plt.xlabel('Separation (")')
+    plt.ylabel('Contrast (Magnitudes)')
+    ax = plt.gca()
+    ax.set_ylim(ax.get_ylim()[::-1])
+    plt.savefig(directory + filename, bbox_inches="tight")
+    plt.close("all")
+    return
+
 def plot_array(
-    plot_type, im_array, vmin, vmax, directory, filename, extent=None
+    plot_type, im_array, vmin, vmax, directory, filename, extent=None, snames=None, filts=None
 ):  # pylint: disable=too-many-arguments
     """
     Plots arrays produced in the process of the pipeline.
@@ -129,7 +139,7 @@ def plot_array(
         :fig: (Matplotlib figure) plotted figure.
     """
 
-    def plot_few(func):
+    def plot_few(func, snames=None):
         fig = plt.figure(figsize=(6 * array_len, 6))
         for i in range(array_len):
             ax = fig.add_subplot(
@@ -145,7 +155,11 @@ def plot_array(
                 norm=co.Normalize(vmin=vmin, vmax=vmax),
                 extent=extent,
             )
-            ax.set_xlabel("pixels", fontsize=25)
+            if snames:
+                ax.set_xlabel(snames[i], fontsize=25)
+            else:
+                ax.set_xlabel("pixels", fontsize=25)
+
             if i == 0:
                 ax.set_ylabel("pixels", fontsize=25)
             ax.tick_params(axis="both", which="major", labelsize=20)
@@ -153,7 +167,7 @@ def plot_array(
             add_colorbars(fig, plot_type, cim, mode="few")
         return fig, cim
 
-    def plot_many(func):
+    def plot_many(func, snames=None):
         nrows = 4
         ncols = int(np.ceil((array_len / 4.0)))
         rowheight = nrows * 10
@@ -168,6 +182,8 @@ def plot_array(
                 pltim = np.rot90(im_array[i, 250:350, 250:350], 2)
             else:
                 pltim = np.rot90(im_array[i, :, :], 2)
+            if snames:
+                ax.set_xlabel(snames[i], fontsize=25)
             scaled_pltim = func(pltim)
 
             cim = ax.imshow(
@@ -192,6 +208,38 @@ def plot_array(
             add_colorbars(fig, plot_type, cim, mode="many")
         return fig, cim
 
+    def plot_all_stars(func, snames=snames, filts=filts, nrows=4):
+        ncols = int(np.ceil((array_len /nrows)))
+        rowheight = nrows * 10
+        colheight = ncols * 10
+
+        fig = plt.figure(figsize=(colheight, rowheight))
+        for i in range(array_len):
+            ax = fig.add_subplot(nrows, ncols, i + 1)
+            pltim = np.rot90(im_array[i,:,:],2)
+            scaled_pltim = func(pltim)
+
+            cim = ax.imshow(
+                scaled_pltim,
+                origin="lower",
+                cmap=plot_config[plot_type]["colormap"],
+                norm=co.Normalize(vmin=vmin, vmax=vmax),
+                extent=extent,
+            )
+
+            ax.set_xlabel(snames[i], fontsize=50)
+            ax.annotate(filts[i], xy=(2,2), zorder=1000, color='w',fontsize=50)
+
+            if (i % ncols) == 0: #if it is on the leftmost column
+                ax.set_ylabel('pixels',fontsize=50)
+
+            ax.tick_params(axis='both', which='major',labelsize=40)
+
+        if plot_config[plot_type]["colorbars"]:
+            add_colorbars(fig, plot_type, cim, mode="many")
+        return fig, cim
+
+
     if not plot_config:
         initialize_plotting()
     # if this shouldn't be plotted, just return
@@ -214,14 +262,17 @@ def plot_array(
     if array_len == 1 and plot_type == "final_im":
         im_array = np.array([im_array])
 
-    if array_len <= 5:
-        fig, cim = plot_few(func)
+    if "all_stars" in filename:
+        fig, cim = plot_all_stars(func, snames=snames, filts=filts)
+
+    elif array_len <= 5:
+        fig, cim = plot_few(func, snames=snames)
 
     elif array_len > 50:
         print("Too many images to plot.")
         return
     else:  # 11 images? 13 images? make it 4xn
-        fig, cim = plot_many(func)
+        fig, cim = plot_many(func, snames=snames)
 
     fig.subplots_adjust(right=0.8)
 

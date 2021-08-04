@@ -55,13 +55,9 @@ def sky_driver(raw_dir, reddir, config, inst, plotting_yml=None):
             skies.Object == star
         ].Filter.values  # array of filters as strings
         for n, filter_name in enumerate(filts):
-            # CDD change
-            # skylist = literal_eval(skies[skies.Object == s].Filenums.values[n])
-            # literal_eval issues below
             skylist = eval(
                 skies[skies.Object == star].Filenums.values[n]
-            )  # pylint: disable=eval-used
-            # end CDD change
+            )
             create_skies(
                 raw_dir, reddir, s_dir, skylist, inst, filter_name=filter_name
             )
@@ -107,6 +103,12 @@ def create_skies(
     flatfile = reddir + f"flat_{filt}.fits"
     if inst.name == "PHARO" and filt == "Br-gamma":
         flatfile = reddir + "flat_K_short.fits"  # no BrG flats in Palomar data
+
+    #For ShARCS, use Ks flat instead of BrG-2.16 if necessary
+    if (inst.name == "ShARCS" and filt == "BrG-2.16"):
+        if os.path.exists(flatfile) == False:
+            flatfile = reddir + 'flat_Ks.fits'
+
     flat = pyfits.getdata(flatfile, 0)
 
     for i in range(nskies):
@@ -119,10 +121,8 @@ def create_skies(
     pl.plot_array(
         "intermediate", sky_array, -10.0, 100.0, sf_dir, "sky_cube.png"
     )
-    # CDD change
-    #  head.update('DATAFILE', str(skylist)) #add all file names
+
     head.set("DATAFILE", str(skylist))  # add all file names
-    # end CDD change
 
     hdu = pyfits.PrimaryHDU(final_sky, header=head)
     hdu.writeto(sf_dir + "sky.fits", overwrite=True, output_verify="ignore")
