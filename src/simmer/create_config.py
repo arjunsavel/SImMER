@@ -101,7 +101,7 @@ def isolate_columns(logdf):
     """
     if "Method" not in logdf.columns:
         savedf = logdf[["Object", "ExpTime", "Filter", "Comments"]]
-        savedf.Method = "saturated"  # default for now
+        savedf['Method'] = "saturated"  # default for now
     else:
         savedf = logdf[["Object", "ExpTime", "Filter", "Comments", "Method"]]
 

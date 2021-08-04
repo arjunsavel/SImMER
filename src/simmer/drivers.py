@@ -6,16 +6,17 @@ from glob import glob
 
 import numpy as np
 import pandas as pd
+import os as os
 from tqdm import tqdm
 
 from . import darks, flats, image
 from . import plotting as pl
 from . import search_headers as search
 from . import sky
-
+from . import summarize as summarize
 
 def all_driver(
-    inst, config_file, raw_dir, reddir, plotting_yml=None, searchsize=10
+    inst, config_file, raw_dir, reddir, plotting_yml=None, searchsize=10, just_images=False, verbose=True
 ):
     """
     Runs all drivers, performing an end-to-end reduction.
@@ -25,10 +26,15 @@ def all_driver(
         :config_file: (string) path of the config file containing plotting
             specifications. Optional.
         :raw_dir: (string) path of the directory containing the raw data.
-        :reddir: (string) path of the directory to contain the raw data.
+        :reddir: (string) path of the directory to contain the reduced data.
         :plotting_yml: (string) path to the plotting configuration file.
 
     """
+    #check if desired reddir exists and create it if needed
+    if os.path.isdir(reddir) == False:
+        if verbose == True:
+            print('Making reduction directory ', reddir)
+        os.mkdir(reddir)
 
     # obtain file list from config file
     config = pd.read_csv(config_file)
@@ -40,9 +46,11 @@ def all_driver(
     if plotting_yml:
         pl.initialize_plotting(plotting_yml)
 
-    darks.dark_driver(raw_dir, reddir, config, inst)
-    flats.flat_driver(raw_dir, reddir, config, inst)
-    sky.sky_driver(raw_dir, reddir, config, inst)
+    #If this is a re-reduction, it's possible to save time by using existing darks, flats, and skies
+    if just_images == False:
+        darks.dark_driver(raw_dir, reddir, config, inst)
+        flats.flat_driver(raw_dir, reddir, config, inst)
+        sky.sky_driver(raw_dir, reddir, config, inst)
     methods = image.image_driver(raw_dir, reddir, config, inst)
 
     star_dirlist = glob(reddir + "*/")
@@ -66,10 +74,16 @@ def all_driver(
     ):
         image.create_im(s_dir, searchsize, method=methods[i])
 
+    #make summary plot showing reduced images of all stars observed
+    summarize.image_grid(reddir)
 
-def config_driver(inst, config_file, raw_dir, reddir):
+    #make summary plot showing contrast curves for all stars observed
+    summarize.nightly_contrast_curve(reddir)
+
+
+
     """
-    Runs all_drivers, terminating afrer running sky_driver.
+    Runs all_drivers, terminating after running sky_driver.
 
     Inputs:
         :inst: (Instrument object) instrument for which data is being reduced.
