@@ -5,7 +5,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-  - master
+  - main
 
 schedules:
   - cron: "0 0 1 * *"
