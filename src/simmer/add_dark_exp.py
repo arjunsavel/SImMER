@@ -78,6 +78,8 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
                 writer, tab, index=False, startrow=end, header=False
             )
             writer.save()
+
+            return None
         else:
             # Save log with darks to a new file so that we don't end up adding
             # darks over and over if we rerun the pipeline
@@ -88,7 +90,7 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             # add the darks to the end of the data frame
             full_log = current_log.append(dark_log, ignore_index=True)
             full_log.to_csv(outlog, index=False, header=True)
-        return outlog
+            return outlog
 
     find_itimes(inst, raw_dir)
     if tab:
