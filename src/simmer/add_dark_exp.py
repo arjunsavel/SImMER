@@ -78,8 +78,8 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
                 writer, tab, index=False, startrow=end, header=False
             )
             writer.save()
+            writer.close()
 
-            return None
         else:
             # Save log with darks to a new file so that we don't end up adding
             # darks over and over if we rerun the pipeline
@@ -162,9 +162,11 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
 
     end = find_end(initial_frame["Object"])
 
-    outlog = log_to_csv(log, tab, end, new_frame)
-
-    return outlog
+    if log[-3:] == "csv":
+        outlog = log_to_csv(log, tab, end, new_frame)
+        return outlog
+    else:
+        log_to_csv(log, tab, end, new_frame)
 
 
 def find_itimes(inst, raw_dir):
