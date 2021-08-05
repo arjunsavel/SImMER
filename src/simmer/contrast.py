@@ -154,7 +154,7 @@ def ConCur(
     center=None,
     background_method="astropy",
     find_hots=False,
-    find_center=False,
+    find_center=False,verbose=False
 ):
     """
     Main function for computing contrast curves.
@@ -233,14 +233,15 @@ def ConCur(
                 )
             )
         except ValueError:
-            print(
-                "annulus",
-                i,
-                "relative flux equal to",
-                (np.sum(all_data[i]) / all_apers_areas[i] + 5 * all_stds[i])
-                / center_val,
-                "...it is not included",
-            )
+            if verbose == True:
+                    print(
+                    "annulus",
+                    i,
+                    "relative flux equal to",
+                    (np.sum(all_data[i]) / all_apers_areas[i] + 5 * all_stds[i])
+                    / center_val,
+                    "...it is not included",
+                )
             delta_mags.append(np.NaN)
 
     arc_lengths = []
@@ -256,8 +257,9 @@ def ConCur(
     delta_mags = np.array(delta_mags)
     lim_stds = all_stds[: len(lim_arc_lengths)]
     if delta_mags[1] < 0:
-        warnings.warn(
-            f"First annulus has negative relative flux of value, {delta_mags[1]}, consider changing center or radius size",
-        )
+        if verbose == True:
+            warnings.warn(
+                f"First annulus has negative relative flux of value, {delta_mags[1]}, consider changing center or radius size",
+                )
 
     return (lim_arc_lengths, delta_mags, lim_stds)
