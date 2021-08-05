@@ -294,11 +294,15 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
             "rots.png",
             extent=[-ssize1, ssize1, -ssize1, ssize1],
         )
+        #CDD change: use dynamic plot colorscaling (was 0,  10000)
+        final_vmin, final_vmax = np.percentile(final_im, [1,99])
         pl.plot_array(
-            "final_im", final_im, 0.0, 10000.0, sf_dir, "final_image.png"
+            "final_im", final_im, final_vmin, final_vmax, sf_dir, "final_image.png"
         )
+        #CDD change: use dynamic plot colorscaling (was 0,  10000)
+        frames_vmin, frames_vmax = np.percentile(frames, [1,99])
         pl.plot_array(
-            "intermediate", frames, 0.0, 10000.0, sf_dir, "centers.png"
+            "intermediate", frames, frames_vmin, frames_vmax, sf_dir, "centers.png"
         )
 
         #calculate and save contrast curve
