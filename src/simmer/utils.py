@@ -108,8 +108,12 @@ def header_subsection(input_image_file, npix, center):
     # hdulist = fits.open(input_image_file)
     # header = wcs.WCS(hdulist[0].header)
 
-    header["CRPIX1"] = npix / 2 - (center[1] - header["CRPIX1"])  # x=col
-    header["CRPIX2"] = npix / 2 - (center[0] - header["CRPIX2"])  # y=row
+    #CDD fix to prevent CRPIX1, CRPIX2 being evaluated as strings
+    header["CRPIX1"] = npix / 2 - (center[1] - float(header["CRPIX1"]))  # x=col
+    header["CRPIX2"] = npix / 2 - (center[0] - float(header["CRPIX2"]))  # y=row
+    #header["CRPIX1"] = npix / 2 - (center[1] - header["CRPIX1"])  # x=col
+    #header["CRPIX2"] = npix / 2 - (center[0] - header["CRPIX2"])  # y=row
+    #end CDD
     header["NAXIS1"] = 600
     header["NAXIS2"] = 600
 
