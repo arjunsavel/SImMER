@@ -184,12 +184,12 @@ def find_itimes(inst, raw_dir):
             if np.logical_and(
                 len(hkeys[integrations]) > 0, len(hkeys[objects]) > 0
             ):
-                itime = int(round(inst.itime(head)))
                 obj = head["OBJECT  "]
 
                 if obj == "dark":
                     #                     if lastitime != itime:
                     #                         lastitime = itime
+                    itime = float(round(inst.itime(head),2))
                     outfile.write(
                         os.path.basename(file) + " " + str(itime) + "\n"
                     )
