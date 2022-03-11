@@ -20,6 +20,10 @@ from photutils.aperture import (
     aperture_photometry,
 )
 
+#CDD added for optimization
+import time
+#end CDD
+
 
 def hot_pixels(star_data, center, background_mean, background_std):
 
@@ -56,11 +60,15 @@ def hot_pixels(star_data, center, background_mean, background_std):
 def twoD_weighted_std(data, weights):
     wm = np.sum(weights * data) / (np.sum(weights))
     numerator = np.sum(weights * ((data - wm) ** 2))
-    N = 0
-    for i in weights:
-        for j in i:
-            if j > 0:
-                N += 1
+
+    #CDD change to speed up code
+#    N = 0
+#    for i in weights:
+#        for j in i:
+#            if j > 0:
+#                N += 1
+    N = np.count_nonzero(weights)
+
     final = np.sqrt(numerator / (((N - 1) / N) * np.sum(weights)))
     return final
 
@@ -194,8 +202,7 @@ def ConCur(
     radius_size=1,
     center=None,
     background_method="astropy",
-    find_hots=False,
-    find_center=False,
+    find_center=False,verbose=False
 ):
     """
     Main function for computing contrast curves.
@@ -203,7 +210,10 @@ def ConCur(
 
     data = star_data.copy()
 
-    background_mean, background_std = background_calc(data, background_method)
+    #CDD
+    #Is this used?
+    #background_mean, background_std = background_calc(data, background_method)
+    #end CDD
 
     x, y = np.indices((data.shape))
 
@@ -211,9 +221,6 @@ def ConCur(
         center = np.array(
             [(x.max() - x.min()) / 2.0, (y.max() - y.min()) / 2.0]
         )
-
-    if find_hots == True:
-        hots = hot_pixels(data, center, background_mean, background_std)
 
     if find_center == True:
         center_vals = find_best_center(data, radius_size, center)
@@ -244,7 +251,7 @@ def ConCur(
         aper = CircularAnnulus(
             [center[0], center[1]],
             r_in=(j * radius_size + radius_size),
-            r_out=(j * radius_size + 2 * radius_size),
+            r_out=((j * radius_size) + (2 * radius_size)),
         )
         all_apers.append(aper)
         all_apers_areas.append(aper.area)
@@ -257,31 +264,31 @@ def ConCur(
         all_stds.append(twoD_weighted_std(mask_data, mask_weight))
     phot_table = aperture_photometry(data, all_apers)
 
-    center_val = np.sum(all_data[0]) / all_apers_areas[0] + 5 * all_stds[0]
+    #CDD change: no 5sigma for central value
+#    center_val = np.sum(all_data[0]) / all_apers_areas[0] + 5 * all_stds[0] #CDD note: not sure about adding 5 sigma here
+    center_val = np.sum(all_data[0]) / all_apers_areas[0]  #CDD note: not sure about adding 5 sigma here
+    #end CDD
+
 
     delta_mags = []
-    for i in range(len(phot_table[0]) - 3):
+    for i in range(len(phot_table[0]) - 3): #-3 to account for id, xcenter, ycenter
         try:
-            delta_mags.append(
-                -2.5
-                * math.log(
-                    (
-                        np.sum(all_data[i]) / all_apers_areas[i]
-                        + 5 * all_stds[i]
-                    )
-                    / center_val,
-                    10,
-                )
-            )
+        #    delta_mags.append(-2.5* math.log((np.sum(all_data[i]) / all_apers_areas[i]+ 5 * all_stds[i])/ center_val,
+        #                        10))
+
+        #no standard deviation correction
+            delta_mags.append(-2.5* math.log((np.sum(all_data[i])/all_apers_areas[i])/ center_val,10))
+
         except ValueError:
-            print(
-                "annulus",
-                i,
-                "relative flux equal to",
-                (np.sum(all_data[i]) / all_apers_areas[i] + 5 * all_stds[i])
-                / center_val,
-                "...it is not included",
-            )
+            if verbose == True:
+                    print(
+                    "annulus",
+                    i,
+                    "relative flux equal to",
+                    (np.sum(all_data[i]) / all_apers_areas[i] + 5 * all_stds[i])
+                    / center_val,
+                    "...it is not included",
+                )
             delta_mags.append(np.NaN)
 
     arc_lengths = []
@@ -297,8 +304,9 @@ def ConCur(
     delta_mags = np.array(delta_mags)
     lim_stds = all_stds[: len(lim_arc_lengths)]
     if delta_mags[1] < 0:
-        warnings.warn(
-            f"First annulus has negative relative flux of value, {delta_mags[1]}, consider changing center or radius size",
-        )
+        if verbose == True:
+            warnings.warn(
+                f"First annulus has negative relative flux of value, {delta_mags[1]}, consider changing center or radius size",
+                )
 
     return (lim_arc_lengths, delta_mags, lim_stds)

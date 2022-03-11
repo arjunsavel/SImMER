@@ -1,6 +1,10 @@
 """
 Functions to work with flats.
 """
+
+import os
+from glob import glob
+
 from os import path
 
 import astropy.io.fits as pyfits
@@ -96,6 +100,11 @@ def create_flats(
     """
     nflats = len(flatlist)
     flatfiles = u.make_filelist(raw_dir, flatlist, inst)
+
+    #Save flat filenames to label plotting grid
+    short_flatfiles = flatfiles.copy()
+    for jj in np.arange(len(flatfiles)):
+        short_flatfiles[jj] = os.path.basename(flatfiles[jj]).split('.')[0]
     flat_array = u.read_imcube(flatfiles)
     flat_array = inst.adjust_array(flat_array, nflats)
     head = inst.head(flatfiles[0])
@@ -115,8 +124,10 @@ def create_flats(
     final_flat = np.median(flat_array, axis=0)
     final_flat = final_flat / np.median(final_flat)
 
+    #CDD change: use a narrow range for flat colorscaling (was -2, 2)
+    flat_vmin, flat_vmax = np.percentile(flat_array, [1,99])
     pl.plot_array(
-        "intermediate", flat_array, -2.0, 2.0, reddir, f"flat_cube_{filt}.png"
+        "intermediate", flat_array, flat_vmin, flat_vmax, reddir, f"flat_cube_{filt}.png", snames=short_flatfiles
     )
 
     # CDD update

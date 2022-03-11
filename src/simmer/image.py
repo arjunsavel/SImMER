@@ -46,7 +46,7 @@ def open_flats(flatfile):
         return flat
 
 
-def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
+def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=None):
     """Do flat division, sky subtraction, and initial alignment via coords in header.
     Returns Python list of each registration method used per star.
 
@@ -73,6 +73,18 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
         ]
     stars = skies.Object.unique()
     sdirs = glob(reddir + "*/")
+
+    #Make sure list of stars doesn't include sky frames taken by nodding
+    if sep_skies == True:
+        keep = np.zeros(len(stars)) + 1
+        for kk in np.arange(len(keep)):
+            if("sky" in stars[kk]):
+                keep[kk] = 0
+        wstar = np.where(keep == 1)
+        stars = stars[wstar]
+
+    else:
+        stars = stars
 
     methods = []
 
@@ -294,15 +306,21 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
             "rots.png",
             extent=[-ssize1, ssize1, -ssize1, ssize1],
         )
+        #CDD change: use dynamic plot colorscaling (was 0,  10000)
+        final_vmin, final_vmax = np.percentile(final_im, [1,99])
         pl.plot_array(
-            "final_im", final_im, 0.0, 10000.0, sf_dir, "final_image.png"
+            "final_im", final_im, final_vmin, final_vmax, sf_dir, "final_image.png"
         )
+        #CDD change: use dynamic plot colorscaling (was 0,  10000)
+        frames_vmin, frames_vmax = np.percentile(frames, [1,99])
         pl.plot_array(
-            "intermediate", frames, 0.0, 10000.0, sf_dir, "centers.png"
+            "intermediate", frames, frames_vmin, frames_vmax, sf_dir, "centers.png"
         )
 
         #calculate and save contrast curve
-        seps, delta_mags, all_stds = contrast.ConCur(final_im)
+
+        seps, delta_mags, all_stds = contrast.ConCur(final_im, verbose=False)
+
         pl.plot_contrast(seps, delta_mags, sf_dir, 'contrast_curve.png')
         condf = pd.DataFrame({'separation': seps, 'contrast': delta_mags})
         ccfile = sf_dir + 'contrast_curve.csv'

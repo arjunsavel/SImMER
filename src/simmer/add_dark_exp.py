@@ -35,7 +35,7 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             :file: (string) name of file of interest.
         """
         if file[1] == "0":
-            # check below needed because python raises an invalid token error when numbers have leading zeros
+            #check below needed because python raises an invalid token error when numbers have leading zeros
             if file[2] == "0":
                 number = literal_eval(file[3:5])  # just a safer eval
             else:
@@ -81,16 +81,18 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             writer.close()
 
         else:
-            # Save log with darks to a new file so that we don't end up adding
-            # darks over and over if we rerun the pipeline
-            parts = log.split(".")
-            outlog = parts[0] + "_with_darks." + parts[-1]
+            #Save log with darks to a new file so that we don't end up adding
+            #darks over and over if we rerun the pipeline
+            parts = log.split('.')
+            outlog = parts[0] + '_with_darks.'+parts[-1]
             current_log = pd.read_csv(log)
 
-            # add the darks to the end of the data frame
+            #add the darks to the end of the data frame
             full_log = current_log.append(dark_log, ignore_index=True)
             full_log.to_csv(outlog, index=False, header=True)
-            return outlog
+        return outlog
+
+
 
     find_itimes(inst, raw_dir)
     if tab:
@@ -129,15 +131,29 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
     ends += [get_number(end_file)]
     exposes += [get_number(end_file) - starts[len(starts) - 1] + 1]
 
-    # when frame is merged with an existing log,
-    # any missing columns should be filled in.
 
+    #comment some of these out; when frame is merged with an existing log,
+    #any missing columns should be filled in. NOTE: This probably breaks the excel version,
+    #but works for the csv version.
     data_dict = {
         "Object": objects,
         "Start": starts,
         "End": ends,
         "ExpTime": exptime,
+
+        #"Coadds": np.full(len(objects), np.nan),
         "Expose": exposes,
+        #"Total_tint": np.full(len(objects), np.nan),
+        #"Filter": np.full(len(objects), np.nan),
+        #"""Dither (")""": np.full(len(objects), np.nan),
+        #"Aperture": np.full(len(objects), np.nan),
+        #"TUB": np.full(len(objects), np.nan),
+        #"Airmass": np.full(len(objects), np.nan),
+        #"PT": np.full(len(objects), np.nan),
+        #"KepMag": np.full(len(objects), np.nan),
+        #"Companion": np.full(len(objects), np.nan),
+        #"Comments": np.full(len(objects), np.nan),
+
     }
 
     # if these columns aren't added, .xlsx files will break here!
@@ -162,11 +178,11 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
 
     end = find_end(initial_frame["Object"])
 
-    if log[-3:] == "csv":
-        outlog = log_to_csv(log, tab, end, new_frame)
-        return outlog
-    else:
-        log_to_csv(log, tab, end, new_frame)
+
+    outlog = log_to_csv(log, tab, end, new_frame)
+
+    return outlog
+
 
 
 def find_itimes(inst, raw_dir):
@@ -195,12 +211,12 @@ def find_itimes(inst, raw_dir):
             if np.logical_and(
                 len(hkeys[integrations]) > 0, len(hkeys[objects]) > 0
             ):
-                itime = int(round(inst.itime(head)))
                 obj = head["OBJECT  "]
 
                 if obj == "dark":
                     #                     if lastitime != itime:
                     #                         lastitime = itime
+                    itime = float(round(inst.itime(head),2))
                     outfile.write(
                         os.path.basename(file) + " " + str(itime) + "\n"
                     )
