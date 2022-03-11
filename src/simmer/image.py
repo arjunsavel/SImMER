@@ -46,7 +46,7 @@ def open_flats(flatfile):
         return flat
 
 
-def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
+def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=None):
     """Do flat division, sky subtraction, and initial alignment via coords in header.
     Returns Python list of each registration method used per star.
 
@@ -73,6 +73,18 @@ def image_driver(raw_dir, reddir, config, inst, plotting_yml=None):
         ]
     stars = skies.Object.unique()
     sdirs = glob(reddir + "*/")
+
+    #Make sure list of stars doesn't include sky frames taken by nodding
+    if sep_skies == True:
+        keep = np.zeros(len(stars)) + 1
+        for kk in np.arange(len(keep)):
+            if("sky" in stars[kk]):
+                keep[kk] = 0
+        wstar = np.where(keep == 1)
+        stars = stars[wstar]
+
+    else:
+        stars = stars
 
     methods = []
 
