@@ -16,7 +16,9 @@ from . import sky
 from . import summarize as summarize
 
 def all_driver(
+
     inst, config_file, raw_dir, reddir, sep_skies = False, plotting_yml=None, searchsize=10, just_images=False, verbose=True
+
 ):
     """
     Runs all drivers, performing an end-to-end reduction.
@@ -28,6 +30,7 @@ def all_driver(
         :raw_dir: (string) path of the directory containing the raw data.
         :reddir: (string) path of the directory to contain the reduced data.
         :sep_skies: (Boolean) if true, skies for observations of star STAR are recorded with Object = "STAR sky". If false, observations were taken using a dither pattern and can be used as the skies.
+
         :plotting_yml: (string) path to the plotting configuration file.
 
     """
@@ -53,6 +56,7 @@ def all_driver(
         flats.flat_driver(raw_dir, reddir, config, inst)
         sky.sky_driver(raw_dir, reddir, config, inst, sep_skies=sep_skies)
     methods = image.image_driver(raw_dir, reddir, config, inst, sep_skies=sep_skies)
+
 
     star_dirlist = glob(reddir + "*/")
 

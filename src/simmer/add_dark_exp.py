@@ -78,6 +78,8 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
                 writer, tab, index=False, startrow=end, header=False
             )
             writer.save()
+            writer.close()
+
         else:
             #Save log with darks to a new file so that we don't end up adding
             #darks over and over if we rerun the pipeline
@@ -89,6 +91,7 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             full_log = current_log.append(dark_log, ignore_index=True)
             full_log.to_csv(outlog, index=False, header=True)
         return outlog
+
 
 
     find_itimes(inst, raw_dir)
@@ -128,6 +131,7 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
     ends += [get_number(end_file)]
     exposes += [get_number(end_file) - starts[len(starts) - 1] + 1]
 
+
     #comment some of these out; when frame is merged with an existing log,
     #any missing columns should be filled in. NOTE: This probably breaks the excel version,
     #but works for the csv version.
@@ -136,6 +140,7 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
         "Start": starts,
         "End": ends,
         "ExpTime": exptime,
+
         #"Coadds": np.full(len(objects), np.nan),
         "Expose": exposes,
         #"Total_tint": np.full(len(objects), np.nan),
@@ -148,14 +153,36 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
         #"KepMag": np.full(len(objects), np.nan),
         #"Companion": np.full(len(objects), np.nan),
         #"Comments": np.full(len(objects), np.nan),
+
     }
+
+    # if these columns aren't added, .xlsx files will break here!
+    if log[-3:] != "csv":
+        keys_to_add = [
+            "Coadds",
+            "Total_tint",
+            "Filter",
+            """Dither (")""",
+            "Aperture",
+            "TUB",
+            "Airmass",
+            "PT",
+            "KepMag",
+            "Companion",
+            "Comments",
+        ]
+        for key in keys_to_add:
+            data_dict[key] = np.full(len(objects), np.nan)
+
     new_frame = pd.DataFrame(data=data_dict)
 
     end = find_end(initial_frame["Object"])
 
+
     outlog = log_to_csv(log, tab, end, new_frame)
 
     return outlog
+
 
 
 def find_itimes(inst, raw_dir):

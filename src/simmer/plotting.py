@@ -116,7 +116,9 @@ def plot_contrast(dists, delta_mags, directory, filename):
     plt.ylabel('Contrast (Magnitudes)')
     ax = plt.gca()
     ax.set_ylim(ax.get_ylim()[::-1])
+
     plt.savefig(directory + filename, bbox_inches="tight", dpi=300)
+
     plt.close("all")
     return
 
@@ -183,9 +185,11 @@ def plot_array(
             else:
                 pltim = np.rot90(im_array[i, :, :], 2)
             if snames:
+
                 ax.set_xlabel(snames[i], fontsize=50)
             else:
                 ax.set_xlabel("pixels", fontsize=50)
+
             scaled_pltim = func(pltim)
 
             cim = ax.imshow(

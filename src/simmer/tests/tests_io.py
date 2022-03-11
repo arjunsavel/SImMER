@@ -41,33 +41,27 @@ def captured_output():
 
 class TestYml(unittest.TestCase):
     default_config = {
-        "intermediate": 
-            {
-                "plot": True,
-                "zoom_scale": 0,
-                "colorbars": True,
-                "colormap": "plasma",
-                "scaling": "linear",
-            }
-        ,
-        "final_im": 
-            {
-                "plot": True,
-                "zoom_scale": 0,
-                "colorbars": True,
-                "colormap": "plasma",
-                "scaling": "linear",
-            }
-        ,
-        "rots": 
-            {
-                "plot": True,
-                "zoom_scale": 0,
-                "colorbars": True,
-                "colormap": "plasma",
-                "scaling": "linear",
-            }
-        ,
+        "intermediate": {
+            "plot": True,
+            "zoom_scale": 0,
+            "colorbars": True,
+            "colormap": "plasma",
+            "scaling": "linear",
+        },
+        "final_im": {
+            "plot": True,
+            "zoom_scale": 0,
+            "colorbars": True,
+            "colormap": "plasma",
+            "scaling": "linear",
+        },
+        "rots": {
+            "plot": True,
+            "zoom_scale": 0,
+            "colorbars": True,
+            "colormap": "plasma",
+            "scaling": "linear",
+        },
     }
 
     plot_types = ["intermediate", "final_im", "rots"]
@@ -156,7 +150,10 @@ class TestConfig(unittest.TestCase):
             "src/simmer/tests/config_test/compare_frame_csv.csv"
         )
         delete_folder("src/simmer/tests/config_test")
-        self.assertTrue(created_frame.equals(compare_frame))
+
+        self.assertTrue(
+            created_frame.drop("Method", axis=1).equals(compare_frame)
+        )
 
     def test_create_config_xlsx(self):
         try:
@@ -173,7 +170,9 @@ class TestConfig(unittest.TestCase):
             "src/simmer/tests/config_test/created_frame_xlsx.csv"
         )
         delete_folder("src/simmer/tests/config_test")
-        self.assertTrue(created_frame.equals(compare_frame))
+        self.assertTrue(
+            created_frame.drop("Method", axis=1).equals(compare_frame)
+        )
 
     def test_check_logsheet_incorrect(self):
         inst = i.ShARCS()

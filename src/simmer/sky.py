@@ -80,6 +80,7 @@ def sky_driver(raw_dir, reddir, config, inst, sep_skies = False, plotting_yml=No
 
         for n, filter_name in enumerate(filts):
             skylist = eval(
+
                 skies[skies.Object == skyname].Filenums.values[n]
             )
             create_skies(
