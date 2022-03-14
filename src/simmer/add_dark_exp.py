@@ -118,8 +118,10 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
     exptime = []
     exposes = []
 
+    previous_itime = np.nan #setting to a value that can't possibly match a real exposure time.
     for i, (itime, file) in enumerate(zip(itimes, files)):
-        if itime not in exptime:
+        if itime != previous_itime:
+            previous_itime = itime
             exptime += [itime]
             starts += [get_number(file)]
             objects += ["dark"]
@@ -141,7 +143,7 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
         "End": ends,
         "ExpTime": exptime,
 
-        #"Coadds": np.full(len(objects), np.nan),
+        "Coadds": np.full(len(objects), 1),
         "Expose": exposes,
         #"Total_tint": np.full(len(objects), np.nan),
         #"Filter": np.full(len(objects), np.nan),
