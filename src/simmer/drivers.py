@@ -98,14 +98,6 @@ def all_driver(
 
     """
 
-    # get file list from config file
-    config = pd.read_csv(config_file)
-    config.Object = config.Object.astype(str)
-
-    darks.dark_driver(raw_dir, reddir, config, inst)
-    flats.flat_driver(raw_dir, reddir, config, inst)
-    sky.sky_driver(raw_dir, reddir, config, inst)
-
 
 def image_driver(inst, config_file, raw_dir, reddir):
     """
