@@ -59,5 +59,6 @@ def run_night(wantdate, add_darks=True, just_images=False, verbose=False, skip_r
     #Reduce the data!
     if skip_reduction == True:
         print('files exist')
+        return config_file
     else:
         drivers.all_driver(inst, config_file, rawdir, reddir, just_images=just_images)
