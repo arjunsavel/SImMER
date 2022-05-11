@@ -35,7 +35,7 @@ import warnings
 warnings.simplefilter("ignore")
 
 
-def contrast_curve_main(data, fwhm, instrument):
+def contrast_curve_main(data, fwhm, instrument, position=None):
     """
     Main code to run contrast curve analysis.
 
@@ -45,6 +45,8 @@ def contrast_curve_main(data, fwhm, instrument):
         :fwhm: (float) full-width half-max of central star [pixels]
         :instrument: (str) instrument with which the the data was taken; determines
                       the plate scale used. ['PHARO' or 'ShARCS'].
+        :position: (optional; 1D numpy.array, ints) pixel coordinates of target star.
+        If None, target is assumed to be at image center.
 
     Outputs
     -------
@@ -60,15 +62,21 @@ def contrast_curve_main(data, fwhm, instrument):
 
     plate_scale = plate_scale_dict[instrument]
 
-    contrast_result = contrast_curve_core(
-        np.abs(data), plate_scale, radius_size=fwhm
-    )
-    means = contrast_result[0]
-    stds = contrast_result[1]
+    #set radius_size so that radius is no larger than 1"
+    radius_size = np.min([1./plate_scale, fwhm])
 
-    center_flux = run_ap_phot(data, fwhm)
+#DO NOT TAKE ABSOLUTE VALUE!
+    contrast_result = contrast_curve_core(
+        data, plate_scale, fwhm=fwhm, radius_size=radius_size, center=position
+    )
+    separation = contrast_result[0]
+    means = contrast_result[1]
+    stds = contrast_result[2]
+
+    center_flux = run_ap_phot(data, fwhm, position=position)
 
     # intiialize the "fake im fluxes" with the central aperture flux.
+    all_seps = [0]
     fake_im_fluxes = [center_flux[0]]
     fake_im_stds = [center_flux[1]]
 
@@ -81,7 +89,7 @@ def contrast_curve_main(data, fwhm, instrument):
         for j in range(n_annuli):
             mean = all_mean[j]
             std = all_std[j]
-            x, y = np.meshgrid(np.arange(-100, 100), np.arange(-100, 100))
+            x, y = np.meshgrid(np.arange(-1000, 1000), np.arange(-1000, 1000)) #was 100x100; CDD made larger for poor FWHMs
             dst = np.sqrt(x * x + y * y)
 
             # Initializing sigma and muu: size of fake injected source
@@ -91,8 +99,8 @@ def contrast_curve_main(data, fwhm, instrument):
             bg_std = std
 
             noise_image = make_noise_image(
-                (200, 200), distribution="gaussian", mean=mean, stddev=bg_std
-            )
+                (2000, 2000), distribution="gaussian", mean=mean, stddev=bg_std
+            ) #Was 200x200, but that's too small for some images because the sky annulus falls outside the fake image for high FWHM.
             # Calculating Gaussian array. tuned to a total STD=5
             fake = (
                 7 * std * np.exp(-((dst - muu) ** 2 / (2.0 * sigma**2)))
@@ -109,17 +117,22 @@ def contrast_curve_main(data, fwhm, instrument):
             fake_im_fluxes_an += [flux]
         fake_im_fluxes += [np.nanmedian(fake_im_fluxes_an)]
         fake_im_stds += [np.nanstd(fake_im_fluxes_an)]
+        all_seps += [separation[i]]
 
     fake_im_fluxes = np.array(fake_im_fluxes)
 
     err = 2.5 * np.log10(1.0 + (fake_im_stds / fake_im_fluxes))
 
-    indices = np.arange(len(fake_im_fluxes))
-    separation = fwhm * plate_scale * indices
+#DELETE THIS
+#    indices = np.arange(len(fake_im_fluxes))
+#    separation = fwhm * plate_scale * indices
 
     contrast = -2.5 * np.log10(fake_im_fluxes / center_flux[0])
 
-    return separation, contrast, err
+    #Save contrast curve as a pandas DataFrame
+    df = pd.DataFrame({'arcsec': all_seps, 'dmag': contrast, 'dmrms': err})
+
+    return df #separation, contrast, err
 
 
 def meanclip(image, clipsig, maxiter=None, converge_num=None):
@@ -155,79 +168,6 @@ def twoD_weighted_std(data, weights):
     final = np.sqrt(numerator / (((N - 1) / N) * np.sum(weights)))
     return final
 
-
-def background_calc(star_data, background_method):
-
-    # Method 1 for background - Everything outside center (bad for companions)
-    if background_method == "outside":
-        non_center = []
-        for i in range(len(star_data)):
-            for j in range(len(star_data[i])):
-                if i < 265 or i > 335 or j < 265 or j > 335:
-                    non_center.append(star_data[i, j])
-        background_mean = np.mean(non_center)
-        background_std = np.std(non_center)
-
-    # Method 2 for background - 4 Box method (remove a box if it is wonky/high)
-    if background_method == "boxes":
-        box1, box2, box3, box4 = (
-            star_data[100:200, 100:200],
-            star_data[100:200, 400:500],
-            star_data[400:500, 100:200],
-            star_data[400:500, 400:500],
-        )
-        mean_box1, mean_box2, mean_box3, mean_box4 = (
-            np.mean(box1),
-            np.mean(box2),
-            np.mean(box3),
-            np.mean(box4),
-        )
-        std_box1, std_box2, std_box3, std_box4 = (
-            np.std(box1),
-            np.std(box2),
-            np.std(box3),
-            np.std(box4),
-        )
-
-        mean_boxes = []
-        std_boxes = []
-        if mean_box1 < (
-            10 * np.mean([std_box2, std_box3, std_box4])
-            + np.mean([mean_box2, mean_box3, mean_box4])
-        ):
-            mean_boxes.append(mean_box1)
-            std_boxes.append(std_box1)
-        if mean_box2 < (
-            10 * np.mean([std_box1, std_box3, std_box4])
-            + np.mean([mean_box1, mean_box3, mean_box4])
-        ):
-            mean_boxes.append(mean_box2)
-            std_boxes.append(std_box2)
-        if mean_box3 < (
-            10 * np.mean([std_box1, std_box2, std_box4])
-            + np.mean([mean_box1, mean_box2, mean_box4])
-        ):
-            mean_boxes.append(mean_box3)
-            std_boxes.append(std_box3)
-        if mean_box4 < (
-            10 * np.mean([std_box2, std_box3, std_box1])
-            + np.mean([mean_box2, mean_box3, mean_box1])
-        ):
-            mean_boxes.append(mean_box4)
-            std_boxes.append(std_box4)
-        background_mean = np.mean(mean_boxes)
-        background_std = np.mean(std_boxes)
-    # Method 3 for background - simple astropy
-    if background_method == "astropy":
-        (
-            background_mean,
-            background_median,
-            background_std,
-        ) = sigma_clipped_stats(star_data, sigma=5)
-
-    return [background_mean, background_std]
-
-
 def check_boundaries(data, theta1, theta2):
     """
     everything in an image that isn't between theta 1 and theta 2 goes to nan.
@@ -243,13 +183,15 @@ def check_boundaries(data, theta1, theta2):
     return data2
 
 
-def run_ap_phot(data, fwhm):
+def run_ap_phot(data, fwhm, position=None):
     """
     Given an image and fwhm, performs background-subtracted aperture photometry
-
-    returns raw counts.
+    returns raw counts. Unless position is set, aperture photometry will be performed
+    around image center.
     """
-    position = np.array(data.shape) // 2
+    if type(position) == type(None):
+        position = np.array(data.shape) // 2
+
     aperture = CircularAperture(position, r=fwhm)
 
     sky_annulus_aperture = CircularAnnulus(
@@ -281,13 +223,9 @@ def run_ap_phot(data, fwhm):
 def contrast_curve_core(
     star_data,
     plate_scale,
-    radius_size=1,
+    fwhm=1,
+    radius_size=None,
     center=None,
-    background_method="astropy",
-    find_hots=False,
-    find_center=False,
-    background_mean=None,
-    background_std=None,
 ):
     """
     Main function for computing contrast curves.
@@ -295,27 +233,18 @@ def contrast_curve_core(
     Inputs
     ------
         :star_data: (numpy array) image array to work with.
-        :radius_size: (float) width of annuli. [pixels]
+        :fwhm: (float) full-width half-max of target [pixels]
+        :radius_size: (float) width of annuli. [pixels]; defaults to FWHM if not set
         :center: (tuple) center of contrast curve computation.
-        :background_method: (str) how to calculate the background.
-        :find_hots: (bool) whether to remove potential hot pixels
-        :find_center: (bool) whether to compute the center automatically
-        :background_mean: (float) prescribed mean of background noise
-        :background_std: (float) perscribed std of background noise
         :instrument: (str) PHARO or ShARCS.
     """
 
-    # clean data slightly
+    # make copy of data array
     data = star_data.copy()
 
-    data = np.abs(data)
+#    data = np.abs(data) #DO NOT DO THIS!!!! It's making the standard deviation too small later.
 
-    ################## calc background, establish center, find hot pixels ########
-
-    if background_mean is None or background_std is None:
-        background_mean, background_std = background_calc(
-            data, background_method
-        )
+    ################## establish center ########
 
     x, y = np.indices((data.shape))
 
@@ -323,12 +252,9 @@ def contrast_curve_core(
         center = np.array(
             [(x.max() - x.min()) / 2.0, (y.max() - y.min()) / 2.0]
         )
-    if find_hots == True:
-        hots = hot_pixels(data, center, background_mean, background_std)
 
-    if find_center == True:
-        center_vals = find_best_center(data, radius_size, center)
-        center = np.array([center_vals[0], center_vals[1]])
+    if type(radius_size) == type(None):
+        radius_size = fwhm
 
     ########## set up radial coordinate system ########
 
@@ -362,12 +288,14 @@ def contrast_curve_core(
 
     medians = np.zeros((number_of_a, len(pie_edges) - 1))
     stds = np.zeros((number_of_a, len(pie_edges) - 1))
+    seps = np.zeros(number_of_a)
     for j in range(int(number_of_a)):
-        r_in = j * radius_size + radius_size
-        r_out = j * radius_size + 2 * radius_size
+        r_in = j * radius_size + fwhm
+        r_out = j * radius_size + radius_size + fwhm
+        seps[j] = (r_in+r_out)/2.*plate_scale
 
         # terminate if completely outside 10 arcseconds
-        if r_in * plate_scale > 10:
+        if (r_in * plate_scale) > 10:
             break
 
         # create aperture
@@ -398,4 +326,8 @@ def contrast_curve_core(
             mean, std = meanclip(mask_data_masked, 3, converge_num=0.2)
             stds[j, i] = std
 
-    return medians, stds
+    #Return only the medians and stds for distances within the desired range
+    seps = seps[0:j]
+    medians = medians[0:j,:]
+    stds = stds[0:j,:]
+    return seps, medians, stds

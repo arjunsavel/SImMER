@@ -71,7 +71,7 @@ def nightly_contrast_curve(reddir):
             fcol = '#5555ff'
         else:
             fcol = '#555555'
-        plt.plot(sc.separation, sc.contrast,'-',color=fcol)
+        plt.plot(sc.arcsec, sc.dmag,'-',color=fcol)
 
     plt.xlabel('Separation (")')
     plt.ylabel('Contrast (Magnitudes)')
