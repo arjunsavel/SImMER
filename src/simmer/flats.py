@@ -14,10 +14,6 @@ from tqdm import tqdm
 from . import plotting as pl
 from . import utils as u
 
-CENTER = (750, 1100)  # row,col
-MPIX = 600
-
-
 class DarkOpeningError(FileNotFoundError):
     pass
 
@@ -89,8 +85,6 @@ def create_flats(
         :reddir: (str) directory where the reduced data is stored.
         :flatlist: (list) list of integers corresponding to flats.
         :inst: (inst object) instrument for which data is being reduced.
-        :center: (tuple) two-element tuple dictating where the center of each image is.
-        :npix: (int) number of pixels in image.
         :filter_name: (str) filter name given if head['FILT1NAM'] == 'Unknown'
         :plotting_yml: (string) path to the plotting configuration file.
         :test: (bool) Boolean flag used for testing purposes.

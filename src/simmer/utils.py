@@ -66,7 +66,8 @@ def image_subsection(input_image, npix, center):
         :npix: (float) value for size of return image. If non-square image desired, enter as list.
 
         :default: center = (750, 1100)
-        :npix: = 600 for inscribed region or npix = 1000 for circumscribing region
+        :npix: = 800 for inscribed region or npix = 1000 for circumscribing region
+                 (was 600 for inscribed region; CDD changed to 800)
 
         :transposed: = np.rot90(input_image.T,2)
         :transposed: = np.rot90(input_image,2)
@@ -114,8 +115,8 @@ def header_subsection(input_image_file, npix, center):
     #header["CRPIX1"] = npix / 2 - (center[1] - header["CRPIX1"])  # x=col
     #header["CRPIX2"] = npix / 2 - (center[0] - header["CRPIX2"])  # y=row
     #end CDD
-    header["NAXIS1"] = 600
-    header["NAXIS2"] = 600
+    header["NAXIS1"] = 800 #CDD changed from 600
+    header["NAXIS2"] = 800 #CDD changed from 600
 
     return header
 

@@ -55,7 +55,7 @@ class ShARCS(Instrument):
 
     name = "ShARCS"
     center = (750, 1100)  # row, col
-    npix = 600
+    npix = 800 #Was 600. CDD changed to 800.
 
     plate_scale = 0.033  # arcsec/pixel
 

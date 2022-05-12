@@ -12,7 +12,7 @@ import simmer.check_logsheet as check
 import simmer.add_dark_exp as ad
 import simmer.create_config as config
 
-def run_night(wantdate, add_darks=True, just_images=False, verbose=False, skip_reduction=False):
+def run_night(wantdate, add_darks=True, just_images=False, sep_skies=False,  skip_reduction=False, verbose=False):
     #wantdate = desired night to reduce. Format is 'YYYY-MM-DD' (e.g., '2019-09-13')
 
     #Change these for your local installation
@@ -59,5 +59,6 @@ def run_night(wantdate, add_darks=True, just_images=False, verbose=False, skip_r
     #Reduce the data!
     if skip_reduction == True:
         print('files exist')
+        return config_file
     else:
-        drivers.all_driver(inst, config_file, rawdir, reddir, just_images=just_images)
+        drivers.all_driver(inst, config_file, rawdir, reddir, just_images=just_images, sep_skies=sep_skies, verbose=verbose)

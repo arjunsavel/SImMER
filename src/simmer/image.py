@@ -46,7 +46,7 @@ def open_flats(flatfile):
         return flat
 
 
-def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=None):
+def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=None, verbose=False):
     """Do flat division, sky subtraction, and initial alignment via coords in header.
     Returns Python list of each registration method used per star.
 
@@ -226,7 +226,7 @@ def create_imstack(
     return im_array, shifts_all
 
 
-def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
+def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", verbose=False):
     """Take the shifted, cut down images from before, then perform registration
     and combine. Tests should happen before this, as this is a per-star basis.
 
@@ -244,11 +244,21 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
         fdirs = glob(s_dir + "*/")
 
     for sf_dir in fdirs:  # each filter
+        #Only register star images, not sky images
+        dirparts = sf_dir.split('/')
+        if 'sky' in dirparts[len(dirparts)-3]:
+            if verbose == True:
+                print('this is a sky directory: ', sf_dir)
+            continue
+
+        if verbose == True:
+            print('working on sf_dir ', sf_dir)
 
         files = glob(
             sf_dir + f"sh*.fits"
         )  # might need to change to file_prefix
         nims = len(files)
+
         frames = u.read_imcube(files)
         frames = frames.astype(float)
 
@@ -285,6 +295,8 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
             frames[i, :, :] = image_centered  # newimage
 
         final_im = np.nanmedian(frames, axis=0)
+        #Trim down to smaller final size
+        final_im = final_im[100:700,100:700] #extract central 600x600 pixel region
 
         head = pyfits.getheader(files[0])
         hdu = pyfits.PrimaryHDU(final_im, header=head)
@@ -306,22 +318,12 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default"):
             "rots.png",
             extent=[-ssize1, ssize1, -ssize1, ssize1],
         )
-        #CDD change: use dynamic plot colorscaling (was 0,  10000)
+
         final_vmin, final_vmax = np.percentile(final_im, [1,99])
         pl.plot_array(
             "final_im", final_im, final_vmin, final_vmax, sf_dir, "final_image.png"
         )
-        #CDD change: use dynamic plot colorscaling (was 0,  10000)
         frames_vmin, frames_vmax = np.percentile(frames, [1,99])
         pl.plot_array(
             "intermediate", frames, frames_vmin, frames_vmax, sf_dir, "centers.png"
         )
-
-        #calculate and save contrast curve
-
-        seps, delta_mags, all_stds = contrast.ConCur(final_im, verbose=False)
-
-        pl.plot_contrast(seps, delta_mags, sf_dir, 'contrast_curve.png')
-        condf = pd.DataFrame({'separation': seps, 'contrast': delta_mags})
-        ccfile = sf_dir + 'contrast_curve.csv'
-        condf.to_csv(ccfile, index=False)
