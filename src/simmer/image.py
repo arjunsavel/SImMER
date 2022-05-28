@@ -294,9 +294,19 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
                 )
             frames[i, :, :] = image_centered  # newimage
 
-        final_im = np.nanmedian(frames, axis=0)
+        final_im = np.nanmedian(frames, axis=0) #This will pick values from a single image. Better to use mean given small sample of images?
         #Trim down to smaller final size
-        final_im = final_im[100:700,100:700] #extract central 600x600 pixel region
+        cutsize = 600 #desired axis length of final cutout image
+        astart = int(round((final_im.shape[0]-cutsize)/2.))
+        bstart = int(round((final_im.shape[1]-cutsize)/2.))
+        aend = astart+cutsize
+        bend = bstart+cutsize
+        if np.logical_or(aend > final_im.shape[0],bend > final_im.shape[1]):
+            print('ERROR: Requested cutout is too large. Using full image instead.')
+            print('Current image dimensions: ', final_im.shape)
+            print('Desired cuts: ', astart, aend, bstart, bend)
+        else:
+            final_im = final_im[astart:astart+cutsize,bstart:bstart+cutsize] #extract central cutsize x cutsize pixel region from larger image
 
         head = pyfits.getheader(files[0])
         hdu = pyfits.PrimaryHDU(final_im, header=head)
