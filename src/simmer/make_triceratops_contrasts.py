@@ -73,6 +73,9 @@ for ff in np.arange(len(flist)):
     #Drop the error column
     c = c[['arcsec','dmag']]
 
+    #Don't keep any rows with missing values
+    c = c.dropna()
+
     #Write TRICERATOPS-friendly output file
     c.to_csv(tridir+outname,index=False,header=False)
     counter += 1
