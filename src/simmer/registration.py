@@ -339,18 +339,38 @@ def calc_shifts(
     return (xshift, yshift), out
 
 
-def shift_bruteforce(image, base_position=None):
+def shift_bruteforce(image, base_position=None, max_shift=200, verbose=False):
     """This will shift the maximum pixel to base_position (i.e. the center of image).
-    Make sure base_position is entered as (int,int)."""
+    Make sure base_position is entered as (int,int).
+
+    max_shift: set pixels farther than max_shift from base_position to 0
+               to avoid selecting brightened edges as the target star.
+    """
 
     num_rows, num_cols = np.shape(image)
     cent = (int(num_rows / 2), int(num_cols / 2))
     if not base_position:
         base_position = cent  # if no other information available, use center
 
-    # First, do a median filter on the image and find max pixel location.
+    #Mask edges to avoid selecting brightened pixels near image boundary
+    #Determine maximum shift allowed in pixels (round up)
+    imshape = image.shape
+    max_shift = np.abs(max_shift)
+    ilo = np.max([0, base_position[0] - max_shift])
+    ihi  = np.min([imshape[0],base_position[0]+max_shift])
+    jlo = np.max([0, base_position[1] - max_shift])
+    jhi  = np.min([imshape[0],base_position[1]+max_shift])
+    if max_shift == 0:
+        if verbose:
+            print('ERROR: Max shiftset to 0. Considering full image.')
+            print('       Requested max_shift: ', max_shift)
+    else:
+        masked_image= image.copy()*0.
+        masked_image[ilo:ihi, jlo:jhi] = image[ilo:ihi, jlo:jhi]
+
+    # Apply a median filter to the image and find max pixel location.
     # Filter to remove hot pixels and make sure max is star.
-    filtered = median_filter(image, size=7)
+    filtered = median_filter(masked_image, size=7)
     maxpix = np.unravel_index(np.nanargmax(filtered), filtered.shape)
 
     # Now shift that location to the center (or base_position)
