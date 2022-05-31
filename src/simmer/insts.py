@@ -55,7 +55,7 @@ class ShARCS(Instrument):
 
     name = "ShARCS"
     center = (750, 1100)  # row, col
-    npix = 600
+    npix = 1000 #Was 600. Using 1000x1000 prevents vertical and horizontal boundaries in final image.
 
     plate_scale = 0.033  # arcsec/pixel
 

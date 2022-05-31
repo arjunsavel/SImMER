@@ -55,7 +55,7 @@ def all_driver(
         darks.dark_driver(raw_dir, reddir, config, inst)
         flats.flat_driver(raw_dir, reddir, config, inst)
         sky.sky_driver(raw_dir, reddir, config, inst, sep_skies=sep_skies)
-    methods = image.image_driver(raw_dir, reddir, config, inst, sep_skies=sep_skies)
+    methods = image.image_driver(raw_dir, reddir, config, inst, sep_skies=sep_skies, verbose=verbose)
 
 
     star_dirlist = glob(reddir + "*/")
@@ -77,13 +77,15 @@ def all_driver(
             leave=True,
         )
     ):
-        image.create_im(s_dir, searchsize, method=methods[i])
+        print('searchsize: ', searchsize)
+        print('s_dir: ', s_dir)
+        image.create_im(s_dir, searchsize, method=methods[i], verbose=verbose)
 
     #make summary plot showing reduced images of all stars observed
     summarize.image_grid(reddir)
 
     #make summary plot showing contrast curves for all stars observed
-    summarize.nightly_contrast_curve(reddir)
+    #summarize.nightly_contrast_curve(reddir)
 
 
 
@@ -101,7 +103,7 @@ def all_driver(
 
 def image_driver(inst, config_file, raw_dir, reddir):
     """
-    Runs all_drivers, terminating afrer running image_drivers.
+    Runs all_drivers, terminating after running image_drivers.
 
     Inputs:
         :inst: (Instrument object) instrument for which data is being reduced.

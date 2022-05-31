@@ -15,7 +15,7 @@ plot_config = None
 
 def initialize_plotting(yml_filename=None):
     """
-    Function to set up globabl plotting within SImMER.
+    Function to set up global plotting within SImMER.
 
     Inputs:
         yml_filename: (string) defaults to None. Path to yml.

@@ -13,10 +13,6 @@ import re as re
 from . import plotting as pl
 from . import utils as u
 
-CENTER = (750, 1100)  # row,col
-NPIX = 600
-
-
 def sky_driver(raw_dir, reddir, config, inst, sep_skies = False, plotting_yml=None):
     """Night should be entered in format 'yyyy_mm_dd' as string.
     This will point toward a config file for the night with flats listed.
