@@ -308,6 +308,8 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
             frames[i, :, :] = image_centered  # newimage
 
         final_im = np.nanmedian(frames, axis=0)
+        #Trim down to smaller final size
+        final_im = final_im[100:700,100:700] #extract central 600x600 pixel region
 
         #Trim down to smaller final size
         cutsize = 600 #desired axis length of final cutout image
