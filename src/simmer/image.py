@@ -10,6 +10,7 @@ import astropy.io.fits as pyfits
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+from astropy.convolution import Gaussian2DKernel, interpolate_replace_nans
 
 from . import plotting as pl
 from . import registration as reg
@@ -267,6 +268,18 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
         newshifts1 = []
         for i in range(nims):  # each image
             image = frames[i, :, :]
+
+            #Interpolate over NaNs so that scipy can shift images
+            #without producing arrays that are completely NaN
+            #Following this tutorial: https://docs.astropy.org/en/stable/convolution/index.html
+
+            # Generate Gaussian kernel with x_stddev=1 (and y_stddev=1)
+            # It is a 9x9 array
+            kernel = Gaussian2DKernel(x_stddev=1)
+
+            # Replace NaNs with interpolated values
+            image = interpolate_replace_nans(image, kernel)
+
             if method == "saturated":
                 image_centered, rot, newshifts1 = reg.register_saturated(
                     image, ssize1, newshifts1
@@ -294,7 +307,8 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
                 )
             frames[i, :, :] = image_centered  # newimage
 
-        final_im = np.nanmedian(frames, axis=0) #This will pick values from a single image. Better to use mean given small sample of images?
+        final_im = np.nanmedian(frames, axis=0)
+
         #Trim down to smaller final size
         cutsize = 600 #desired axis length of final cutout image
         astart = int(round((final_im.shape[0]-cutsize)/2.))
