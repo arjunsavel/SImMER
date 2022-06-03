@@ -118,6 +118,9 @@ class ShARCS(Instrument):
             filt = filter_name
         else:
             filt = head["FILT1NAM"]
+        if head["FILT2NAM"] != "Open": #append Ch4-1.2 as needed
+            filt = filt + '+'+head["FILT2NAM"]
+
         return filt
 
     def itime(self, head):
