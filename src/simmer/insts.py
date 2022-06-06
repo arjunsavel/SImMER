@@ -55,7 +55,7 @@ class ShARCS(Instrument):
 
     name = "ShARCS"
     center = (750, 1100)  # row, col
-    npix = 800 #Was 600. CDD changed to 800.
+    npix = 1000 #Was 600. Using 1000x1000 prevents vertical and horizontal boundaries in final image.
 
     plate_scale = 0.033  # arcsec/pixel
 
@@ -118,6 +118,9 @@ class ShARCS(Instrument):
             filt = filter_name
         else:
             filt = head["FILT1NAM"]
+        if head["FILT2NAM"] != "Open": #append Ch4-1.2 as needed
+            filt = filt + '+'+head["FILT2NAM"]
+
         return filt
 
     def itime(self, head):

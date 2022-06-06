@@ -10,6 +10,7 @@ import astropy.io.fits as pyfits
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+from astropy.convolution import Gaussian2DKernel, interpolate_replace_nans
 
 from . import plotting as pl
 from . import registration as reg
@@ -179,6 +180,12 @@ def create_imstack(
     if (inst.name == "ShARCS" and filt == "BrG-2.16"):
         if os.path.exists(flatfile) == False:
             flatfile = reddir + 'flat_Ks.fits'
+
+    #For ShARCS, use J flat instead of J+Ch4-1.2 if necessary
+    if (inst.name == "ShARCS" and filt == "J+Ch4-1.2"):
+        if os.path.exists(flatfile) == False:
+            flatfile = reddir + 'flat_J.fits'
+
     flat = open_flats(flatfile)
 
     skyfile = sf_dir + "sky.fits"
@@ -267,6 +274,18 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
         newshifts1 = []
         for i in range(nims):  # each image
             image = frames[i, :, :]
+
+            #Interpolate over NaNs so that scipy can shift images
+            #without producing arrays that are completely NaN
+            #Following this tutorial: https://docs.astropy.org/en/stable/convolution/index.html
+
+            # Generate Gaussian kernel with x_stddev=1 (and y_stddev=1)
+            # It is a 9x9 array
+            kernel = Gaussian2DKernel(x_stddev=1)
+
+            # Replace NaNs with interpolated values
+            image = interpolate_replace_nans(image, kernel)
+
             if method == "saturated":
                 image_centered, rot, newshifts1 = reg.register_saturated(
                     image, ssize1, newshifts1
@@ -297,6 +316,19 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
         final_im = np.nanmedian(frames, axis=0)
         #Trim down to smaller final size
         final_im = final_im[100:700,100:700] #extract central 600x600 pixel region
+
+        #Trim down to smaller final size
+        cutsize = 600 #desired axis length of final cutout image
+        astart = int(round((final_im.shape[0]-cutsize)/2.))
+        bstart = int(round((final_im.shape[1]-cutsize)/2.))
+        aend = astart+cutsize
+        bend = bstart+cutsize
+        if np.logical_or(aend > final_im.shape[0],bend > final_im.shape[1]):
+            print('ERROR: Requested cutout is too large. Using full image instead.')
+            print('Current image dimensions: ', final_im.shape)
+            print('Desired cuts: ', astart, aend, bstart, bend)
+        else:
+            final_im = final_im[astart:astart+cutsize,bstart:bstart+cutsize] #extract central cutsize x cutsize pixel region from larger image
 
         head = pyfits.getheader(files[0])
         hdu = pyfits.PrimaryHDU(final_im, header=head)

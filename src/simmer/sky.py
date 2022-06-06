@@ -130,6 +130,11 @@ def create_skies(
         if os.path.exists(flatfile) == False:
             flatfile = reddir + 'flat_Ks.fits'
 
+    #For ShARCS, use J flat instead of J+Ch4-1.2 if necessary
+    if (inst.name == "ShARCS" and filt == "J+Ch4-1.2"):
+        if os.path.exists(flatfile) == False:
+            flatfile = reddir + 'flat_J.fits'
+
     flat = pyfits.getdata(flatfile, 0)
 
     for i in range(nskies):

@@ -103,7 +103,7 @@ def all_driver(
 
 def image_driver(inst, config_file, raw_dir, reddir):
     """
-    Runs all_drivers, terminating afrer running image_drivers.
+    Runs all_drivers, terminating after running image_drivers.
 
     Inputs:
         :inst: (Instrument object) instrument for which data is being reduced.
