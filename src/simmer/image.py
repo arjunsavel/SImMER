@@ -190,7 +190,15 @@ def create_imstack(
 
     skyfile = sf_dir + "sky.fits"
     sky = pyfits.getdata(skyfile, 0)
-    sky[np.isnan(sky)] = 0.0  # set nans from flat=0 pixels to 0 in sky
+
+    #Use a 2D Gaussian Kernel to interpolate over NaNs in the sky file
+    # Generate Gaussian kernel with x_stddev=1 (and y_stddev=1)
+    # It is a 9x9 array
+    kernel = Gaussian2DKernel(x_stddev=1)
+    # Replace NaNs with interpolated values
+    sky = interpolate_replace_nans(sky, kernel)
+
+    #sky[np.isnan(sky)] = 0.0  # set nans from flat=0 pixels to 0 in sky
 
     shifts_all = []
     for i in range(nims):

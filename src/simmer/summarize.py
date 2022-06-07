@@ -52,6 +52,7 @@ def image_grid(reddir):
 def nightly_contrast_curve(reddir):
     #produce a plot showing all contrast curves
     #get list of all contrast curves
+    #Contrast curves aren't made automatically, so they might not be available. 
     flist = glob.glob(reddir+'**/contrast_curve.csv',recursive=True)
     flist.sort()
 
