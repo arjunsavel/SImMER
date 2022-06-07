@@ -47,7 +47,7 @@ def open_flats(flatfile):
         return flat
 
 
-def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=None, verbose=False):
+def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=None, selected_stars = None, verbose=False):
     """Do flat division, sky subtraction, and initial alignment via coords in header.
     Returns Python list of each registration method used per star.
 
@@ -57,7 +57,7 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
         :config: (pandas DataFrame) dataframe corresponding to config sheet for data.
         :inst: (Instrument object) instrument for which data is being reduced.
         :plotting_yml: (string) path to the plotting configuration file.
-
+        :selected_stars: (array of strings; OPTIONAL) list of stars to reduce
     """
     # Save these images to the appropriate folder.
 
@@ -92,6 +92,11 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
     for star in tqdm(
         np.unique(stars), desc="Running image driver", position=0, leave=True
     ):
+        #Check if we want to run this star
+        if selected_stars != None:
+            if star not in selected_stars:
+                print('Star ', star, 'not in selected list of stars (', selected_stars, ')')
+                continue
         s_dir = reddir + star + "/"
         if (
             s_dir not in sdirs
