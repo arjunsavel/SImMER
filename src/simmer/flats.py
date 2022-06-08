@@ -59,6 +59,10 @@ def flat_driver(raw_dir, reddir, config, inst, plotting_yml=None):
 
     _flats = config[config.Object == "flat"]
     filts = _flats.Filter.tolist()
+
+    #Remove duplicates from list of filters
+    filts = np.unique(filts)
+
     for filter_name in tqdm(
         filts, desc="Running flats", position=0, leave=True
     ):

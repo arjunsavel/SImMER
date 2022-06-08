@@ -74,20 +74,16 @@ def sky_driver(raw_dir, reddir, config, inst, sep_skies = False, plotting_yml=No
             skies.Object == skyname
         ].Filter.values  # array of filters as strings
 
+        #Remove duplicates from list of filters
+        filts = np.unique(filts)
+
         for n, filter_name in enumerate(filts):
-            skylist = eval(
-
-                skies[skies.Object == skyname].Filenums.values[n]
-            )
-            print('old sky list: ', skylist)
-
             skylist = []
             ww = np.where(skies.Object == skyname)
             allfiles = skies.iloc[ww].Filenums.values
             for aa in np.arange(len(allfiles)):
                 for bb in eval(allfiles[aa]):
                     skylist.append(bb)
-            print('new sky list: ', skylist)
 
             create_skies(
                 raw_dir, reddir, s_dir, skylist, inst, filter_name=filter_name
