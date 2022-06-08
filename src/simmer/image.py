@@ -111,7 +111,6 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
         filts = np.unique(filts)
 
         for n, filter_name in enumerate(filts):
-            print('n, filter_name: ', n, filter_name)
             obj = config[config.Object == star]
 
             #Trying workaround
@@ -125,9 +124,6 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
 
             # cast obj_methods as list so that elementwise comparison isn't performed
             obj_methods = config[config.Object == star].Method.values
-
-            #Keep only the first method listed because we'll use the same method for all frames
-            obj_methods = obj_methods[0]
 
             # use pd.isnull because it can check against strings
             if np.all(pd.isnull(obj_methods)):
@@ -170,8 +166,6 @@ def create_imstack(
 
     nims = len(imlist)
     imfiles = u.make_filelist(raw_dir, imlist, inst)
-    print('imlist: ', imlist)
-    print('imfiles: ', imfiles)
 
     #Keep track of original filenames so that we can annotate the shift1_cube
     #image arrays and easily decide which images to exclude

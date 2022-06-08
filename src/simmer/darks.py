@@ -28,10 +28,13 @@ def dark_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     texps = _darks.ExpTime.unique()
 
     for texp in tqdm(texps, desc="Running darks", position=0, leave=True):
-        # literal_eval issues below
-        darklist = eval(
-            _darks[_darks.ExpTime == texp].Filenums.values[0]
-        )  # pylint: disable=eval-used
+        darklist = []
+        ww = np.where(_darks.ExpTime == texp)
+        allfiles = _darks.iloc[ww].Filenums.values
+        for aa in np.arange(len(allfiles)):
+            for bb in eval(allfiles[aa]):
+                darklist.append(bb)
+
         create_darks(
             raw_dir, reddir, darklist, inst
         )  # creates a new dark file

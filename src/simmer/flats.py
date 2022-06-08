@@ -62,10 +62,13 @@ def flat_driver(raw_dir, reddir, config, inst, plotting_yml=None):
     for filter_name in tqdm(
         filts, desc="Running flats", position=0, leave=True
     ):
-        # literal_eval issues below
-        flatlist = eval(
-            _flats[_flats.Filter == filter_name].Filenums.values[0]
-        )  # pylint: disable=eval-used
+        flatlist = []
+        ww = np.where(_flats.Filter == filter_name)
+        allfiles = _flats.iloc[ww].Filenums.values
+        for aa in np.arange(len(allfiles)):
+            for bb in eval(allfiles[aa]):
+                flatlist.append(bb)
+
         itime = _flats[_flats.Filter == filter_name].ExpTime.values[0]
 
         # darks are matched with flats by exposure time
