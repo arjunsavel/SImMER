@@ -24,7 +24,8 @@ from photutils.aperture import aperture_photometry
 from astropy.stats import SigmaClip
 from astropy.io import fits
 
-import simmer.cd_contrast_attempt as cca
+import time as time
+
 import simmer.contrast as sim_con_curve
 
 #Test file
@@ -118,7 +119,7 @@ def analyze(filename=filename, maxiter = 10, postol=1, fwhmtol = 0.5, inst = 'Sh
     return im, xcen, ycen, fwhm, updated_sources, contrast_curve
 
 
-def find_sources(im, sigma=5, fwhm=5, tscale=10, verbose=False):
+def find_sources(im, sigma=5, fwhm=5, tscale=10, make_plot=False, verbose=False):
     """
     Determines sources in an image. Based on astropy tutorial here: https://photutils.readthedocs.io/en/stable/detection.html
     """
@@ -139,17 +140,17 @@ def find_sources(im, sigma=5, fwhm=5, tscale=10, verbose=False):
             print(sources)
         fwhm += 1
 
-    #Plot image and mark location of detected sources
-    positions = np.transpose((sources['xcentroid'], sources['ycentroid']))
-    apertures = CircularAperture(positions, r=4.)
-    norm = ImageNormalize(stretch=SqrtStretch(),vmin=0,vmax=100)
-    plt.imshow(im, cmap='Greys', origin='lower', norm=norm, interpolation='nearest')
-    apertures.plot(color='orange', lw=2.5);
-    plt.close()
+    if make_plot == True:
+        #Plot image and mark location of detected sources
+        positions = np.transpose((sources['xcentroid'], sources['ycentroid']))
+        apertures = CircularAperture(positions, r=4.)
+        norm = ImageNormalize(stretch=SqrtStretch(),vmin=0,vmax=100)
+        plt.imshow(im, cmap='Greys', origin='lower', norm=norm, interpolation='nearest')
+        apertures.plot(color='orange', lw=2.5);
+        plt.close()
 
     #Convert sources to a dataframe
     df = sources.to_pandas()
-   # print(len(sources))
     return df
 
 def find_FWHM(image, center, min_fwhm = 2, verbose=False):
