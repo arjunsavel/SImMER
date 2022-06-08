@@ -84,7 +84,7 @@ def contrast_curve_main(data, fwhm, instrument, position=None):
     fake_ims = []
 
     #Use FWHM to set size of noise image
-    fsize = int(np.ceil(fwhm*5)) #must be larger than maximum size needed for aperture photometry, which is 3 x FWHM + 15
+    fsize = int(np.ceil(fwhm * 3 + 20)) #must be larger than maximum size needed for aperture photometry, which is 3 x FWHM + 15
     for i, (all_mean, all_std) in enumerate(zip(means, stds)):
         # initialize fake fluxes for a given annulus
         fake_im_fluxes_an = []
