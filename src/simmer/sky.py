@@ -82,7 +82,7 @@ def sky_driver(raw_dir, reddir, config, inst, sep_skies = False, plotting_yml=No
             print('old sky list: ', skylist)
 
             skylist = []
-            ww = np.where(skis.Object == skyname)
+            ww = np.where(skies.Object == skyname)
             allfiles = skies.iloc[ww].Filenums.values
             for aa in np.arange(len(allfiles)):
                 for bb in eval(allfiles[aa]):
