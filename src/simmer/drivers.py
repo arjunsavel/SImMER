@@ -17,7 +17,7 @@ from . import summarize as summarize
 
 def all_driver(
 
-    inst, config_file, raw_dir, reddir, sep_skies = False, plotting_yml=None, searchsize=10, just_images=False, verbose=True
+    inst, config_file, raw_dir, reddir, sep_skies = False, plotting_yml=None, searchsize=10, just_images=False, selected_stars=None, verbose=True
 
 ):
     """
@@ -30,9 +30,8 @@ def all_driver(
         :raw_dir: (string) path of the directory containing the raw data.
         :reddir: (string) path of the directory to contain the reduced data.
         :sep_skies: (Boolean) if true, skies for observations of star STAR are recorded with Object = "STAR sky". If false, observations were taken using a dither pattern and can be used as the skies.
-
         :plotting_yml: (string) path to the plotting configuration file.
-
+        :selected_stars: (array of strings; OPTIONAL) list of stars to reduce
     """
     #check if desired reddir exists and create it if needed
     if os.path.isdir(reddir) == False:
@@ -55,7 +54,7 @@ def all_driver(
         darks.dark_driver(raw_dir, reddir, config, inst)
         flats.flat_driver(raw_dir, reddir, config, inst)
         sky.sky_driver(raw_dir, reddir, config, inst, sep_skies=sep_skies)
-    methods = image.image_driver(raw_dir, reddir, config, inst, sep_skies=sep_skies, verbose=verbose)
+    methods = image.image_driver(raw_dir, reddir, config, inst, sep_skies=sep_skies, selected_stars = selected_stars, verbose=verbose)
 
 
     star_dirlist = glob(reddir + "*/")
@@ -69,6 +68,8 @@ def all_driver(
         for ob in config.Object
         if ob in star_dir
     ]
+    miter=0
+    print('methods: ', methods)
     for i, s_dir in enumerate(
         tqdm(
             np.unique(cleaned_star_dirlist),
@@ -79,7 +80,18 @@ def all_driver(
     ):
         print('searchsize: ', searchsize)
         print('s_dir: ', s_dir)
-        image.create_im(s_dir, searchsize, method=methods[i], verbose=verbose)
+        if selected_stars != None:
+            thisstar = os.path.basename(s_dir[:-1])
+            print('this star: ', thisstar)
+            use_method = 'saturated' #workaround for now; would be better to do something like methods[miter]
+            miter += 1
+            if thisstar not in selected_stars:
+                print('Star ', thisstar, 'not in selected list of stars (', selected_stars, ')')
+                continue
+        else:
+            use_method = methods[i]
+
+        image.create_im(s_dir, searchsize, method=use_method, verbose=verbose)
 
     #make summary plot showing reduced images of all stars observed
     summarize.image_grid(reddir)

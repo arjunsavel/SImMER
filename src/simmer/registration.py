@@ -339,7 +339,7 @@ def calc_shifts(
     return (xshift, yshift), out
 
 
-def shift_bruteforce(image, base_position=None, max_shift=200, verbose=False):
+def shift_bruteforce(image, base_position=None, max_shift=350, verbose=False):
     """This will shift the maximum pixel to base_position (i.e. the center of image).
     Make sure base_position is entered as (int,int).
 

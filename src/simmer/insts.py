@@ -34,7 +34,7 @@ class Instrument:
             :image: (2D numpy array) image to be filtered for bad pixels.
 
         Outputs:
-            :iamge: (2D numpy array) image, now filtered for bad pixels.
+            :c_im: (2D numpy array) image, now filtered for bad pixels.
                     Same dimensions as input image.
         """
         c_im = image.copy()
@@ -158,7 +158,10 @@ class ShARCS(Instrument):
         bpfile = pyfits.getdata(bpfile_name, 0)
         bpfile = u.image_subsection(bpfile, self.npix, self.center)
 
-        bad = np.where(bpfile == 1)  # locations of bad pixels
+        bad = np.where(np.logical_or(
+            bpfile == 1, # locations of bad pixels
+            np.isnan(image)==1) # where pixels are NaN
+        )
 
         filtered = median_filter(image, size=7)
         image[bad] = filtered[
