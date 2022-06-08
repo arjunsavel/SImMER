@@ -106,13 +106,28 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
         filts = skies[
             skies.Object == star
         ].Filter.values  # array of filters as strings
+
+        #Remove duplicates from list of filters
+        filts = np.unique(filts)
+
         for n, filter_name in enumerate(filts):
+            print('n, filter_name: ', n, filter_name)
             obj = config[config.Object == star]
-            imlist = eval(
-                obj[obj.Comments != "sky"].Filenums.values[n]
-            )  # pylint: disable=eval-used # liter_eval issues
+
+            #Trying workaround
+            ww = np.where(np.logical_and(obj.Filter.values == filter_name,
+                obj.Comments != 'sky'))
+            allfiles = obj.iloc[ww].Filenums.values
+            imlist = []
+            for aa in np.arange(len(allfiles)):
+                for bb in eval(allfiles[aa]):
+                    imlist.append(bb)
+
             # cast obj_methods as list so that elementwise comparison isn't performed
             obj_methods = config[config.Object == star].Method.values
+
+            #Keep only the first method listed because we'll use the same method for all frames
+            obj_methods = obj_methods[0]
 
             # use pd.isnull because it can check against strings
             if np.all(pd.isnull(obj_methods)):
@@ -125,6 +140,7 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
                     methods.append("saturated")
                 elif "saturated" not in obj_method and "wide" in obj_method:
                     methods.append("wide")
+
             create_imstack(
                 raw_dir, reddir, s_dir, imlist, inst, filter_name=filter_name
             )
@@ -154,6 +170,8 @@ def create_imstack(
 
     nims = len(imlist)
     imfiles = u.make_filelist(raw_dir, imlist, inst)
+    print('imlist: ', imlist)
+    print('imfiles: ', imfiles)
 
     #Keep track of original filenames so that we can annotate the shift1_cube
     #image arrays and easily decide which images to exclude
