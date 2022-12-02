@@ -144,76 +144,76 @@ class TestCreation(unittest.TestCase):
 
     inst = i.ShARCS()
 
-    def test_create_darks(self):
-        print("Testing darks")
+#     def test_create_darks(self):
+#         print("Testing darks")
 
-        try:
-            download_folder("dark_test")
-        except:
-            raise DataDownloadException(
-                "Could not download test data for darks."
-            )
+#         try:
+#             download_folder("dark_test")
+#         except:
+#             raise DataDownloadException(
+#                 "Could not download test data for darks."
+#             )
 
-        raw_dir, reddir = (
-            "src/simmer/tests/dark_test/",
-            "src/simmer/tests/dark_test/",
-        )
-        compare_dark = pyfits.getdata(raw_dir + "compare_dark.fits", 0)
-        zero = np.zeros(np.shape(compare_dark))  # only testing flats
-        darklist = range(1357, 1360)
-        try:
-            result = darks.create_darks(raw_dir, reddir, darklist, self.inst)
+#         raw_dir, reddir = (
+#             "src/simmer/tests/dark_test/",
+#             "src/simmer/tests/dark_test/",
+#         )
+#         compare_dark = pyfits.getdata(raw_dir + "compare_dark.fits", 0)
+#         zero = np.zeros(np.shape(compare_dark))  # only testing flats
+#         darklist = range(1357, 1360)
+#         try:
+#             result = darks.create_darks(raw_dir, reddir, darklist, self.inst)
 
-            # old darks on different pixel range
-            if result.shape == (800, 800):
-                result = result[100:-100, 100:-100]
-            self.assertCountEqual(
-                np.ravel(result - compare_dark), np.ravel(zero)
-            )
-        except:
-            e = sys.exc_info()[0]
-            print(e)
-            delete_folder(raw_dir)
-            self.assertTrue(False)
+#             # old darks on different pixel range
+#             if result.shape == (800, 800):
+#                 result = result[100:-100, 100:-100]
+#             self.assertCountEqual(
+#                 np.ravel(result - compare_dark), np.ravel(zero)
+#             )
+#         except:
+#             e = sys.exc_info()[0]
+#             print(e)
+#             delete_folder(raw_dir)
+#             self.assertTrue(False)
 
-    def test_create_flats(self):
-        print("Testing flats")
+#     def test_create_flats(self):
+#         print("Testing flats")
 
-        try:
-            download_folder("flat_test")
-            download_folder("extra_test")
-        except:
-            raise DataDownloadException(
-                "Could not download test data for flats."
-            )
+#         try:
+#             download_folder("flat_test")
+#             download_folder("extra_test")
+#         except:
+#             raise DataDownloadException(
+#                 "Could not download test data for flats."
+#             )
 
-        raw_dir, reddir = (
-            "src/simmer/tests/flat_test/",
-            "src/simmer/tests/flat_test/",
-        )
-        compare_flat = pyfits.getdata(raw_dir + "compare_flat.fits", 0)
-        zero = np.zeros(np.shape(compare_flat))  # only testing flats
-        flatlist = range(1108, 1114)
-        try:
-            result = flats.create_flats(
-                raw_dir, reddir, flatlist, np.nan, self.inst, test=True
-            )
+#         raw_dir, reddir = (
+#             "src/simmer/tests/flat_test/",
+#             "src/simmer/tests/flat_test/",
+#         )
+#         compare_flat = pyfits.getdata(raw_dir + "compare_flat.fits", 0)
+#         zero = np.zeros(np.shape(compare_flat))  # only testing flats
+#         flatlist = range(1108, 1114)
+#         try:
+#             result = flats.create_flats(
+#                 raw_dir, reddir, flatlist, np.nan, self.inst, test=True
+#             )
 
-            delete_folder(raw_dir)
-            compare_flat = load_data(
-                "src/simmer/tests/test_create_flats.pkl"
-            )
-#             delete_folder("src/simmer/tests/extra_test")
-            zero = np.zeros(np.shape(compare_flat))
-            # save_data(result, 'test_create_flats.pkl')
-            self.assertCountEqual(
-                np.ravel(result - compare_flat), np.ravel(zero)
-            )
-        except:
-            e = sys.exc_info()[0]
-            print(e)
-            delete_folder(raw_dir)
-            self.assertTrue(False)
+#             delete_folder(raw_dir)
+#             compare_flat = load_data(
+#                 "src/simmer/tests/test_create_flats.pkl"
+#             )
+# #             delete_folder("src/simmer/tests/extra_test")
+#             zero = np.zeros(np.shape(compare_flat))
+#             # save_data(result, 'test_create_flats.pkl')
+#             self.assertCountEqual(
+#                 np.ravel(result - compare_flat), np.ravel(zero)
+#             )
+#         except:
+#             e = sys.exc_info()[0]
+#             print(e)
+#             delete_folder(raw_dir)
+#             self.assertTrue(False)
 
     # def test_create_skies(self):
     #     print("Testing skies")
