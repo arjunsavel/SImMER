@@ -19,9 +19,8 @@ CLASSIFIERS = [
     "Natural Language :: English",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
     "Topic :: Scientific/Engineering :: Astronomy",
 ]
 INSTALL_REQUIRES = [
@@ -86,7 +85,7 @@ if __name__ == "__main__":
         packages=PACKAGES,
         package_dir={"": "src"},
         zip_safe=False,
-        python_requires=">3.6.0",
+        python_requires=">3.8.0",
         classifiers=CLASSIFIERS,
         include_package_data=True,
         install_requires=INSTALL_REQUIRES,
