@@ -25,7 +25,6 @@ from photutils.aperture import aperture_photometry
 from astropy.stats import SigmaClip
 from astropy.io import fits
 
-import simmer.cd_contrast_attempt as cca
 import simmer.contrast as sim_con_curve
 
 #Test file
@@ -107,11 +106,6 @@ def analyze(filename=filename, maxiter = 10, postol=1, fwhmtol = 0.5, inst = 'Sh
     updated_sources.to_csv(outdir+'detected_stars.csv', index=False)
 
     #Make contrast curve
-
-    #Use CD's attempt at converting David Ciardi's code to python
-    #start from the selected center position
-    #contrast_curve = cca.ciardi_contrast(im, xcen, ycen, fwhm, plate_scale=plate_scale, outdir=outdir, verbose=verbose)
-
     #Use current version of simmer
     contrast_curve = sim_con_curve.contrast_curve_main(im, fwhm, inst, position=[xcen, ycen])
     contrast_curve.to_csv(outdir+'contrast_curve.csv',index=False)
