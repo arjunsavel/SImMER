@@ -24,13 +24,13 @@ strategy:
   matrix:
     linux:
       vm_Image: "Ubuntu-16.04"
-      python.version: "3.7"
+      python.version: "3.8"
     mac:
       vm_Image: "macOS-10.14"
-      python.version: "3.7"
+      python.version: "3.8"
     windows:
       vm_Image: "vs2017-win2016"
-      python.version: "3.7"
+      python.version: "3.8"
 
 steps:
   - task: UsePythonVersion@0
