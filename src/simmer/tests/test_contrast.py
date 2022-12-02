@@ -34,13 +34,13 @@ class TestContrastCurve(unittest.TestCase):
         result = cc(arr, .0333, )
         self.assertTrue(all_same(result[1]))
 
-    def test_zero_vals(self):
-        arr = np.array([[0] * 600] * 600)
-        result = cc(arr, .0333, )
-        bools = []
-        for i in result[1]:
-            bools.append(np.isnan(i))
-        self.assertTrue(np.all(bools))
+#     def test_zero_vals(self):
+#         arr = np.array([[0] * 600] * 600)
+#         result = cc(arr, .0333, )
+#         bools = []
+#         for i in result[1]:
+#             bools.append(np.isnan(i))
+#         self.assertTrue(np.all(bools))
 
     def test_radius_size(self):
         arr = np.array([[1000] * 600] * 600)
