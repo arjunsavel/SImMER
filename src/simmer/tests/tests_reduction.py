@@ -56,7 +56,7 @@ def download_folder(folder, path=None):
         "readpharo_test": "l8fi3100v5flufp",
         "config_test": "q0vqvy1ejd6rn14",
         "search_headers": "7q20lgxae5yb3bz",
-        " ": "bzo29t85xk3ohyi",
+        "extra_test": "bzo29t85xk3ohyi",
     }
 
     def retrieve_extract(path):
