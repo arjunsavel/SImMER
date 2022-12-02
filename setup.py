@@ -27,7 +27,7 @@ INSTALL_REQUIRES = [
     "numpy",
     "tqdm",
     "pandas==1.2.3",
-    "astropy <4.1, >=3.1.2",
+    "astropy >=5.1",
     "openpyxl>=2.5.12",
     "scipy <1.5.3, >=1.1.0",
     "matplotlib <3.1.1,>=3.0.1",
