@@ -18,8 +18,9 @@ from astropy.stats import sigma_clipped_stats
 #from photutils.datasets import load_star_image
 from photutils.detection import DAOStarFinder
 from astropy.visualization import SqrtStretch
+
 from astropy.visualization.mpl_normalize import ImageNormalize
-from photutils.aperture import CircularAperture
+from photutils.aperture import CircularAperture, CircularAnnulus, ApertureStats
 from photutils.aperture import aperture_photometry
 from astropy.stats import SigmaClip
 from astropy.io import fits
@@ -118,7 +119,7 @@ def analyze(filename=filename, maxiter = 10, postol=1, fwhmtol = 0.5, inst = 'Sh
     return im, xcen, ycen, fwhm, updated_sources, contrast_curve
 
 
-def find_sources(im, sigma=5, fwhm=5, tscale=10, verbose=False):
+def find_sources(im, sigma=5, fwhm=5, tscale=10, verbose=False, plot=True, **kwargs):
     """
     Determines sources in an image. Based on astropy tutorial here: https://photutils.readthedocs.io/en/stable/detection.html
     """
@@ -131,7 +132,7 @@ def find_sources(im, sigma=5, fwhm=5, tscale=10, verbose=False):
         if verbose == True:
             print('trying FWHM: ', fwhm)
         #Detect stars >threshold above the background. Needed to adjust FWHM and threshold
-        daofind = DAOStarFinder(fwhm=fwhm, threshold=tscale*std, exclude_border=True)
+        daofind = DAOStarFinder(fwhm=fwhm, threshold=tscale*std, exclude_border=True, **kwargs)
         sources = daofind(im - median)
     #    for col in sources.colnames:
     #        sources[col].info.format = '%.8g'  # for consistent table output
@@ -139,13 +140,14 @@ def find_sources(im, sigma=5, fwhm=5, tscale=10, verbose=False):
             print(sources)
         fwhm += 1
 
-    #Plot image and mark location of detected sources
-    positions = np.transpose((sources['xcentroid'], sources['ycentroid']))
-    apertures = CircularAperture(positions, r=4.)
-    norm = ImageNormalize(stretch=SqrtStretch(),vmin=0,vmax=100)
-    plt.imshow(im, cmap='Greys', origin='lower', norm=norm, interpolation='nearest')
-    apertures.plot(color='orange', lw=2.5);
-    plt.close()
+    if plot:
+        # Plot image and mark location of detected sources
+        positions = np.transpose((sources['xcentroid'], sources['ycentroid']))
+        apertures = CircularAperture(positions, r=4.)
+        norm = ImageNormalize(stretch=SqrtStretch(),vmin=0,vmax=100)
+        plt.imshow(im, cmap='Greys', origin='lower', norm=norm, interpolation='nearest')
+        apertures.plot(color='orange', lw=2.5);
+        plt.close()
 
     #Convert sources to a dataframe
     df = sources.to_pandas()
@@ -179,6 +181,36 @@ def find_FWHM(image, center, min_fwhm = 2, verbose=False):
     FWHM = np.max([FWHM, min_fwhm])
 
     return FWHM
+
+def aperture_photometry(im, df, fwhm):
+    """
+    Wrapper around photutils. Performs simple aperture photometry on a set of sources.
+    adapted from tutorial: https://photutils.readthedocs.io/en/stable/aperture.html
+    """
+
+    _, median, _ = sigma_clipped_stats(im, sigma=3.0)
+    im -= median  # subtract background from the data
+
+    positions = np.transpose((df['xcentroid'], df['ycentroid']))
+    apertures = CircularAperture(positions, r=fwhm)
+
+    phot_table = aperture_photometry(im, apertures)
+
+    annulus_apertures = CircularAnnulus(positions, r_in=fwhm * 2, r_out=fwhm * 3)
+    aperstats = ApertureStats(im, annulus_apertures)
+    bkg_mean = aperstats.mean # for each position
+
+    aperture_areas = apertures.area_overlap(im)
+
+    total_bkg = bkg_mean * aperture_areas
+
+    phot_bkgsub = phot_table['aperture_sum'] - total_bkg
+
+    phot_table['total_bkg'] = total_bkg
+    phot_table['aperture_sum_bkgsub'] = phot_bkgsub
+
+    return phot_table
+
 
 def find_center(df, verbose=False):
     '''Returns coordinates of star with highest peak'''
