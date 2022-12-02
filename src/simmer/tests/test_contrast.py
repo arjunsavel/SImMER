@@ -17,7 +17,7 @@ from numpy import random
 import unittest
 from photutils import datasets
 from astropy.table import Table
-from simmer.contrast import ConCur as cc
+from simmer.contrast import contrast_curve_core as cc
 from simmer.contrast import twoD_weighted_std as wstd
 from simmer.contrast import find_best_center
 from simmer.contrast import background_calc
@@ -31,12 +31,12 @@ def all_same(items):
 class TestContrastCurve(unittest.TestCase):
     def test_constant_flux(self):
         arr = np.array([[1000] * 600] * 600)
-        result = cc(arr)
+        result = cc(arr, .0333, )
         self.assertTrue(all_same(result[1]))
 
     def test_zero_vals(self):
         arr = np.array([[0] * 600] * 600)
-        result = cc(arr)
+        result = cc(arr, .0333, )
         bools = []
         for i in result[1]:
             bools.append(np.isnan(i))
@@ -44,9 +44,9 @@ class TestContrastCurve(unittest.TestCase):
 
     def test_radius_size(self):
         arr = np.array([[1000] * 600] * 600)
-        rad1_result = cc(arr, radius_size=1)
-        rad3_result = cc(arr, radius_size=3)
-        rad6_result = cc(arr, radius_size=6)
+        rad1_result = cc(arr, .0333, radius_size=1)
+        rad3_result = cc(arr, .0333, radius_size=3)
+        rad6_result = cc(arr, .0333, radius_size=6)
         self.assertTrue(
             np.all(
                 [
