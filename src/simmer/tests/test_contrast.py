@@ -20,7 +20,7 @@ from astropy.table import Table
 from simmer.contrast import contrast_curve_core as cc
 from simmer.contrast import twoD_weighted_std as wstd
 # from simmer.contrast import find_best_center
-from simmer.contrast import background_calc
+# from simmer.contrast import background_calc
 from simmer.contrast import hot_pixels
 
 
