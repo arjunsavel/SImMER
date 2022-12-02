@@ -19,7 +19,7 @@ from photutils import datasets
 from astropy.table import Table
 from simmer.contrast import contrast_curve_core as cc
 from simmer.contrast import twoD_weighted_std as wstd
-from simmer.contrast import find_best_center
+# from simmer.contrast import find_best_center
 from simmer.contrast import background_calc
 from simmer.contrast import hot_pixels
 
@@ -56,14 +56,14 @@ class TestContrastCurve(unittest.TestCase):
             )
         )
 
-    def test_best_center(self):
-        table = Table()
-        table["flux"] = [1000]
-        table["x_mean"] = [299.5]
-        table["y_mean"] = [299.5]
-        arr = datasets.make_gaussian_sources_image((600, 600), table)
-        result = find_best_center(arr, 3, [299.5, 299.5])
-        self.assertTrue(np.allclose((result[0], result[1]), [299.5, 299.5]))
+#     def test_best_center(self):
+#         table = Table()
+#         table["flux"] = [1000]
+#         table["x_mean"] = [299.5]
+#         table["y_mean"] = [299.5]
+#         arr = datasets.make_gaussian_sources_image((600, 600), table)
+#         result = find_best_center(arr, 3, [299.5, 299.5])
+#         self.assertTrue(np.allclose((result[0], result[1]), [299.5, 299.5]))
 
     def test_twoD_weighted_std_constants(self):
         numbers = np.array([[20] * 600] * 600)
