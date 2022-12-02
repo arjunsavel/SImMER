@@ -56,7 +56,7 @@ def download_folder(folder, path=None):
         "readpharo_test": "l8fi3100v5flufp",
         "config_test": "q0vqvy1ejd6rn14",
         "search_headers": "7q20lgxae5yb3bz",
-        "extra_test": "bzo29t85xk3ohyi",
+        " ": "bzo29t85xk3ohyi",
     }
 
     def retrieve_extract(path):
@@ -201,9 +201,9 @@ class TestCreation(unittest.TestCase):
 
             delete_folder(raw_dir)
             compare_flat = load_data(
-                "src/simmer/tests/extra_test/test_create_flats.pkl"
+                "src/simmer/tests/test_create_flats.pkl"
             )
-            delete_folder("src/simmer/tests/extra_test")
+#             delete_folder("src/simmer/tests/extra_test")
             zero = np.zeros(np.shape(compare_flat))
             # save_data(result, 'test_create_flats.pkl')
             self.assertCountEqual(
@@ -314,10 +314,10 @@ class TestCreation(unittest.TestCase):
             image.create_im(s_dir, 10, method="default")
             final_im = pyfits.getdata(raw_dir + "Ks/final_im.fits", 0)
             compare_final_im = load_data(
-                "src/simmer/tests/extra_test/test_create_im_default.pkl"
+                "src/simmer/tests/test_create_im_default.pkl"
             )
             # save_data(final_im, 'test_create_im_default.pkl')
-            delete_folder("src/simmer/tests/extra_test")
+#             delete_folder("src/simmer/tests/extra_test")
             zero = np.zeros(np.shape(final_im))
             val = np.all(
                 np.ravel(final_im - compare_final_im) == np.ravel(zero)
@@ -562,10 +562,10 @@ class TestIntegration(unittest.TestCase):
                 raw_dir + "HIP49081/Br-gamma/final_im.fits", 0
             )
             compare_final_im = load_data(
-                "src/simmer/tests/extra_test/test_pharo_alldrivers.pkl"
+                "src/simmer/tests/test_pharo_alldrivers.pkl"
             )
             # save_data(final_im, 'test_pharo_alldrivers.pkl')
-            delete_folder("src/simmer/tests/extra_test")
+#             delete_folder("src/simmer/tests/extra_test")
             zero = np.zeros(np.shape(final_im))
             val = np.all(
                 np.allclose(
