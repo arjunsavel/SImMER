@@ -72,6 +72,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
     "nbsphinx",
+    "sphinx_book_theme",
 ]
 
 
@@ -98,9 +99,9 @@ master_doc = "index"
 # General information about the project.
 project = "SImMER"
 copyright = (
-    "2020, Arjun B. Savel, Lea Hirsch, Courtney D. Dressing, David R. Ciardi"
+    "2022, Arjun B. Savel, Lea Hirsch, Holden Gill, Courtney D. Dressing, David R. Ciardi"
 )
-author = "Arjun B. Savel, Lea Hirsch, Courtney D. Dressing, David R. Ciardi"
+author = "Arjun B. Savel, Lea Hirsch, Holden Gill, Courtney D. Dressing, David R. Ciardi"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -188,7 +189,7 @@ latex_documents = [
         master_doc,
         "SImMER.tex",
         "SImMER Documentation",
-        "Arjun B. Savel, Lea Hirsch, Courtney D. Dressing, David R. Ciardi",
+        "Arjun B. Savel, Lea Hirsch, Holden Gill, Courtney D. Dressing, David R. Ciardi",
         "manual",
     )
 ]
