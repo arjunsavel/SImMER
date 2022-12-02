@@ -21,7 +21,7 @@ from simmer.contrast import contrast_curve_core as cc
 from simmer.contrast import twoD_weighted_std as wstd
 # from simmer.contrast import find_best_center
 # from simmer.contrast import background_calc
-from simmer.contrast import hot_pixels
+# from simmer.contrast import hot_pixels
 
 
 def all_same(items):
@@ -76,56 +76,56 @@ class TestContrastCurve(unittest.TestCase):
         self.assertTrue(np.isclose(wstd(numbers, weighers), 1.095445115))
 
 
-class TestHotPixels(unittest.TestCase):
-    """
-    Test whether the hot pixel algorithm correctly identifies pixels
-    that aren't working well.
-    """
+# class TestHotPixels(unittest.TestCase):
+#     """
+#     Test whether the hot pixel algorithm correctly identifies pixels
+#     that aren't working well.
+#     """
 
-    def test_hot_pixels_one(self):
-        arr = np.array([[0] * 600] * 600)
-        arr[300, 300] = 1
-        background_mean = 1 / (3600)
-        background_std = 0
-        result = hot_pixels(arr, [300, 300], background_mean, background_std)
-        self.assertEqual(1, len(result))
+#     def test_hot_pixels_one(self):
+#         arr = np.array([[0] * 600] * 600)
+#         arr[300, 300] = 1
+#         background_mean = 1 / (3600)
+#         background_std = 0
+#         result = hot_pixels(arr, [300, 300], background_mean, background_std)
+#         self.assertEqual(1, len(result))
 
-    def test_hot_pixels_multiple(self):
-        arr = np.array([[0] * 600] * 600)
-        arr[300:302, 300:302] = 1
-        background_mean = 4 / 3600
-        background_std = 0
-        result = hot_pixels(arr, [300, 300], background_mean, background_std)
-        self.assertEqual(4, len(result))
+#     def test_hot_pixels_multiple(self):
+#         arr = np.array([[0] * 600] * 600)
+#         arr[300:302, 300:302] = 1
+#         background_mean = 4 / 3600
+#         background_std = 0
+#         result = hot_pixels(arr, [300, 300], background_mean, background_std)
+#         self.assertEqual(4, len(result))
 
-    def test_hot_pixels_clump(self):
-        arr = np.array([[0] * 600] * 600)
-        arr[300:303, 300:303] = 1
-        background_mean = 4 / 3600
-        background_std = 0
-        result = hot_pixels(arr, [300, 300], background_mean, background_std)
-        self.assertEqual(0, len(result))
+#     def test_hot_pixels_clump(self):
+#         arr = np.array([[0] * 600] * 600)
+#         arr[300:303, 300:303] = 1
+#         background_mean = 4 / 3600
+#         background_std = 0
+#         result = hot_pixels(arr, [300, 300], background_mean, background_std)
+#         self.assertEqual(0, len(result))
 
-    def test_hot_pixels_cold(self):
-        arr = np.array([[1] * 600] * 600)
-        background_mean = 1
-        background_std = 0
-        result = hot_pixels(arr, [300, 300], background_mean, background_std)
-        self.assertEqual(0, len(result))
+#     def test_hot_pixels_cold(self):
+#         arr = np.array([[1] * 600] * 600)
+#         background_mean = 1
+#         background_std = 0
+#         result = hot_pixels(arr, [300, 300], background_mean, background_std)
+#         self.assertEqual(0, len(result))
 
 
-class TestBackgroundMethods(unittest.TestCase):
-    def test_background_outside(self):
-        arr = np.array([[0] * 600] * 600)
-        arr[270:330, 270:330] = 1
-        result = background_calc(arr, "outside")
-        self.assertEqual(result[0], 0)
+# class TestBackgroundMethods(unittest.TestCase):
+#     def test_background_outside(self):
+#         arr = np.array([[0] * 600] * 600)
+#         arr[270:330, 270:330] = 1
+#         result = background_calc(arr, "outside")
+#         self.assertEqual(result[0], 0)
 
-    def test_background_boxes_vals(self):
-        arr = np.array([[0] * 600] * 600)
-        arr[100:150, 100:150], arr[400:450, 400:450] = 1, 1
-        result = background_calc(arr, "boxes")
-        self.assertTrue(result[0] > 0)
+#     def test_background_boxes_vals(self):
+#         arr = np.array([[0] * 600] * 600)
+#         arr[100:150, 100:150], arr[400:450, 400:450] = 1, 1
+#         result = background_calc(arr, "boxes")
+#         self.assertTrue(result[0] > 0)
 
 
 if __name__ == "__main__":
