@@ -111,15 +111,15 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
 
             # use pd.isnull because it can check against strings
             if np.all(pd.isnull(obj_methods)):
-                methods.append("default")
+                methods.append("quick_look")
             else:
                 obj_method = obj_methods[~pd.isnull(obj_methods)][0].lower()
-                if "saturated" and "wide" in obj_method:
-                    methods.append("saturated wide")
-                elif "saturated" in obj_method and "wide" not in obj_method:
+                if "saturated" and "separated" in obj_method:
+                    methods.append("saturated separated")
+                elif "saturated" in obj_method and "separated" not in obj_method:
                     methods.append("saturated")
-                elif "saturated" not in obj_method and "wide" in obj_method:
-                    methods.append("wide")
+                elif "saturated" not in obj_method and "separated" in obj_method:
+                    methods.append("separated")
             create_imstack(
                 raw_dir, reddir, s_dir, imlist, inst, filter_name=filter_name
             )
@@ -233,7 +233,7 @@ def create_imstack(
     return im_array, shifts_all
 
 
-def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", verbose=False):
+def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="quick_look", verbose=False):
     """Take the shifted, cut down images from before, then perform registration
     and combine. Tests should happen before this, as this is a per-star basis.
 
@@ -250,7 +250,7 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
     if not fdirs:
         fdirs = glob(s_dir + "*/")
 
-    for sf_dir in fdirs:  # each filter
+    for sf_dir in fdirs:  # each filter for each star
         #Only register star images, not sky images
         dirparts = sf_dir.split('/')
         if 'sky' in dirparts[len(dirparts)-3]:
@@ -272,6 +272,11 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
         arrsize1 = ssize1 * 2 + 1
         rots = np.zeros((nims, arrsize1, arrsize1))
         newshifts1 = []
+
+        # if we're doing PSF-fitting, we do it across all the images at once
+        if method == 'psf':
+            frames = reg.register_psf_fit(frames)
+
         for i in range(nims):  # each image
             image = frames[i, :, :]
 
@@ -291,7 +296,7 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
                     image, ssize1, newshifts1
                 )
                 rots[i, :, :] = rot
-            elif method == "default":
+            elif method == "quick_look":
                 image[image < 0.0] = 0.0
                 image_centered = reg.register_bruteforce(image)
                 if len(image_centered) == 0:
@@ -300,13 +305,13 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="default", ve
                         image, ssize1, newshifts1
                     )
                     rots[i, :, :] = rot
-            elif method == "saturated wide":
+            elif method == "saturated separated":
                 rough_center = reg.find_wide_binary(image)
                 image_centered, rot, newshifts1 = reg.register_saturated(
                     image, ssize1, newshifts1, rough_center=rough_center
                 )
                 rots[i, :, :] = rot
-            elif method == "wide":
+            elif method == "separated":
                 rough_center = reg.find_wide_binary(image)
                 image_centered = reg.register_bruteforce(
                     image, rough_center=rough_center
