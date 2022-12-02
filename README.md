@@ -4,7 +4,7 @@
 
 
 
-Repository for developing the ```SImMER``` image reduction pipeline. If you'd like to help out, take a look at our [ways to contribute](https://github.com/arjunsavel/simmer/blob/master/CONTRIBUTING.md).
+Repository for developing the ```SImMER``` image reduction pipeline. If you'd like to help out, take a look at our [ways to contribute](https://github.com/arjunsavel/simmer/blob/main/CONTRIBUTING.md).
 
 <p align="center">
   <img src="https://github.com/arjunsavel/SImMER/blob/main/docs/img/final_image.png" />
