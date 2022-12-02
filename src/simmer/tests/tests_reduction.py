@@ -541,76 +541,76 @@ class TestIntegration(unittest.TestCase):
             delete_folder(raw_dir)
             self.assertTrue(False)
 
-    def test_PHARO_config_drivers(self):
-        print(
-            "Testing PHARO config integration"
-        )  # need better way to get config?
+#     def test_PHARO_config_drivers(self):
+#         print(
+#             "Testing PHARO config integration"
+#         )  # need better way to get config?
 
-        try:
-            download_folder("PHARO_config_driver")
-        except:
-            raise DataDownloadException(
-                "Could not download test data for PHARO config integration."
-            )
-        raw_dir, reddir = (
-            os.getcwd() + "/src/simmer/tests/PHARO_config_driver/",
-            os.getcwd() + "/src/simmer/tests/PHARO_config_driver/",
-        )
-        config_file = os.getcwd() + "/src/simmer/tests/test_image_config.csv"
-        try:
-            drivers.config_driver(self.p, config_file, raw_dir, reddir)
-            sky = pyfits.getdata(raw_dir + "HIP49081/Br-gamma/sky.fits", 0)
-            compare_sky = pyfits.getdata(
-                raw_dir + "HIP49081/Br-gamma/compare_sky.fits", 0
-            )
-            zero = np.zeros(np.shape(compare_sky))
-            val = np.all(np.allclose(compare_sky, sky, equal_nan=True))
+#         try:
+#             download_folder("PHARO_config_driver")
+#         except:
+#             raise DataDownloadException(
+#                 "Could not download test data for PHARO config integration."
+#             )
+#         raw_dir, reddir = (
+#             os.getcwd() + "/src/simmer/tests/PHARO_config_driver/",
+#             os.getcwd() + "/src/simmer/tests/PHARO_config_driver/",
+#         )
+#         config_file = os.getcwd() + "/src/simmer/tests/test_image_config.csv"
+#         try:
+#             drivers.config_driver(self.p, config_file, raw_dir, reddir)
+#             sky = pyfits.getdata(raw_dir + "HIP49081/Br-gamma/sky.fits", 0)
+#             compare_sky = pyfits.getdata(
+#                 raw_dir + "HIP49081/Br-gamma/compare_sky.fits", 0
+#             )
+#             zero = np.zeros(np.shape(compare_sky))
+#             val = np.all(np.allclose(compare_sky, sky, equal_nan=True))
 
-            delete_folder(raw_dir)
-            self.assertTrue(val)
-        except:
-            e = sys.exc_info()[0]
-            print(e)
-            delete_folder(raw_dir)
-            self.assertTrue(False)
+#             delete_folder(raw_dir)
+#             self.assertTrue(val)
+#         except:
+#             e = sys.exc_info()[0]
+#             print(e)
+#             delete_folder(raw_dir)
+#             self.assertTrue(False)
 
-    def test_PHARO_image_drivers(self):
-        print(
-            "Testing PHARO image integration"
-        )  # need to actually point to correct folder, change aodirs
+#     def test_PHARO_image_drivers(self):
+#         print(
+#             "Testing PHARO image integration"
+#         )  # need to actually point to correct folder, change aodirs
 
-        try:
-            download_folder("PHARO_image_driver")
-        except:
-            raise DataDownloadException(
-                "Could not download test data for PHARO image driver."
-            )
-        raw_dir, reddir = (
-            os.getcwd() + "/src/simmer/tests/PHARO_image_driver/",
-            os.getcwd() + "/src/simmer/tests/PHARO_image_driver/",
-        )
-        config_file = os.getcwd() + "/src/simmer/tests/test_image_config.csv"
-        try:
-            drivers.image_driver(self.p, config_file, raw_dir, reddir)
-            remove_files = [
-                "sh00.fits",
-                "sh01.fits",
-                "sh02.fits",
-                "sh03.fits",
-                "shifts.txt",
-            ]
-            val = np.all(
-                [
-                    r in os.listdir(raw_dir + "HIP49081/Br-gamma/")
-                    for r in remove_files
-                ]
-            )
+#         try:
+#             download_folder("PHARO_image_driver")
+#         except:
+#             raise DataDownloadException(
+#                 "Could not download test data for PHARO image driver."
+#             )
+#         raw_dir, reddir = (
+#             os.getcwd() + "/src/simmer/tests/PHARO_image_driver/",
+#             os.getcwd() + "/src/simmer/tests/PHARO_image_driver/",
+#         )
+#         config_file = os.getcwd() + "/src/simmer/tests/test_image_config.csv"
+#         try:
+#             drivers.image_driver(self.p, config_file, raw_dir, reddir)
+#             remove_files = [
+#                 "sh00.fits",
+#                 "sh01.fits",
+#                 "sh02.fits",
+#                 "sh03.fits",
+#                 "shifts.txt",
+#             ]
+#             val = np.all(
+#                 [
+#                     r in os.listdir(raw_dir + "HIP49081/Br-gamma/")
+#                     for r in remove_files
+#                 ]
+#             )
 
-            file_dir = os.getcwd() + "/src/simmer/tests/PHARO_image_driver/"
-            delete_folder(raw_dir)
-            self.assertTrue(val)
-        except:
-            e = sys.exc_info()[0]
-            print(e)
-            delete_folder(raw_dir)
-            self.assertTrue(False)
+#             file_dir = os.getcwd() + "/src/simmer/tests/PHARO_image_driver/"
+#             delete_folder(raw_dir)
+#             self.assertTrue(val)
+#         except:
+#             e = sys.exc_info()[0]
+#             print(e)
+#             delete_folder(raw_dir)
+#             self.assertTrue(False)
