@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 
 from . import add_dark_exp as ad
+import logging
+logger = logging.getLogger('simmer')
 
 
 def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
@@ -57,58 +59,60 @@ def check_logsheet(inst, log_name, tab=None, add_dark_times=False):
             if not np.isin(col, frame_cols):
                 missing.append(col)
         if len(missing) != 0:
-            print(f"Missing columns for {missing}.")
+            logger.error(f"Missing columns for {missing}.")
             failed += 1
 
         objects = log_frame["Object"].dropna().values
         exptimes = log_frame["ExpTime"].dropna().values
         if len(exptimes) != len(objects):
-            print("Missing an exposure time.")
+            logger.error("Missing an exposure time.")
             failed += 1
 
         filters = log_frame["Filter"].dropna().values
         if len(filters) != len(log_frame[log_frame["Object"] != "dark"]):
-            print("Missing a filter.")
+            logger.error("Missing a filter.")
             failed += 1
 
         starts = log_frame["Start"].dropna().values
         if len(starts) != len(objects):
-            print("Missing a start exposure.")
+            logger.error("Missing a start exposure.")
             failed += 1
 
         ends = log_frame["End"].dropna().values
         if len(ends) != len(objects):
-            print("Missing an end exposure.")
+            logger.error("Missing an end exposure.")
             failed += 1
 
         coadds = log_frame["Coadds"].dropna().values
         if len(coadds) != len(objects):
-            print("Missing a coadd.")
+            logger.error("Missing a coadd.")
+
             failed += 1
 
         if not np.all(exptimes > 0):
-            print("There are negative or 0 exposure times.")
+            logger.error("There are negative or 0 exposure times.")
+
             failed += 1
         try:
             inter = ends - starts
             if not np.all(inter >= 0):
-                print("Check the start and end exposures.")
+                logger.error("There are negative exposure times.")
+
                 failed += 1
         except ValueError:
-            print("Check the start and end exposures.")
+            logger.error("Check the start and end exposures.")
+
             failed += 1
 
         exposes = log_frame["Expose"].dropna().values
         try:
             if not np.all(exposes == inter + 1):
-                print(
-                    "Incorrect number of exposures for start and end exposure."
-                )
+                logger.error('Incorrect number of exposures for start and end exposure.')
                 failed += 1
         except UnboundLocalError:
-            print("Incorrect number of exposures for start and end exposure.")
+            logger.error('Incorrect number of exposures for start and end exposure.')
             failed += 1
-        print(f"{9-failed}/9 logsheet checks passed.")
+        logger.info(f"{9-failed}/9 logsheet checks passed.")
         return failed
 
     failed = 0

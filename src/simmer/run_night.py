@@ -11,8 +11,14 @@ from simmer.tests.tests_reduction import download_folder
 import simmer.check_logsheet as check
 import simmer.add_dark_exp as ad
 import simmer.create_config as config
+import logging
+
+logger = logging.getLogger('simmer')
 
 def run_night(wantdate, add_darks=True, just_images=False, sep_skies=False,  skip_reduction=False, verbose=False):
+    if verbose:
+        logger.setLevel(logging.DEBUG)
+
     #wantdate = desired night to reduce. Format is 'YYYY-MM-DD' (e.g., '2019-09-13')
 
     #Change these for your local installation
@@ -36,9 +42,8 @@ def run_night(wantdate, add_darks=True, just_images=False, sep_skies=False,  ski
 
     #Check that logsheet exists
     if os.path.isfile(log_name) == False:
-        print('ERROR. Logsheet does not exist. Attempted to find ', log_name, '.')
-    if verbose == True:
-        print('Reading logsheet ', log_name)
+        logger.error('ERROR. Logsheet does not exist. Attempted to find ', log_name, '.')
+    logger.debug('Reading logsheet ', log_name)
 
     #Set up config file from logsheet
     tab = None # this is a CSV, so we don't have a tab name of interest.
@@ -47,8 +52,8 @@ def run_night(wantdate, add_darks=True, just_images=False, sep_skies=False,  ski
     #add darks
     if add_darks == True:
         log_name_with_darks = ad.add_dark_exp(inst, log_name, rawdir, tab,)
-        if verbose == True:
-            print('Saving logsheet with darks added as: ', log_name_with_darks)
+        logger.debug('Saving logsheet with darks added as: ', log_name_with_darks)
+
     else:
         log_name_with_darks = log_name
 
@@ -58,7 +63,7 @@ def run_night(wantdate, add_darks=True, just_images=False, sep_skies=False,  ski
 
     #Reduce the data!
     if skip_reduction == True:
-        print('files exist')
+        logger.info('Skipping reduction')
         return config_file
     else:
         drivers.all_driver(inst, config_file, rawdir, reddir, just_images=just_images, sep_skies=sep_skies, verbose=verbose)
