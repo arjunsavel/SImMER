@@ -121,28 +121,3 @@ def header_subsection(input_image_file, npix, center):
     return header
 
 
-# def general_bad_pix(image):
-#    sh = np.shape(image)
-#    bp_im = image.copy()
-#    px = 5
-#
-#    for r in range(sh[0]):
-#        for c in range(sh[1]):
-#            left = np.max([0, c-px]) #left of image, or 5 less than current pixel
-#            right = np.min([sh[1], c+px]) #right of image or 5 more than current pixel
-#            bott = np.max([0, r-px]) #bottom of image or 5 less than current pixel
-#            top = np.min([sh[0], c+px]) #top of image or 5 more than current pixel
-#
-#            region = image[bott:top, left:right]
-#            region_size = np.size(region)
-#
-#            nans = np.sum(np.isnan(region))
-#            if nans == region_size:
-#                #all these pixels are shitty, set value to 0
-#                bp_im[r,c] = 0.
-#            else:
-#                r_med = np.nanmedian(region)
-#                if image[r,c] > 5.*r_med or np.isnan(image[r,c]):
-#                    bp_im[r,c] = r_med
-#
-#    return bp_im
