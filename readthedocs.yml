@@ -9,7 +9,10 @@ submodules:
 
 python:
   install:
-    - requirements: docs/requirements.txt
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
 
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
