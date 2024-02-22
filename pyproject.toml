@@ -1,6 +1,61 @@
 [build-system]
-requires = ["setuptools>=40.6.0", "wheel", "setuptools_scm", "extension_helpers"]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "simmer"
+
+authors = [
+    {name = "Arjun Savel", email = "asavel@gmail.com"},
+    {name= "Lea Hirsch"},
+    {name= "Holden Gill"},
+    {name= "Courtney D. Dressing"},
+    {name= "David R. Ciardi"}
+]
+description = "Stellar Image Maturation via Efficient Reduction"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["astronomy"]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+dependencies = [
+    "numpy",
+    "tqdm",
+    "pandas==1.2.3",
+    "astropy >=5.1",
+    "openpyxl>=2.5.12",
+    "scipy",
+    "matplotlib <3.1.1,>=3.0.1",
+    "Scikit-image>=0.16.2",
+    "pyyaml>=5.3.1",
+    "numba",
+    "emcee",
+    "cerberus>=1.3.2",
+    "photutils>=1.5.0",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/arjunsavel/SImMER"
+Issues = "https://github.com/arjunsavel/SImMER/issues"
+Documentation = "https://simmer.readthedocs.io"
+
+[tool.setuptools_scm]
+root = 'src/simmer'
+
 
 [tool.black]
 line-length = 79
