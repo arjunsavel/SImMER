@@ -19,6 +19,13 @@ To install with conda (the recommended method), run
 conda config --add channels conda-forge
 conda install simmer
 ```
+
+To install with mamba, run
+
+```
+mamba install simmer
+```
+
 To install with pip, run
 ```
 pip install simmer
