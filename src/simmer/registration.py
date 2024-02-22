@@ -16,6 +16,9 @@ from .scipy_utils import *
 
 from simmer.analyze_image import *
 
+import logging
+logger = logging.getLogger('simmer')
+
 
 def roll_shift(image, shifts, cval=0.0):
     """
@@ -365,9 +368,9 @@ def shift_bruteforce(image, base_position=None, max_shift=200, verbose=False):
     jlo = np.max([0, base_position[1] - max_shift])
     jhi  = np.min([imshape[0],base_position[1]+max_shift])
     if max_shift == 0:
-        if verbose:
-            print('ERROR: Max shiftset to 0. Considering full image.')
-            print('       Requested max_shift: ', max_shift)
+        logger.error('ERROR: Max shiftset to 0. Considering full image.')
+        logger.debug('       Requested max_shift: ', max_shift)
+
     else:
         masked_image= image.copy()*0.
         masked_image[ilo:ihi, jlo:jhi] = image[ilo:ihi, jlo:jhi]

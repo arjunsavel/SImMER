@@ -17,6 +17,9 @@ from . import registration as reg
 from . import utils as u
 from . import contrast as contrast
 
+import logging
+logger = logging.getLogger('simmer')
+
 
 class FlatOpeningError(ValueError):
     pass
@@ -254,12 +257,10 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="quick_look",
         #Only register star images, not sky images
         dirparts = sf_dir.split('/')
         if 'sky' in dirparts[len(dirparts)-3]:
-            if verbose == True:
-                print('this is a sky directory: ', sf_dir)
+            logger.debug('this is a sky directory: ', sf_dir)
             continue
 
-        if verbose == True:
-            print('working on sf_dir ', sf_dir)
+        logger.debug('working on sf_dir ', sf_dir)
 
         files = glob(
             sf_dir + f"sh*.fits"
@@ -300,7 +301,7 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="quick_look",
                 image[image < 0.0] = 0.0
                 image_centered = reg.register_bruteforce(image)
                 if len(image_centered) == 0:
-                    print("Resorting to saturated mode.")
+                    logger.info("Resorting to saturated mode.")
                     image_centered, rot, newshifts1 = reg.register_saturated(
                         image, ssize1, newshifts1
                     )
@@ -329,9 +330,9 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="quick_look",
         aend = astart+cutsize
         bend = bstart+cutsize
         if np.logical_or(aend > final_im.shape[0],bend > final_im.shape[1]):
-            print('ERROR: Requested cutout is too large. Using full image instead.')
-            print('Current image dimensions: ', final_im.shape)
-            print('Desired cuts: ', astart, aend, bstart, bend)
+            logger.error('ERROR: Requested cutout is too large. Using full image instead.')
+            logger.info('Current image dimensions: ', final_im.shape)
+            logger.info('Desired cuts: ', astart, aend, bstart, bend)
         else:
             final_im = final_im[astart:astart+cutsize,bstart:bstart+cutsize] #extract central cutsize x cutsize pixel region from larger image
 

@@ -7,6 +7,8 @@
 from glob import glob
 
 import astropy.io.fits as pyfits
+import logging
+logger = logging.getLogger('simmer')
 
 
 def search_headers(raw_dir, write_dir=None):
@@ -50,7 +52,7 @@ def search_headers(raw_dir, write_dir=None):
                 textfile.write(f"{file}\n")
 
         else:
-            print(f"Header Incomplete in {file}!!! ")
+            logger.error(f"Header Incomplete in {file}!!! ")
             textfile.write(f"{file} HEADER INCOMPLETE\n")
 
     textfile.close()

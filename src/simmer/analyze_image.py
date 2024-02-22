@@ -27,6 +27,9 @@ from astropy.io import fits
 
 import simmer.contrast as sim_con_curve
 
+import logging
+logger = logging.getLogger('simmer')
+
 #Test file
 startname = '/Users/courtney/Documents/data/shaneAO/data-'
 datestr = '2019-07-19'
@@ -39,6 +42,8 @@ filename = startname + datestr + midname + datestr + '/'+starname+'/'+filt+endna
 outdir = startname + datestr + midname + datestr + '/'+starname+'/'+filt+'/'
 
 def analyze(filename=filename, maxiter = 10, postol=1, fwhmtol = 0.5, inst = 'ShARCS', outdir='', verbose=True):
+    if verbose:
+        logger.setLevel(logging.DEBUG)
 
     #set defaults
     if inst == 'PHARO':
@@ -58,8 +63,8 @@ def analyze(filename=filename, maxiter = 10, postol=1, fwhmtol = 0.5, inst = 'Sh
 
     #Determine FWHM using that center
     fwhm = find_FWHM(im, [xcen,ycen])
-    if verbose == True:
-        print('Estimated FWHM: ', fwhm)
+    logger.debug('Estimated FWHM: ', fwhm)
+
 
     #Iterate until coordinates and FWHM agree to within tolerance
     #or until maximum number of iterations is reached
@@ -67,13 +72,15 @@ def analyze(filename=filename, maxiter = 10, postol=1, fwhmtol = 0.5, inst = 'Sh
     fwhmdiff = 2
     niter = 1
     while np.logical_and(niter < maxiter, np.logical_or(posdiff > postol, fwhmdiff > fwhmtol)):
-        if verbose == True:
-            print('Beginning iteration ', niter)
+
+        logger.debug('Beginning iteration ', niter)
+
 
         #Find sources again
         updated_sources = find_sources(im, fwhm=fwhm)
-        if verbose == True:
-            print('Updated sources')
+        logger.debug('Updated sources')
+
+        if verbose:
             print(updated_sources)
 
         #Find brightest peak again using updated list of stars
@@ -81,15 +88,16 @@ def analyze(filename=filename, maxiter = 10, postol=1, fwhmtol = 0.5, inst = 'Sh
 
         #Determine FWHM using that center
         updated_fwhm = find_FWHM(im, [updated_xcen,updated_ycen])
-        if verbose == True:
-            print('Estimated FWHM: ', updated_fwhm)
+        logger.debug('Estimated FWHM: ', updated_fwhm)
+
 
         #Compute differences
         posdiff = np.sqrt((updated_xcen - xcen)**2. + (updated_ycen - ycen)**2.)
         fwhmdiff = np.sqrt((updated_fwhm - fwhm)**2.)
-        if verbose == True:
-            print('Current posdiff: ', posdiff)
-            print('Current fwhmdiff: ', fwhmdiff)
+
+        logger.debug('posdiff: ', posdiff)
+        logger.debug('fwhmdiff: ', fwhmdiff)
+
 
         #Update reference values
         xcen = updated_xcen
@@ -117,21 +125,23 @@ def find_sources(im, sigma=5, fwhm=5, tscale=10, verbose=False, plot=True, **kwa
     """
     Determines sources in an image. Based on astropy tutorial here: https://photutils.readthedocs.io/en/stable/detection.html
     """
+    if verbose:
+        logger.setLevel(logging.DEBUG)
     mean, median, std = sigma_clipped_stats(im, sigma=sigma)
-    if verbose == True:
-        print((mean, median, std))
+    logger.debug('mean, median, std: ', mean, median, std)
+
 
     sources = None
     while np.logical_and(type(sources) == type(None), fwhm < 200):
-        if verbose == True:
-            print('trying FWHM: ', fwhm)
+        logger.debug('trying FWHM: ', fwhm)
+
         #Detect stars >threshold above the background. Needed to adjust FWHM and threshold
         daofind = DAOStarFinder(fwhm=fwhm, threshold=tscale*std, exclude_border=True, **kwargs)
         sources = daofind(im - median)
     #    for col in sources.colnames:
     #        sources[col].info.format = '%.8g'  # for consistent table output
-        if verbose == True:
-            print(sources)
+        logger.debug('sources: ', sources)
+
         fwhm += 1
 
     if plot:
@@ -145,7 +155,6 @@ def find_sources(im, sigma=5, fwhm=5, tscale=10, verbose=False, plot=True, **kwa
 
     #Convert sources to a dataframe
     df = sources.to_pandas()
-   # print(len(sources))
     return df
 
 def find_FWHM(image, center, min_fwhm = 2, verbose=False):
@@ -208,9 +217,12 @@ def aperture_photometry(im, df, fwhm):
 
 def find_center(df, verbose=False):
     '''Returns coordinates of star with highest peak'''
+    if verbose:
+        logger.setLevel(logging.DEBUG)
+
     ww = np.where(df['peak'] == np.max(df['peak']))
     xcen = int(np.round(float(df.iloc[ww]['xcentroid'])))
     ycen = int(np.round(float(df.iloc[ww]['ycentroid'])))
-    if verbose == True:
-        print('Closest pixels to center: ', xcen, ycen)
+    logger.debug('Closest pixels to center: ', xcen, ycen)
+
     return xcen, ycen
