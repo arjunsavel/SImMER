@@ -45,6 +45,9 @@ dependencies = [
 ]
 dynamic = ["version"]
 
+
+[tool.setuptools_scm]
+
 [project.optional-dependencies]
 docs = ["nbsphinx",
         "nbconvert",
