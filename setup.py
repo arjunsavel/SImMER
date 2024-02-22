@@ -29,7 +29,7 @@ INSTALL_REQUIRES = [
     "pandas==1.2.3",
     "astropy >=5.1",
     "openpyxl>=2.5.12",
-    "scipy <1.5.3, >=1.1.0",
+    "scipy",
     "matplotlib <3.1.1,>=3.0.1",
     "Scikit-image>=0.16.2",
     "pyyaml>=5.3.1",
