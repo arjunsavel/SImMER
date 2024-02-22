@@ -32,6 +32,8 @@ import pandas as pd
 from tqdm import tqdm
 import warnings
 
+import time as time
+
 warnings.simplefilter("ignore")
 
 
@@ -65,7 +67,6 @@ def contrast_curve_main(data, fwhm, instrument, position=None):
     #set radius_size so that radius is no larger than 1"
     radius_size = np.min([1./plate_scale, fwhm])
 
-#DO NOT TAKE ABSOLUTE VALUE!
     contrast_result = contrast_curve_core(
         data, plate_scale, fwhm=fwhm, radius_size=radius_size, center=position
     )
@@ -82,6 +83,8 @@ def contrast_curve_main(data, fwhm, instrument, position=None):
 
     fake_ims = []
 
+    #Use FWHM to set size of noise image
+    fsize = int(np.ceil(fwhm * 3 + 20)) #must be larger than maximum size needed for aperture photometry, which is 3 x FWHM + 15
     for i, (all_mean, all_std) in enumerate(zip(means, stds)):
         # initialize fake fluxes for a given annulus
         fake_im_fluxes_an = []
@@ -89,7 +92,7 @@ def contrast_curve_main(data, fwhm, instrument, position=None):
         for j in range(n_annuli):
             mean = all_mean[j]
             std = all_std[j]
-            x, y = np.meshgrid(np.arange(-1000, 1000), np.arange(-1000, 1000)) #was 100x100; CDD made larger for poor FWHMs
+            x, y = np.meshgrid(np.arange(-1*fsize/2, fsize/2), np.arange(-1*fsize/2, fsize/2))
             dst = np.sqrt(x * x + y * y)
 
             # Initializing sigma and muu: size of fake injected source
@@ -99,8 +102,8 @@ def contrast_curve_main(data, fwhm, instrument, position=None):
             bg_std = std
 
             noise_image = make_noise_image(
-                (2000, 2000), distribution="gaussian", mean=mean, stddev=bg_std
-            ) #Was 200x200, but that's too small for some images because the sky annulus falls outside the fake image for high FWHM.
+                (fsize, fsize), distribution="gaussian", mean=mean, stddev=bg_std
+            )
             # Calculating Gaussian array. tuned to a total STD=5
             fake = (
                 7 * std * np.exp(-((dst - muu) ** 2 / (2.0 * sigma**2)))
@@ -122,10 +125,6 @@ def contrast_curve_main(data, fwhm, instrument, position=None):
     fake_im_fluxes = np.array(fake_im_fluxes)
 
     err = 2.5 * np.log10(1.0 + (fake_im_stds / fake_im_fluxes))
-
-#DELETE THIS
-#    indices = np.arange(len(fake_im_fluxes))
-#    separation = fwhm * plate_scale * indices
 
     contrast = -2.5 * np.log10(fake_im_fluxes / center_flux[0])
 

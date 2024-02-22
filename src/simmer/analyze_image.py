@@ -30,6 +30,9 @@ from photutils.aperture import (
 # from photutils.datasets import load_star_image
 from photutils.detection import DAOStarFinder
 
+
+import time as time
+
 import simmer.contrast as sim_con_curve
 
 logger = logging.getLogger("simmer")
@@ -143,6 +146,7 @@ def analyze(
     return im, xcen, ycen, fwhm, updated_sources, contrast_curve
 
 
+
 def find_sources(
     im, sigma=5, fwhm=5, tscale=10, verbose=False, plot=True, **kwargs
 ):
@@ -166,8 +170,17 @@ def find_sources(
         #    for col in sources.colnames:
         #        sources[col].info.format = '%.8g'  # for consistent table output
         logger.debug("sources: ", sources)
-
         fwhm += 1
+
+    if make_plot == True:
+        #Plot image and mark location of detected sources
+        positions = np.transpose((sources['xcentroid'], sources['ycentroid']))
+        apertures = CircularAperture(positions, r=4.)
+        norm = ImageNormalize(stretch=SqrtStretch(),vmin=0,vmax=100)
+        plt.imshow(im, cmap='Greys', origin='lower', norm=norm, interpolation='nearest')
+        apertures.plot(color='orange', lw=2.5);
+        plt.close()
+        
 
     if plot:
         # Plot image and mark location of detected sources

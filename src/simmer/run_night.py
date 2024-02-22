@@ -15,7 +15,9 @@ import logging
 
 logger = logging.getLogger('simmer')
 
-def run_night(wantdate, add_darks=True, just_images=False, sep_skies=False,  skip_reduction=False, verbose=False):
+
+def run_night(wantdate, add_darks=True, just_images=False, sep_skies=False,  skip_reduction=False, selected_stars=None, verbose=False):
+
     if verbose:
         logger.setLevel(logging.DEBUG)
 
@@ -66,4 +68,4 @@ def run_night(wantdate, add_darks=True, just_images=False, sep_skies=False,  ski
         logger.info('Skipping reduction')
         return config_file
     else:
-        drivers.all_driver(inst, config_file, rawdir, reddir, just_images=just_images, sep_skies=sep_skies, verbose=verbose)
+        drivers.all_driver(inst, config_file, rawdir, reddir, just_images=just_images, sep_skies=sep_skies, selected_stars=selected_stars, verbose=verbose)

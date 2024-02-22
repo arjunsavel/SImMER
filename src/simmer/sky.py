@@ -74,11 +74,17 @@ def sky_driver(raw_dir, reddir, config, inst, sep_skies = False, plotting_yml=No
             skies.Object == skyname
         ].Filter.values  # array of filters as strings
 
-        for n, filter_name in enumerate(filts):
-            skylist = eval(
+        #Remove duplicates from list of filters
+        filts = np.unique(filts)
 
-                skies[skies.Object == skyname].Filenums.values[n]
-            )
+        for n, filter_name in enumerate(filts):
+            skylist = []
+            ww = np.where(np.logical_and(skies.Object == skyname, skies.Filter == filter_name))
+            allfiles = skies.iloc[ww].Filenums.values
+            for aa in np.arange(len(allfiles)):
+                for bb in eval(allfiles[aa]):
+                    skylist.append(bb)
+
             create_skies(
                 raw_dir, reddir, s_dir, skylist, inst, filter_name=filter_name
             )
@@ -144,8 +150,10 @@ def create_skies(
     # final_sky = u.median_outlier_reject(sky_array, 2.0) #2sigma outlier rejection?
     final_sky = np.median(sky_array, axis=0)
 
+    #CDD change: use adaptive range for sky colorscaling (was -10,100)
+    sky_vmin, sky_vmax = np.percentile(sky_array, [1,99])
     pl.plot_array(
-        "intermediate", sky_array, -10.0, 100.0, sf_dir, "sky_cube.png"
+        "intermediate", sky_array, sky_vmin, sky_vmax, sf_dir, "sky_cube.png"
     )
 
     head.set("DATAFILE", str(skylist))  # add all file names

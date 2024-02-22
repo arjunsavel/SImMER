@@ -346,7 +346,8 @@ def calc_shifts(
     return (xshift, yshift), out
 
 
-def shift_bruteforce(image, base_position=None, max_shift=200, verbose=False):
+def shift_bruteforce(image, base_position=None, max_shift=350, verbose=False):
+
     """This will shift the maximum pixel to base_position (i.e. the center of image).
     Make sure base_position is entered as (int,int).
 
@@ -368,6 +369,7 @@ def shift_bruteforce(image, base_position=None, max_shift=200, verbose=False):
     jlo = np.max([0, base_position[1] - max_shift])
     jhi  = np.min([imshape[0],base_position[1]+max_shift])
     if max_shift == 0:
+
         logger.error('ERROR: Max shiftset to 0. Considering full image.')
         logger.debug('       Requested max_shift: ', max_shift)
 

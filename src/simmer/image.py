@@ -50,7 +50,7 @@ def open_flats(flatfile):
         return flat
 
 
-def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=None, verbose=False):
+def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=None, selected_stars = None, verbose=False):
     """Do flat division, sky subtraction, and initial alignment via coords in header.
     Returns Python list of each registration method used per star.
 
@@ -60,7 +60,7 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
         :config: (pandas DataFrame) dataframe corresponding to config sheet for data.
         :inst: (Instrument object) instrument for which data is being reduced.
         :plotting_yml: (string) path to the plotting configuration file.
-
+        :selected_stars: (array of strings; OPTIONAL) list of stars to reduce
     """
     # Save these images to the appropriate folder.
 
@@ -95,6 +95,11 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
     for star in tqdm(
         np.unique(stars), desc="Running image driver", position=0, leave=True
     ):
+        #Check if we want to run this star
+        if selected_stars != None:
+            if star not in selected_stars:
+                print('Star ', star, 'not in selected list of stars (', selected_stars, ')')
+                continue
         s_dir = reddir + star + "/"
         if (
             s_dir not in sdirs
@@ -104,11 +109,22 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
         filts = skies[
             skies.Object == star
         ].Filter.values  # array of filters as strings
+
+        #Remove duplicates from list of filters
+        filts = np.unique(filts)
+
         for n, filter_name in enumerate(filts):
             obj = config[config.Object == star]
-            imlist = eval(
-                obj[obj.Comments != "sky"].Filenums.values[n]
-            )  # pylint: disable=eval-used # liter_eval issues
+
+            #Trying workaround
+            ww = np.where(np.logical_and(obj.Filter.values == filter_name,
+                obj.Comments != 'sky'))
+            allfiles = obj.iloc[ww].Filenums.values
+            imlist = []
+            for aa in np.arange(len(allfiles)):
+                for bb in eval(allfiles[aa]):
+                    imlist.append(bb)
+
             # cast obj_methods as list so that elementwise comparison isn't performed
             obj_methods = config[config.Object == star].Method.values
 
@@ -121,6 +137,7 @@ def image_driver(raw_dir, reddir, config, inst, sep_skies=False, plotting_yml=No
                     methods.append("saturated separated")
                 elif "saturated" in obj_method and "separated" not in obj_method:
                     methods.append("saturated")
+
                 elif "saturated" not in obj_method and "separated" in obj_method:
                     methods.append("separated")
             create_imstack(
@@ -193,7 +210,15 @@ def create_imstack(
 
     skyfile = sf_dir + "sky.fits"
     sky = pyfits.getdata(skyfile, 0)
-    sky[np.isnan(sky)] = 0.0  # set nans from flat=0 pixels to 0 in sky
+
+    #Use a 2D Gaussian Kernel to interpolate over NaNs in the sky file
+    # Generate Gaussian kernel with x_stddev=1 (and y_stddev=1)
+    # It is a 9x9 array
+    kernel = Gaussian2DKernel(x_stddev=1)
+    # Replace NaNs with interpolated values
+    sky = interpolate_replace_nans(sky, kernel)
+
+    #sky[np.isnan(sky)] = 0.0  # set nans from flat=0 pixels to 0 in sky
 
     shifts_all = []
     for i in range(nims):
@@ -330,6 +355,7 @@ def create_im(s_dir, ssize1, plotting_yml=None, fdirs=None, method="quick_look",
         aend = astart+cutsize
         bend = bstart+cutsize
         if np.logical_or(aend > final_im.shape[0],bend > final_im.shape[1]):
+
             logger.error('ERROR: Requested cutout is too large. Using full image instead.')
             logger.info('Current image dimensions: ', final_im.shape)
             logger.info('Desired cuts: ', astart, aend, bstart, bend)
