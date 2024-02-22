@@ -52,7 +52,7 @@ def search_headers(raw_dir, write_dir=None):
                 textfile.write(f"{file}\n")
 
         else:
-            logger.error(f"Header Incomplete in {file}!!! ")
+            logger.error(f"Header Incomplete in {file}!!!")
             textfile.write(f"{file} HEADER INCOMPLETE\n")
 
     textfile.close()
