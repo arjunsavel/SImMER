@@ -31,7 +31,6 @@ jobs:
           python3 -m pip install -U setuptools setuptools_scm pep517
           python3 -m pip install -e .
 
-
       - name: Run tests
         run: |
          python -m unittest discover src
