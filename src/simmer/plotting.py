@@ -10,6 +10,9 @@ import numpy as np
 
 from .schemas import read_yml as read
 
+import logging
+logger = logging.getLogger('simmer')
+
 plot_config = None
 
 
@@ -275,7 +278,7 @@ def plot_array(
         fig, cim = plot_few(func, snames=snames)
 
     elif array_len > 50:
-        print("Too many images to plot.")
+        logger.info("Too many images to plot.")
         return
     else:  # 11 images? 13 images? make it 4xn
         fig, cim = plot_many(func, snames=snames)

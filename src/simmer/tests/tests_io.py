@@ -277,13 +277,11 @@ class TestShARCSSpecific(unittest.TestCase):
             raw_dir + "wrong_header.fits", data, header, overwrite=True
         )
 
-        with captured_output() as (out, err):
+        with self.assertLogs('simmer', level='INFO') as cm:
             search.search_headers(raw_dir)
-        anticipated_string = "Header Incomplete in src/simmer/tests/test_search_header/wrong_header.fits!!!"
-        # This can go inside or outside the `with` block
-        output = out.getvalue().strip()
+
         delete_folder(raw_dir)
-        self.assertEqual(output, anticipated_string)
+        self.assertEqual(cm.output, ['ERROR:simmer:Header Incomplete in src/simmer/tests/test_search_header/wrong_header.fits!!!'])
 
     def test_search_headers_no_datafile(self):
         """
@@ -305,13 +303,15 @@ class TestShARCSSpecific(unittest.TestCase):
             raw_dir + "wrong_header.fits", data, header, overwrite=True
         )
 
-        with captured_output() as (out, err):
+        # need to catch what's sent from the logger
+        with self.assertLogs('simmer', level='INFO') as cm:
             search.search_headers(raw_dir)
-        anticipated_string = "Header Incomplete in src/simmer/tests/test_search_header/wrong_header.fits!!!"
-        # This can go inside or outside the `with` block
-        output = out.getvalue().strip()
+
         delete_folder(raw_dir)
-        self.assertEqual(output, anticipated_string)
+        self.assertEqual(cm.output, ['ERROR:simmer:Header Incomplete in src/simmer/tests/test_search_header/wrong_header.fits!!!'])
+
+        # This can go inside or outside the `with` block
+
 
     def test_search_headers(self):
         try:

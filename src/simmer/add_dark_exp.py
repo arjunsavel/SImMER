@@ -90,7 +90,7 @@ def add_dark_exp(inst, log, raw_dir, tab=None):
             #add the darks to the end of the data frame
             full_log = current_log.append(dark_log, ignore_index=True)
             full_log.to_csv(outlog, index=False, header=True)
-        return outlog
+            return outlog
 
 
 

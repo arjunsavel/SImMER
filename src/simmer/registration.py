@@ -9,8 +9,15 @@ from scipy.ndimage.filters import median_filter
 from scipy.ndimage.interpolation import rotate
 from scipy.ndimage.interpolation import shift as subpix_shift
 from skimage.feature import peak_local_max
+import emcee
+from numba import njit
 
 from .scipy_utils import *
+
+from simmer.analyze_image import *
+
+import logging
+logger = logging.getLogger('simmer')
 
 
 def roll_shift(image, shifts, cval=0.0):
@@ -327,7 +334,7 @@ def calc_shifts(
     ycen = dat.shape[0] / 2
     xoffset = xcen - x_initial
     yoffset = ycen - y_initial
-    # calcualte roll shifts for all x and y combinations
+    # calculate roll shifts for all x and y combinations
     x_grid, y_grid = np.meshgrid(
         np.arange(xoffset + xrad, xoffset - xrad - 1, -0.01),
         np.arange(yoffset + yrad, yoffset - yrad - 1, -0.01),
@@ -340,6 +347,7 @@ def calc_shifts(
 
 
 def shift_bruteforce(image, base_position=None, max_shift=350, verbose=False):
+
     """This will shift the maximum pixel to base_position (i.e. the center of image).
     Make sure base_position is entered as (int,int).
 
@@ -361,9 +369,10 @@ def shift_bruteforce(image, base_position=None, max_shift=350, verbose=False):
     jlo = np.max([0, base_position[1] - max_shift])
     jhi  = np.min([imshape[0],base_position[1]+max_shift])
     if max_shift == 0:
-        if verbose:
-            print('ERROR: Max shiftset to 0. Considering full image.')
-            print('       Requested max_shift: ', max_shift)
+
+        logger.error('ERROR: Max shiftset to 0. Considering full image.')
+        logger.debug('       Requested max_shift: ', max_shift)
+
     else:
         masked_image= image.copy()*0.
         masked_image[ilo:ihi, jlo:jhi] = image[ilo:ihi, jlo:jhi]
@@ -404,3 +413,153 @@ def run_rot(image, searchsize, center, newsize):
     )
 
     return res, cut_image, (xshift, yshift)
+
+
+##### new PSF section
+
+@njit(fastmath=True)
+def gaus2d3(x=0, y=0, mx=0, my=0, sx=1, sy=1, theta=0):
+    x_mid = x - mx
+    y_mid = y - my
+
+    sintheta = np.sin(theta)
+    costheta = np.cos(theta)
+
+    x_prime = x_mid * costheta - y_mid * sintheta
+    y_prime = x_mid * sintheta + y_mid * costheta
+    return 1. / (2. * np.pi * sx * sy) * np.exp(
+        -((x_prime) ** 2. / (2. * sx ** 2.) + (y_prime) ** 2. / (2. * sy ** 2.)))
+
+
+@njit
+def log_prior(theta):
+    mx1, my1, sx, sy, theta, log_f = theta
+    if 2 <= mx1 <= 25 \
+            and 2 <= my1 <= 25 \
+            and 1 <= sx <= 12 \
+            and 1 <= sy <= 12 \
+            and 0 <= theta <= np.pi / 2 \
+            and -10 <= log_f <= 1:
+        return 0.0
+    return -np.inf
+
+def log_probability(theta, x, y, im1, noise):
+    lp = log_prior(theta)
+    if not np.isfinite(lp):
+        return -np.inf
+    return lp + log_likelihood(theta, x, y,im1, noise)
+
+
+def log_likelihood(theta, X, Y, im1, noise):
+    mx1, my1, sx, sy, theta, log_f = theta
+
+    model1 = gaus2d3(X, Y, mx1, my1, sx, sy, theta)
+    yerr1 = noise
+    sigma21 = yerr1 ** 2 + model1 ** 2 * np.exp(2 * log_f)
+
+    log_l1 = -0.5 * np.sum((im1 - model1) ** 2 / sigma21 + np.log(sigma21))
+
+    return log_l1
+
+
+def fit_psf(im, source_find='photutils'):
+    """
+    Performs a basic, flexible PSF fit.
+    """
+
+    x_cen, y_cen = run_starfinder(im)
+
+    initial = [x_cen, y_cen, 2, 2, np.pi/4, 0.1]
+
+    # slightly perturb the walkers
+    pos = initial + 1e-6 * np.random.randn(24, len(initial))
+    nwalkers, ndim = pos.shape
+
+    noise = np.std(im)
+
+    x = np.arange(0, im.shape[0])
+    y = np.arange(0, im.shape[1])
+
+    # create a grid for creating the model images
+    X, Y = np.meshgrid(x, y)
+
+    sampler = emcee.EnsembleSampler(
+        nwalkers, ndim, log_probability, args=(X, Y, im, noise)
+    )
+    sampler.run_mcmc(pos, 30000, progress=True);
+
+    tau = sampler.get_autocorr_time()
+
+    discard = 3 * np.max(tau)
+
+    thin_factor = np.max(tau) // 2
+
+    flat_samples = sampler.get_chain(discard=discard, thin=thin_factor, flat=True)
+
+    return flat_samples
+
+
+def run_starfinder(im, **kwargs):
+    """
+
+    Outputs
+    ------
+        :central: (tuple) x, y coordinates of the central source
+    """
+
+    sources = find_sources(im, plot=False, **kwargs)
+    central_source = find_center(sources, verbose=False)
+    return central_source
+
+
+
+def register_psf_fit(frames):
+    """
+    Constructs an empirical PSF for a single target, fitting for all the positions.
+
+    Inputs
+    ------
+        :frames: (np.ndarray, n_image x n_x x n_y) input array containing all the images at once.
+
+    Outputs
+    -------
+        :frames_centered: (np.ndarray, n_image x n_x x n_y) same as frames, but centered on the target.
+    """
+
+    n_ims = frames.shape[0]
+    frames_centered = np.copy(frames)
+    samples_list = []
+
+    # iterate through the images, fit all their PSFs.
+    for i in range(n_ims):
+        im = frames[i, :, :]
+        samples = fit_psf(im)
+        samples_list += [samples]
+
+        combined_fit = np.prod(samples_list, axis=2)
+
+
+    x_av, y_av, s1_av, s2_av, theta_av, f1_av =  np.mean(combined_fit, axis=1)
+
+    # "ratio" is the ratio between the semimajor and semiminor axis.
+    ratio_av = np.max([s1_av, s2_av]) / np.max([s1_av, s2_av])
+
+    # now we can find the centers based on inputting those parameters to the DAOStarFinder.
+    for i in range(n_ims):
+
+
+        im = frames[i, :, :]
+        x_cen, y_cen = run_starfinder(im, theta=theta_av, ratio=ratio_av)
+
+        # todo: refactor so no duplicated code!
+        x_initial = im.shape[1] / 2
+        y_initial = im.shape[0] / 2
+        xoffset = x_cen - x_initial
+        yoffset = y_cen - y_initial
+
+        image_centered = subpix_shift(im, (yoffset, xoffset))
+        frames_centered[i, :, :] = image_centered
+
+    del frames
+    return frames_centered
+

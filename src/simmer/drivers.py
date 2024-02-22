@@ -15,6 +15,10 @@ from . import search_headers as search
 from . import sky
 from . import summarize as summarize
 
+import logging
+
+logger = logging.getLogger('simmer')
+
 def all_driver(
 
     inst, config_file, raw_dir, reddir, sep_skies = False, plotting_yml=None, searchsize=10, just_images=False, selected_stars=None, verbose=True
@@ -78,8 +82,8 @@ def all_driver(
             leave=True,
         )
     ):
-        print('searchsize: ', searchsize)
-        print('s_dir: ', s_dir)
+        logger.info(f"Running registration for {s_dir}")
+        logger.info(f"searchsize: {searchsize}")
         if selected_stars != None:
             thisstar = os.path.basename(s_dir[:-1])
             print('this star: ', thisstar)
@@ -92,6 +96,7 @@ def all_driver(
             use_method = methods[i]
 
         image.create_im(s_dir, searchsize, method=use_method, verbose=verbose)
+
 
     #make summary plot showing reduced images of all stars observed
     summarize.image_grid(reddir)
