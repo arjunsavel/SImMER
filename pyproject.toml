@@ -53,8 +53,6 @@ Homepage = "https://github.com/arjunsavel/SImMER"
 Issues = "https://github.com/arjunsavel/SImMER/issues"
 Documentation = "https://simmer.readthedocs.io"
 
-[tool.setuptools_scm]
-root = 'src/simmer'
 
 
 [tool.black]
