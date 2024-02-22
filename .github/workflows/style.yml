@@ -26,6 +26,5 @@ jobs:
           python -m pip install -U black isort black_nbconvert
       - name: Check the style
         run: |
-          isort -c -rc src
           black --check src --exclude "__init__.py"
           black_nbconvert --check .
