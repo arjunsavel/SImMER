@@ -2,7 +2,7 @@
 # https://github.com/exoplanet-dev/exoplanet/blob/master/.pre-commit-config.yaml
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
 
@@ -10,38 +10,21 @@ repos:
 
       - id: debug-statements
 
-  - repo: https://github.com/pycqa/isort
-    rev: 5.8.0
-    hooks:
-      - id: isort
-        name: isort (python)
-        additional_dependencies: [toml]
-        exclude: src/simmer/tests
-      - id: isort
-        name: isort (cython)
-        types: [cython]
-        additional_dependencies: [toml]
-        exclude: src/simmer/tests
-      - id: isort
-        name: isort (pyi)
-        types: [pyi]
-        additional_dependencies: [toml]
-        exclude: src/simmer/tests
 
   - repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: 24.2.0
     hooks:
       - id: black
         language_version: python3 # Should be a command that runs python3.6+
         exclude: src/simmer/__init__.py
 
   - repo: https://github.com/dfm/black_nbconvert
-    rev: stable
+    rev: v0.4.0
     hooks:
       - id: black_nbconvert
 
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.17.0
+    rev: v1.35.1
     hooks:
       - id: yamllint
         args: [-c=.yamllint]
