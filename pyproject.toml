@@ -31,7 +31,7 @@ classifiers = [
 dependencies = [
     "numpy",
     "tqdm",
-    "pandas==1.2.3",
+    "pandas==2.2.1",
     "astropy >=5.1",
     "openpyxl>=2.5.12",
     "scipy",
